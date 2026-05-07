@@ -53,10 +53,10 @@ function VerifyOtpPage() {
       );
 
       if (res.data.token) {
-        if (res.success) {
+        
         localStorage.setItem("token", res.data.token);
         localStorage.setItem("user", JSON.stringify(res.data.user)); 
-        }
+
         const user = res.data.user;
 
         if (user && user.role === "Admin") { 
