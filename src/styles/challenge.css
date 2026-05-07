@@ -1,0 +1,108 @@
+/* ضبط الخطوط لتكون مطابقة لـ UserHome */
+.challenge-banner-style, .challenge-card-custom {
+  font-family: 'Inter', 'system-ui', -apple-system, sans-serif;
+}
+
+.challenge-banner-style {
+  background: rgba(18, 22, 32, 0.8);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 2.5rem;
+  padding: 3.5rem;
+  margin-bottom: 2.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.banner-title-style {
+  font-size: 3.5rem;
+  font-weight: 900; /* هذا هو الوزن المستخدم في الهوم */
+  color: white;
+  font-style: italic; /* الميلان المطلوب */
+  letter-spacing: -0.05em;
+  margin: 0;
+}
+
+.banner-subtitle-style {
+  color: #9ca3af;
+  text-transform: uppercase;
+  font-weight: 900;
+  letter-spacing: 0.3em;
+  font-size: 0.75rem;
+  margin-bottom: 0.5rem;
+  font-style: italic;
+}
+
+.section-header-style {
+  font-size: 1.5rem;
+  font-weight: 900;
+  font-style: italic;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.9);
+  margin-bottom: 2rem;
+  letter-spacing: -0.02em;
+}
+
+/* البطاقات */
+.challenge-card-custom {
+  background: rgba(18, 22, 32, 0.8);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 2.5rem;
+  padding: 2.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  min-height: 350px;
+}
+
+.challenge-card-custom:hover {
+  transform: translateY(-10px);
+  border-color: rgba(16, 185, 129, 0.3);
+  box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+}
+
+.challenge-card-title-style {
+  font-size: 1.8rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  font-style: italic;
+  color: white;
+  margin: 1.5rem 0 1rem 0;
+  line-height: 1;
+}
+
+.challenge-card-desc-style {
+  color: #9ca3af;
+  font-size: 0.9rem;
+  line-height: 1.6;
+  font-weight: 500;
+}
+
+.play-btn-style {
+  background: #10b981;
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border-radius: 9999px;
+  font-weight: 900;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 10px 20px rgba(16, 185, 129, 0.2);
+}
+
+.user-tag-style {
+  font-weight: 900;
+  font-style: italic;
+  font-size: 0.8rem;
+  color: #8a96a3;
+  text-transform: uppercase;
+}

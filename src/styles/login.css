@@ -1,0 +1,270 @@
+body {
+  margin: 0;
+  font-family: system-ui;
+  background: radial-gradient(circle at 80% 100%, #ff2a6d33, transparent 40%),
+              linear-gradient(#0b1020, #0b1020);
+}
+
+
+.login-page {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  height: 100vh;
+  background-image: 
+    linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px);
+  background-size: 80px 80px;
+  align-items: center; 
+}
+
+
+.left-side {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+}
+
+.left-side img {
+  height: 85vh;
+  object-fit: contain;
+}
+
+
+.login-card {
+  width: 380px;          
+  padding: 20px; /* قلل padding */
+  border-radius: 24px;
+  background: rgba(255,255,255,0.05);
+  backdrop-filter: blur(30px);
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,0.05),
+    0 20px 40px rgba(0,0,0,0.6); 
+  max-height: 480px; 
+  overflow-y: auto; 
+}
+
+
+
+.tabs {
+  display: flex;
+  background: rgba(255,255,255,0.05);
+  border-radius: 14px;
+  margin-bottom: 20px;
+}
+
+.tab {
+  flex: 1;
+  padding: 10px;
+  background: transparent;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+.tab.active {
+  background: #4b5c7a;
+  border-radius: 14px;
+}
+
+.input {
+  width: 100%;
+  margin-top: 8px;
+  padding: 11px 6px;
+  border-radius: 14px;
+  border: 1px solid rgba(255,255,255,0.06);
+  background: #12172a;
+  color: white;
+  font-size: 15px;
+  outline: none;
+  transition: 0.2s;
+}
+
+.input:focus {
+  border: 1px solid #4c8dff;
+  box-shadow: 0 0 0 2px rgba(76,141,255,0.15);
+}
+
+.input::placeholder {
+  color: rgba(255,255,255,0.35);
+}
+
+.forgot {
+  text-align: right;
+  margin-top: 8px;
+}
+
+.forgot a {
+  color: #9bb4ff;
+  font-size: 13px;
+  text-decoration: none;
+}
+
+.login-btn {
+  width: 100%;
+  margin-top: 16px;
+  padding: 10px;
+  border-radius: 14px;
+  border: none;
+  background: #1e7ad9;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.divider {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin: 30px 0 20px;
+  opacity: 0.7;
+    margin-top: 45px;
+
+}
+
+.divider::before,
+.divider::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: rgba(255,255,255,0.15);
+}
+
+.socials {
+  display: flex;
+  justify-content: center;
+  gap: 25px;
+  margin-top: 10px;
+}
+
+
+.social-btn {
+  width: 70px;
+  height: 60px;
+  border-radius: 14px;
+  border: none;
+  background: #1a1f35;
+  color: #9bb4ff;
+  font-size: 20px;
+  cursor: pointer;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.social-btn svg {
+  font-size: 34px;
+}
+
+
+.right-side {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  padding-right: 80px;
+
+}
+
+.password-field {
+  position: relative;
+}
+
+.eye-icon {
+  position: absolute;
+  right: 14px;
+  top: 65%;   
+  transform: translateY(-50%);
+  color: #9bb4ff;
+  cursor: pointer;
+  font-size: 18px;
+}
+
+.eye-icon:hover {
+  color: white;
+  transform: translateY(-50%) scale(1.1);
+}
+
+.password-rules {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px; 
+  margin-bottom: 8px; 
+}
+
+.password-rules p {
+  width: 48%; 
+  font-size: 0.7rem; 
+  margin: 0;
+}
+
+.password-rules p.valid {
+  color: green;
+  font-weight: bold;
+}
+
+.error-text {
+  color: #e74c3c;
+  font-size: 0.8rem;
+  margin-top: 4px;
+}
+
+.login-btn:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+
+.otp-container {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin-bottom: 25px;
+}
+
+.otp-input {
+  width: 55px;
+  height: 60px;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.05);
+  color: white;
+  text-align: center;
+  font-size: 24px;
+  font-weight: bold;
+  transition: all 0.3s ease;
+}
+
+.otp-input:focus {
+  border-color: #4fa3f7;
+  outline: none;
+  background: rgba(255, 255, 255, 0.1);
+  box-shadow: 0 0 10px rgba(79, 163, 247, 0.3);
+}
+
+.resend-btn {
+  background-color: transparent !important;
+  border: 1px solid #555 !important;
+  color: #ccc !important;
+}
+
+.resend-btn:hover {
+  background-color: rgba(255,255,255,0.1) !important;
+}
+
+.otp-main-title {
+  color: white;
+  font-size: 28px; 
+  text-align: center;
+  margin-bottom: 10px;
+  width: 100%;
+}
+
+.otp-main-subtitle {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 14px;
+  text-align: center; 
+  margin-bottom: 30px;
+  width: 100%;
+}
+
