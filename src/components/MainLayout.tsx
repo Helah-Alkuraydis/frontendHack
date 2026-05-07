@@ -32,7 +32,7 @@ const MainLayout = ({ children, activePage, headerActions, highlightedId ,forceH
     try {
       const token = localStorage.getItem('token');
       if (!token) return;
-      const response = await axios.get(`${BASE_URL}/api/auth/me`, {
+      const response = await axios.get(`${BASE_URL}/auth/me`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setUser(response.data);
@@ -45,7 +45,7 @@ const MainLayout = ({ children, activePage, headerActions, highlightedId ,forceH
     try {
       const token = localStorage.getItem('token');
       if (!token) return;
-      const res = await axios.get(`${BASE_URL}/api/social/notifications`, {
+      const res = await axios.get(`${BASE_URL}/social/notifications`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setHasUnread(res.data.some((n: any) => !n.isRead));
@@ -57,7 +57,7 @@ const MainLayout = ({ children, activePage, headerActions, highlightedId ,forceH
     try {
       const token = localStorage.getItem('token');
       if (!token) return;
-      const res = await axios.get(`${BASE_URL}/api/achievements/unseen`, {
+      const res = await axios.get(`${BASE_URL}/achievements/unseen`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       if (res.data.success && res.data.data.length > 0) {

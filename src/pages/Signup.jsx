@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import "../styles/login.css"; 
-
+import { BASE_URL } from '../api/auth';
 const Signup = () => {
     const [formData, setFormData] = useState({ username: '', email: '', password: '' });
     const navigate = useNavigate();
@@ -9,7 +9,7 @@ const Signup = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await fetch('https://hackhero-tpme.onrender.com/api/auth/signup', {
+            const response = await fetch(`${BASE_URL}/auth/signup`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(formData)
