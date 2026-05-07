@@ -2,7 +2,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import axios from 'axios';
 import { Timer, Trophy, Shield, Zap, Lock, ChevronRight, Search, Cpu, ShieldAlert, Globe, ShieldCheck, Lightbulb, ArrowRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { BASE_URL } from '../../api/auth.js';
+import { BASE_URL } from '../../../api/auth.js';
 
 const CyberEscapeRoom = ({ onFinish, gameId, sessionId, initialLevel, mode }) => { 
   const [scenario, setScenario] = useState(null);
