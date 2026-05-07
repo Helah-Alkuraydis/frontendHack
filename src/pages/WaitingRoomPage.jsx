@@ -8,7 +8,7 @@ import { socket } from "../socket";
 import Swal from "sweetalert2";
 import GameOverOverlay from "../components/GameOverOverlay";
 import MissionTour from '../components/games/EscapeRoom/MissionTour';
-
+import { BASE_URL } from "../api/auth.js";
 
 
 // 1. أضفنا players هنا في الـ Props
@@ -160,7 +160,7 @@ const WaitingRoomPage = () => {
     try {
       const token = localStorage.getItem("token");
       const res = await axios.get(
-        `http://localhost:5000/api/multiplayer/lobby/${sessionId}`,
+        `${BASE_URL}/multiplayer/lobby/${sessionId}`,
         { headers: { Authorization: `Bearer ${token}` } },
       );
       const ESCAPE_ROOM_ID = "69cee7269c67c2d9c0ae209f";
@@ -325,7 +325,7 @@ useEffect(() => {
     const fetchRecentTeams = async () => {
         try {
             const token = localStorage.getItem("token");
-            const res = await axios.get("http://localhost:5000/api/teams/my-teams", {
+            const res = await axios.get(`${BASE_URL}/teams/my-teams`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             
@@ -373,7 +373,7 @@ useEffect(() => {
 
             // 1. نجيب بيانات الغرفة "طازجة" الآن عشان نضمن وجود الـ dbSessionId
             const res = await axios.get(
-              `http://localhost:5000/api/multiplayer/lobby/${sessionId}`,
+              `${BASE_URL}/multiplayer/lobby/${sessionId}`,
               { headers: { Authorization: `Bearer ${token}` } },
             );
 
@@ -390,7 +390,7 @@ useEffect(() => {
 
               // 2. إرسال النقاط للباك أند (الراوت اللي تبينه)
               await axios.post(
-                "http://localhost:5000/api/games/submit",
+                `${BASE_URL}/games/submit`,
                 {
                   sessionId: realDbSessionId,
                   score: 50,
@@ -404,7 +404,7 @@ useEffect(() => {
               // 3. رفع المستوى
               if (freshLobbyData.gameId) {
                 await axios.post(
-                  "http://localhost:5000/api/games/level/up",
+                  `${BASE_URL}/games/level/up`,
                   { gameId: freshLobbyData.gameId, status: "win" },
                   { headers: { Authorization: `Bearer ${token}` } },
                 );
@@ -466,7 +466,7 @@ const inviteFullTeam = async (teamId) => {
         setInvitedTeamIds((prev) => [...prev, teamId]);
 
         const token = localStorage.getItem("token");
-        const res = await axios.post("http://localhost:5000/api/teams/invite-team", 
+        const res = await axios.post(`${BASE_URL}/teams/invite-team`, 
             { teamId, sessionId: sessionId },
             { headers: { Authorization: `Bearer ${token}` } }
         );
@@ -511,7 +511,7 @@ const handleSearchUsers = async (query) => {
       console.log("🚀 [DEBUG] Sending Level to Backend:", currentLevel);
 
       const res = await axios.get(
-        `http://localhost:5000/api/auth/users?search=${query}&level=${currentLevel}&gameId=${lobbyRef.current?.gameId}`,
+        `${BASE_URL}/auth/users?search=${query}&level=${currentLevel}&gameId=${lobbyRef.current?.gameId}`,
         { headers: { Authorization: `Bearer ${token}` } }
       );
 
@@ -524,7 +524,7 @@ const handleSearchUsers = async (query) => {
       try {
         const token = localStorage.getItem("token");
         const res = await axios.get(
-          "http://localhost:5000/api/multiplayer/recent-players",
+          `${BASE_URL}/multiplayer/recent-players`,
           {
             headers: { Authorization: `Bearer ${token}` },
           },
@@ -675,7 +675,7 @@ const handleSearchUsers = async (query) => {
     const fetchUserData = async () => {
       try {
         const token = localStorage.getItem("token");
-        const res = await axios.get("http://localhost:5000/api/auth/me", {
+        const res = await axios.get(`${BASE_URL}/auth/me`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         setPlayers([
@@ -698,7 +698,7 @@ const handleSearchUsers = async (query) => {
       try {
         const token = localStorage.getItem("token");
         const res = await axios.get(
-          "http://localhost:5000/api/social/friends",
+          `${BASE_URL}/social/friends`,
           {
             headers: { Authorization: `Bearer ${token}` },
           },
@@ -718,7 +718,7 @@ const handleSearchUsers = async (query) => {
 
       const token = localStorage.getItem("token");
       const response = await axios.post(
-        "http://localhost:5000/api/multiplayer/invite",
+        `${BASE_URL}/multiplayer/invite`,
         {
           friendId,
           sessionId,
@@ -774,7 +774,7 @@ const handleSearchUsers = async (query) => {
       const token = localStorage.getItem("token");
       // نرسل للباك أند إن هذا اللاعب صار جاهز (بنسوي الـ API حقها بعدين)
       await axios.put(
-        `http://localhost:5000/api/multiplayer/ready/${sessionId}`,
+        `${BASE_URL}/multiplayer/ready/${sessionId}`,
         {},
         {
           headers: { Authorization: `Bearer ${token}` },
@@ -800,7 +800,7 @@ const handleSearchUsers = async (query) => {
 
       // ننادي الباك أند فقط، وهو المسؤول عن تبليغ السوكيت بالترتيب الصح
       await axios.delete(
-        `http://localhost:5000/api/multiplayer/lobby/leave/${sessionId}`,
+        `${BASE_URL}/multiplayer/lobby/leave/${sessionId}`,
         {
           headers: { Authorization: `Bearer ${token}` },
         },

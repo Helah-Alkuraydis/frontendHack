@@ -11,6 +11,7 @@ import MainLayout from "../components/MainLayout";
 import Swal from "sweetalert2";
 import { ArrowLeft, Loader2 } from "lucide-react";
 import confetti from "canvas-confetti";
+import { BASE_URL } from "../api/auth.js";
 
 const ChallengeSolvePage = () => {
   const { id } = useParams();
@@ -57,7 +58,7 @@ const ChallengeSolvePage = () => {
       try {
         const token = localStorage.getItem("token");
         const res = await axios.get(
-          `http://localhost:5000/api/challenges/public/${id}`,
+          `${BASE_URL}/challenges/public/${id}`,
           {
             headers: { Authorization: `Bearer ${token}` },
           },
@@ -212,7 +213,7 @@ const ChallengeSolvePage = () => {
     try {
       const token = localStorage.getItem("token");
       const res = await axios.post(
-        `http://localhost:5000/api/challenges/public/solve/${id}`,
+        `${BASE_URL}/challenges/public/solve/${id}`,
         { userGuess: actionName },
         { headers: { Authorization: `Bearer ${token}` } },
       );
@@ -271,7 +272,7 @@ const ChallengeSolvePage = () => {
     try {
       const token = localStorage.getItem("token");
       const res = await axios.post(
-        `http://localhost:5000/api/challenges/public/solve/${id}`,
+        `${BASE_URL}/challenges/public/solve/${id}`,
         {
           userGuess: { selectedIds, decisions }, // نرسل كائن متكامل
           isPrivacyGame: true,
@@ -313,7 +314,7 @@ const ChallengeSolvePage = () => {
     try {
       const token = localStorage.getItem("token");
       const res = await axios.post(
-        `http://localhost:5000/api/challenges/public/solve/${id}`,
+        `${BASE_URL}/challenges/public/solve/${id}`,
         { userGuess: userAnswer, currentQuestionIndex: currentQuestionIndex },
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -412,7 +413,7 @@ const ChallengeSolvePage = () => {
 
       // 1. الطلب الوحيد للسيرفر
       const res = await axios.post(
-        `http://localhost:5000/api/challenges/public/solve/${id}`,
+        `${BASE_URL}/challenges/public/solve/${id}`,
         {
           userGuess: cleanInput,
           roomIdx: currentRoomIdx,

@@ -3,7 +3,7 @@ import { ArrowLeft, CheckCircle, AlertTriangle, ShieldCheck, Zap } from 'lucide-
 import confetti from 'canvas-confetti';
 import { getSocket } from '../../socket';
 import { useLocation } from 'react-router-dom';
-
+import { BASE_URL } from '../../api/auth.js';
 
 interface SecureCodingScenario {
     title: string;
@@ -122,7 +122,7 @@ const SecureCodingChallenge = ({ level = 1, gameId, sessionId, onFinish, mode }:
         setPhase(1);
         setSelectedLineIdx(null);
         try {
-            const response = await fetch(`http://localhost:5000/api/games/secure-coding/start?level=${localLevel}`, {
+            const response = await fetch(`${BASE_URL}/games/secure-coding/start?level=${localLevel}`, {
                 headers: { 'Authorization': `Bearer ${getToken()}` }
             });
             const data = await response.json();
@@ -169,7 +169,7 @@ const SecureCodingChallenge = ({ level = 1, gameId, sessionId, onFinish, mode }:
 
         try {
             const token = localStorage.getItem('token');
-            const response = await fetch(`http://localhost:5000/api/games/secure-coding/check`, {
+            const response = await fetch(`${BASE_URL}/games/secure-coding/check`, {
                 method: 'POST',
                 headers: { 
                     'Content-Type': 'application/json',

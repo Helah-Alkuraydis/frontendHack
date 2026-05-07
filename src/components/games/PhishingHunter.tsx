@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 import Swal from 'sweetalert2';
 import { Timer, Heart, Trash2, ShieldCheck, Mail, Archive, CornerUpLeft, MoreVertical, Star, ChevronDown, Lock, OctagonAlert, Lightbulb, Zap, Loader2 } from "lucide-react";
+import { BASE_URL } from '../../api/auth.js';
 
 interface PhishingProps {
   gameId: string;
@@ -42,7 +43,7 @@ const PhishingHunter: React.FC<PhishingProps> = ({ gameId, sessionId, initialLev
       setLoadingScenario(true);
       const token = localStorage.getItem('token');
       const currentSubject = scenario?.subject || "";
-      const res = await axios.get(`http://localhost:5000/api/games/phishing/start?t=${Date.now()}&lastSubject=${currentSubject}`, {
+      const res = await axios.get(`${BASE_URL}/games/phishing/start?t=${Date.now()}&lastSubject=${currentSubject}`, {
           headers: { Authorization: `Bearer ${token}` }
       });
       if (res.data.success && res.data.data) {

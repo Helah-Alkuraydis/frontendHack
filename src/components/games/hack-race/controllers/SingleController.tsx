@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import axios from 'axios';
 import SingleLayout from '../layouts/SingleLayout';
-
+import { BASE_URL } from "../../../../api/auth.js";
 interface HackRaceProps {
     gameId: string;
     sessionId: string;
@@ -107,7 +107,7 @@ const SingleController: React.FC<HackRaceProps> = ({
                    const token = localStorage.getItem("token");
    
                    const res = await axios.get(
-                       `http://localhost:5000/api/games/hackrace/start?level=${initialLevel}`,
+                       `${BASE_URL}/games/hackrace/start?level=${initialLevel}`,
                        { headers: { Authorization: `Bearer ${token}` } }
                    );
    
@@ -200,7 +200,7 @@ const SingleController: React.FC<HackRaceProps> = ({
             const token = localStorage.getItem("token");
 
             const res = await axios.post(
-                "http://localhost:5000/api/games/hackrace/check",
+                `${BASE_URL}/games/hackrace/check`,
                 { userAnswer, correctAnswer },
                 { headers: { Authorization: `Bearer ${token}` } }
             );
@@ -278,7 +278,7 @@ const SingleController: React.FC<HackRaceProps> = ({
         const token = localStorage.getItem("token");
 
         try {
-            await axios.post("http://localhost:5000/api/games/submit", {
+            await axios.post(`${BASE_URL}/games/submit`, {
                 sessionId: sessionId,
                 score: status === "Win" ? 25 * initialLevel : 0,
                 status: status,
@@ -288,7 +288,7 @@ const SingleController: React.FC<HackRaceProps> = ({
             });
 
             if (status === "Win") {
-                await axios.post("http://localhost:5000/api/games/level/up", {
+                await axios.post(`${BASE_URL}/games/level/up`, {
                     gameId: gameId,
                     score: 25 * initialLevel,
                     status: "Win"

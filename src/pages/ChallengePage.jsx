@@ -22,6 +22,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import Swal from "sweetalert2";
+import { BASE_URL } from "../api/auth.js";
 
 const ChallengePage = () => {
   const navigate = useNavigate();
@@ -67,7 +68,7 @@ const ChallengePage = () => {
     try {
       const token = localStorage.getItem("token");
       const res = await axios.post(
-        `http://localhost:5000/api/challenges/public/${selectedChallengeForComments._id}/comments`,
+        `${BASE_URL}/challenges/public/${selectedChallengeForComments._id}/comments`,
         { text: newComment },
         { headers: { Authorization: `Bearer ${token}` } },
       );
@@ -150,13 +151,13 @@ const ChallengePage = () => {
       setLoading(true);
       const token = localStorage.getItem("token");
       const pubRes = await axios.get(
-        "http://localhost:5000/api/challenges/public",
+        `${BASE_URL}/challenges/public`,
         {
           headers: { Authorization: `Bearer ${token}` },
         },
       );
       const myRes = await axios.get(
-        "http://localhost:5000/api/challenges/my-challenges",
+        `${BASE_URL}/challenges/my-challenges`,
         {
           headers: { Authorization: `Bearer ${token}` },
         },
@@ -209,7 +210,7 @@ const ChallengePage = () => {
       try {
         const token = localStorage.getItem("token");
         const res = await axios.get(
-          `http://localhost:5000/api/auth/users?search=${query}`,
+          `${BASE_URL}/auth/users?search=${query}`,
           {
             headers: { Authorization: `Bearer ${token}` },
           },
@@ -290,13 +291,13 @@ const ChallengePage = () => {
       // 3. إرسال البيانات للسيرفر (للجميع)
       if (editingId) {
         res = await axios.put(
-          `http://localhost:5000/api/challenges/public/${editingId}`,
+          `${BASE_URL}/challenges/public/${editingId}`,
           formData,
           { headers: { Authorization: `Bearer ${token}` } },
         );
       } else {
         res = await axios.post(
-          "http://localhost:5000/api/challenges/public",
+          `${BASE_URL}/challenges/public`,
           formData,
           { headers: { Authorization: `Bearer ${token}` } },
         );
@@ -354,7 +355,7 @@ const ChallengePage = () => {
     try {
       const token = localStorage.getItem("token");
       const res = await axios.delete(
-        `http://localhost:5000/api/challenges/public/${id}`,
+        `${BASE_URL}/challenges/public/${id}`,
         {
           headers: { Authorization: `Bearer ${token}` },
         },
@@ -384,7 +385,7 @@ const ChallengePage = () => {
       try {
         const token = localStorage.getItem("token");
         if (!token) return;
-        const res = await axios.get("http://localhost:5000/api/auth/me", {
+        const res = await axios.get(`${BASE_URL}/auth/me`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         setCurrentUser({
@@ -407,7 +408,7 @@ const ChallengePage = () => {
 
     const fetchGames = async () => {
       try {
-        const res = await axios.get("http://localhost:5000/api/games");
+        const res = await axios.get(`${BASE_URL}/games`);
         setGames(res.data.data || res.data);
       } catch (err) {
         console.error(err);
@@ -419,7 +420,7 @@ const ChallengePage = () => {
       try {
         const token = localStorage.getItem("token");
         const res = await axios.get(
-          "http://localhost:5000/api/games/user-levels",
+          `${BASE_URL}/games/user-levels`,
           {
             headers: { Authorization: `Bearer ${token}` },
           },

@@ -2,7 +2,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import axios from 'axios';
 import { Timer, Trophy, Shield, Zap, Lock, ChevronRight, Search, Cpu, ShieldAlert, Globe, ShieldCheck, Lightbulb, ArrowRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-
+import { BASE_URL } from '../../api/auth.js';
 
 const CyberEscapeRoom = ({ onFinish, gameId, sessionId, initialLevel, mode }) => { 
   const [scenario, setScenario] = useState(null);
@@ -32,7 +32,7 @@ const finalizeScenario = async () => {
   if (!currentScenarioId) return;
   try {
     const token = localStorage.getItem('token');
-    await axios.put(`http://localhost:5000/api/games/escape/use/${currentScenarioId}`, {}, {
+    await axios.put(`${BASE_URL}/games/escape/use/${currentScenarioId}`, {}, {
       headers: { Authorization: `Bearer ${token}` }
     });
     console.log("✅ Scenario marked as consumed.");
@@ -46,7 +46,7 @@ const finalizeScenario = async () => {
     try {
       setLoading(true);
       const token = localStorage.getItem('token');
-      const res = await axios.get(`http://localhost:5000/api/games/escape/start?level=${initialLevel}`, {
+      const res = await axios.get(`${BASE_URL}/games/escape/start?level=${initialLevel}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       if (res.data.success) {

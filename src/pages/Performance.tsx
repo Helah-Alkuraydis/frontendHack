@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { ArrowLeft, Loader2, Activity } from 'lucide-react';
 import MainLayout from '../components/MainLayout';
+import { BASE_URL } from '../api/auth.js';
+
 
 const Performance = () => {
   const navigate = useNavigate();
@@ -15,11 +17,11 @@ const Performance = () => {
         const token = localStorage.getItem('token');
         if (!token) return;
 
-        const userRes = await axios.get('http://localhost:5000/api/auth/me', {
+        const userRes = await axios.get(`${BASE_URL}/auth/me`, {
           headers: { Authorization: `Bearer ${token}` }
         });
         
-        const res = await axios.get(`http://localhost:5000/api/dashboard/${userRes.data._id}`, {
+        const res = await axios.get(`${BASE_URL}/dashboard/${userRes.data._id}`, {
           headers: { Authorization: `Bearer ${token}` }
         });
         

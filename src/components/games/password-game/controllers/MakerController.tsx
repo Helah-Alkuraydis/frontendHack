@@ -4,7 +4,7 @@ import Swal from 'sweetalert2';
 import MakerSingleLayout from '../layouts/MakerSingleLayout';
 import MakerMultiLayout from '../layouts/MakerMultiLayout'; // استيراد الواجهة الجديدة
 import { socket } from '../../../../socket';
-
+import  {BASE_URL} from '../../../../api/auth.js';
 interface PasswordProps {
     gameId: string;
     sessionId: string;
@@ -176,7 +176,7 @@ const MakerController: React.FC<PasswordProps> = ({ gameId, sessionId, initialLe
         setIsAiAnalyzing(true);
         try {
             const token = localStorage.getItem('token');
-            const res = await axios.post('http://localhost:5000/api/games/password/evaluate', {
+            const res = await axios.post(`${BASE_URL}/games/password/evaluate`, {
                 password, gameId, duration: 180 - timeLeft, level: initialLevel
             }, { headers: { Authorization: `Bearer ${token}` } });
 

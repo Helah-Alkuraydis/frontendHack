@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import axios from 'axios';
 import { socket } from '../../../../socket';
 import MultiLayout from '../layouts/MultiLayout';
+import { BASE_URL } from "../../../../api/auth.js";
 
 interface HackRaceProps {
     gameId: string;
@@ -79,7 +80,7 @@ const MultiController: React.FC<HackRaceProps> = ({
             if (isInitialized || !myUserId || !sessionId) return;
             try {
                 const token = localStorage.getItem("token");
-                const lobbyRes = await axios.get(`http://localhost:5000/api/multiplayer/lobby/${sessionId}`, {
+                const lobbyRes = await axios.get(`${BASE_URL}/multiplayer/lobby/${sessionId}`, {
                     headers: { Authorization: `Bearer ${token}` }
                 });
 
@@ -93,7 +94,7 @@ const MultiController: React.FC<HackRaceProps> = ({
                     isInitialized = true;
                     let finalQuestions = [];
                     try {
-                        const qRes = await axios.get(`http://localhost:5000/api/games/hackrace/start?level=${initialLevel}&count=10`, {
+                        const qRes = await axios.get(`${BASE_URL}/games/hackrace/start?level=${initialLevel}&count=10`, {
                             headers: { Authorization: `Bearer ${token}` }
                         });
                         const rawData = qRes.data.data;
@@ -216,7 +217,7 @@ const MultiController: React.FC<HackRaceProps> = ({
         const token = localStorage.getItem("token");
         try {
             // 🔥 الخطوة 1: استدعاء دالة زميلتك لإنشاء جلسة حقيقية في قاعدة البيانات أولاً
-            const startSessionRes = await axios.post("http://localhost:5000/api/games/session/start", {
+            const startSessionRes = await axios.post(`${BASE_URL}/games/session/start`, {
                 gameId: gameId // نرسل الـ ID حق اللعبة
             }, { headers: { Authorization: `Bearer ${token}` } });
 
@@ -224,7 +225,7 @@ const MultiController: React.FC<HackRaceProps> = ({
             const realDatabaseSessionId = startSessionRes.data.sessionId;
 
             // 🔥 الخطوة 2: الآن نرسل النقاط والهيستوري باستخدام الـ ID الحقيقي!
-            await axios.post("http://localhost:5000/api/games/submit", {
+            await axios.post(`${BASE_URL}/games/submit`, {
                 sessionId: realDatabaseSessionId, // 👈 السر هنا! استبدلنا رقم الغرفة بالرقم الحقيقي
                 score: status === "Win" ? 25 * initialLevel : 0,
                 status: status,
@@ -234,7 +235,7 @@ const MultiController: React.FC<HackRaceProps> = ({
 
             // تحديث الليفل في حال الفوز
             if (status === "Win") {
-                await axios.post("http://localhost:5000/api/games/level/up", {
+                await axios.post("http://localhost:5000/ap/games/level/up", {
                     gameId: gameId, score: 25 * initialLevel, status: "Win"
                 }, { headers: { Authorization: `Bearer ${token}` } });
             }

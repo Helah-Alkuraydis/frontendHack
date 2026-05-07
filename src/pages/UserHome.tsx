@@ -4,6 +4,7 @@ import axios from 'axios';
 import MainLayout from '../components/MainLayout';
 import OnboardingTour from '../OnboardingTour'; 
 import { Zap, Lock, ShieldCheck, Clock, Play, Trophy , UserX , Users} from 'lucide-react';
+import { BASE_URL } from '../api/auth.js';
 
 interface LastActivity {
   friendName: string;
@@ -30,18 +31,18 @@ const UserHome = () => {
         const token = localStorage.getItem('token');
         if (!token) return;
 
-        const userRes = await axios.get('http://localhost:5000/api/auth/me', { 
+        const userRes = await axios.get(`${BASE_URL}/auth/me`, { 
           headers: { Authorization: `Bearer ${token}` } 
         });
         setUser(userRes.data);
 
-        const lastRes = await axios.get(`http://localhost:5000/api/teams/last-played`,  {
+        const lastRes = await axios.get(`${BASE_URL}/teams/last-played`,  {
   headers: { Authorization: `Bearer ${token}` }});
       if (lastRes.data.success) {
         setLastActivity(lastRes.data.data);
       }
 
-        const dashboardRes = await axios.get(`http://localhost:5000/api/dashboard/${userRes.data._id}`, {
+        const dashboardRes = await axios.get(`${BASE_URL}/dashboard/${userRes.data._id}`, {
   headers: { Authorization: `Bearer ${token}` }
 });
 
@@ -49,7 +50,7 @@ if (dashboardRes.data.latestAchievement) {
   setLatestAchievement(dashboardRes.data.latestAchievement);
 }
 
-        const challengeRes = await axios.get('http://localhost:5000/api/challenges/weekly/progress', {
+        const challengeRes = await axios.get(`${BASE_URL}/challenges/weekly/progress`, {
           headers: { Authorization: `Bearer ${token}` }
         });
         if (challengeRes.data) {
@@ -222,7 +223,7 @@ if (dashboardRes.data.latestAchievement) {
         Weekly Challenge
     </p>
 
-    <div className="relative w-32 h-32 flex items-center justify-center relative z-10"> 
+    <div className="relative w-32 h-32 flex items-center justify-center z-10"> 
         <svg className="w-full h-full transform -rotate-90">
             <circle 
                 cx="50%" cy="50%" r="58" 

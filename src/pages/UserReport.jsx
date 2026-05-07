@@ -3,7 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import AdminLayout from '../components/AdminLayout'; 
 import { ArrowLeft, Trophy, Target, Activity, Clock, ShieldAlert, Globe, Zap, ChevronRight } from 'lucide-react';
-
+import { BASE_URL } from '../api/auth.js';
 const UserReport = () => {
     const { userId } = useParams();
     const navigate = useNavigate();
@@ -13,7 +13,7 @@ const UserReport = () => {
     useEffect(() => {
         const fetchReport = async () => {
             try {
-                const res = await axios.get(`http://localhost:5000/api/admin-task/users-management/report/${userId}`);
+                const res = await axios.get(`${BASE_URL}/admin-task/users-management/report/${userId}`);
                 setReportData(res.data);
             } catch (err) {
                 console.error("Fetch error:", err);

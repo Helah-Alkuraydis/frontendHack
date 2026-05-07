@@ -5,6 +5,7 @@ import { FiSearch, FiTrash2, FiFlag, FiFilter } from 'react-icons/fi';
 import AdminLayout from '../AdminLayout'; 
 import '../../styles/AdminStyles.css';
 import Swal from 'sweetalert2';
+import { BASE_URL } from '../../api/auth.js';
 
 const UserManagement = () => {
     const [users, setUsers] = useState([]);
@@ -20,7 +21,7 @@ const UserManagement = () => {
 
     const fetchUsers = async () => {
         try {
-            const res = await axios.get('http://localhost:5000/api/admin-task/users-management/all');
+            const res = await axios.get(`${BASE_URL}/admin-task/users-management/all`);
             setUsers(res.data);
         } catch (err) {
             console.error("فشل الاتصال بالباك إند:", err);
@@ -48,7 +49,7 @@ const UserManagement = () => {
 
     if (result.isConfirmed) {
         try {
-            await axios.delete(`http://localhost:5000/api/admin-task/users-management/delete/${id}`);
+            await axios.delete(`${BASE_URL}/admin-task/users-management/delete/${id}`);
             
             Swal.fire({
                 title: 'DELETED!',

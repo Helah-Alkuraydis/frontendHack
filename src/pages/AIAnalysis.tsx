@@ -5,6 +5,7 @@ import {
   ArrowLeft, Trophy, Zap, AlertTriangle, Lightbulb, Loader2, BrainCircuit, ChevronDown, ChevronUp
 } from 'lucide-react';
 import MainLayout from '../components/MainLayout';
+import { BASE_URL } from '../api/auth.js';
 
 const AIAnalysis = () => {
   const navigate = useNavigate();
@@ -21,12 +22,12 @@ const AIAnalysis = () => {
         const token = localStorage.getItem('token');
         if (!token) return;
 
-        const userRes = await axios.get('http://localhost:5000/api/auth/me', {
+        const userRes = await axios.get(`${BASE_URL}/auth/me`, {
           headers: { Authorization: `Bearer ${token}` }
         });
 
         const res = await axios.get(
-          `http://localhost:5000/api/dashboard/ai-analysis/${userRes.data._id}`,
+          `${BASE_URL}/dashboard/ai-analysis/${userRes.data._id}`,
           { headers: { Authorization: `Bearer ${token}` } }
         );
         console.log("AI RESPONSE:", res.data);

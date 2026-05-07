@@ -15,7 +15,7 @@ import EscapeRoleSelector from '../components/games/EscapeRoom/EscapeRoleSelecto
 import { socket } from "../socket";
 import Swal from "sweetalert2";
 import MultiplayerEscapeRoom from '../components/games/EscapeRoom/MultiplayerEscapeRoom';
-
+import { BASE_URL } from '../api/auth.js';
 
 const getLevelCategory = (level: number) => {
   if (level > 20) return { label: "MASTERED", color: "text-yellow-400" };
@@ -140,7 +140,7 @@ const PlayGame = () => {
         const token = localStorage.getItem('token');
         const { mode, initialLevel } = location.state || {}; // جلب الداتا من الـ navigate
 
-        const gamesRes = await axios.get('http://localhost:5000/api/games');
+        const gamesRes = await axios.get(`${BASE_URL}/games`);
         const currentGame = gamesRes.data.data.find((g: any) => {
           const currentSlug = g.gameName.toLowerCase().replace(/[^a-z0-9]+/g, '-');
           return g._id === stateGameId || currentSlug === gameSlug;
@@ -151,14 +151,14 @@ const PlayGame = () => {
           if (mode === 'weekly' && initialLevel) {
             setCurrentLevel(initialLevel);
           } else {
-            const res = await axios.get(`http://localhost:5000/api/games/level/${currentGame._id}`, {
+            const res = await axios.get(`${BASE_URL}/games/level/${currentGame._id}`, {
               headers: { Authorization: `Bearer ${token}` }
             });
             setCurrentLevel(res.data.level || 1);
           }
         }
 
-        const userRes = await axios.get('http://localhost:5000/api/auth/me', {
+        const userRes = await axios.get(`${BASE_URL}/auth/me`, {
           headers: { Authorization: `Bearer ${token}` }
         });
         setUserData(userRes.data);
@@ -186,7 +186,7 @@ const PlayGame = () => {
       }
 
       if (mode === 'weekly') {
-        await axios.post(`http://localhost:5000/api/challenges/weekly/${challengeId}/solve`, {
+        await axios.post(`${BASE_URL}/challenges/weekly/${challengeId}/solve`, {
           status: results.status
         }, { headers: { Authorization: `Bearer ${token}` } });
 
@@ -198,7 +198,7 @@ const PlayGame = () => {
         const validSessionId = dbSessionId || (isRoomCode ? null : sessionId);
 
         if (validSessionId) {
-            await axios.post('http://localhost:5000/api/games/submit', {
+            await axios.post(`${BASE_URL}/games/submit`, {
               sessionId: validSessionId,
               score: results.score,
               status: results.status,
@@ -212,7 +212,7 @@ const PlayGame = () => {
         }
 
         if (results.status.toLowerCase() === 'win') {
-          await axios.post('http://localhost:5000/api/games/level/up',
+          await axios.post(`${BASE_URL}/games/level/up`,
             { gameId: dbGame?._id, status: 'win' },
             { headers: { Authorization: `Bearer ${token}` } }
           );
@@ -242,7 +242,7 @@ const PlayGame = () => {
     const fetchLobbyAndRole = async () => {
       try {
         const token = localStorage.getItem("token");
-        const res = await axios.get(`http://localhost:5000/api/multiplayer/lobby/${sessionId}`, {
+        const res = await axios.get(`${BASE_URL}/multiplayer/lobby/${sessionId}`, {
           headers: { Authorization: `Bearer ${token}` }
         });
 

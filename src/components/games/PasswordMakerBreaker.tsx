@@ -8,6 +8,7 @@ import {
 import { useNavigate } from 'react-router-dom';
 import confetti from 'canvas-confetti';
 import { socket } from '../../socket'; // تأكدي من مسار ملف socket.js
+import { BASE_URL } from '../../api/auth.js';
 
 interface PasswordProps {
     gameId: string;
@@ -222,7 +223,7 @@ const PasswordMakerBreaker: React.FC<PasswordProps> = ({ gameId, sessionId, init
         setAiRecommendation("System checking protocols...");
         try {
             const token = localStorage.getItem('token');
-            const res = await axios.post('http://localhost:5000/api/games/password/evaluate', {
+            const res = await axios.post(`${BASE_URL}/games/password/evaluate`, {
                 password, gameId, duration: 180 - timeLeft, level: initialLevel
             }, { headers: { Authorization: `Bearer ${token}` } });
 
@@ -312,7 +313,7 @@ const PasswordMakerBreaker: React.FC<PasswordProps> = ({ gameId, sessionId, init
         try {
             const token = localStorage.getItem('token');
             const isTechnical = userData?.isTechnical || false;
-            const res = await axios.post('http://localhost:5000/api/games/password/init-breaker', {
+            const res = await axios.post(`${BASE_URL}/games/password/init-breaker`, {
                 gameId,
                 level: initialLevel,
                 isTechnical,
@@ -346,7 +347,7 @@ const PasswordMakerBreaker: React.FC<PasswordProps> = ({ gameId, sessionId, init
         setIsChecking(true);
         try {
             const token = localStorage.getItem('token');
-            const res = await axios.post('http://localhost:5000/api/games/password/verify-breaker', {
+            const res = await axios.post(`${BASE_URL}/games/password/verify-breaker`, {
                 challengeId, // هذا من الـ state الحالي
                 userGuess: breakerInput,
                 gameId,

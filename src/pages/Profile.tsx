@@ -4,6 +4,8 @@ import Swal from 'sweetalert2';
 import MainLayout from '../components/MainLayout';
 import { User, Mail, Calendar, Globe, Shield, UserCircle, Save, Eye, CheckCircle2 } from 'lucide-react';
 import { socket } from "../socket";
+import { BASE_URL } from '../api/auth.js';
+
 const SAUDI_REGIONS = [
   "Riyadh", "Makkah", "Madinah", "Eastern Province", "Qassim", 
   "Asir", "Tabuk", "Hail", "Northern Borders", "Jazan", 
@@ -33,7 +35,7 @@ const Profile = () => {
     const fetchProfile = async () => {
       try {
         const token = localStorage.getItem('token');
-        const res = await axios.get('http://localhost:5000/api/auth/me', {
+        const res = await axios.get(`${BASE_URL}/auth/me`, {
           headers: { Authorization: `Bearer ${token}` }
         });
         
@@ -58,7 +60,7 @@ const Profile = () => {
     try {
       setSaving(true);
       const token = localStorage.getItem('token');
-      const res = await axios.put('http://localhost:5000/api/auth/update-profile', formData, {
+      const res = await axios.put(`${BASE_URL}/auth/update-profile`, formData, {
         headers: { Authorization: `Bearer ${token}` }
       });
 

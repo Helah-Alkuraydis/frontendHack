@@ -5,6 +5,7 @@ import confetti from 'canvas-confetti';
 import { Loader2 } from 'lucide-react';
 import { socket } from '../../../../socket'; // تأكدي من مسار السوكيت
 import BreakerLayout from '../layouts/BreakerLayout'; // تأكدي من مسار واجهة البريكر
+import { BASE_URL } from '../../../../api/auth.js';
 
 interface PasswordProps {
     gameId: string;
@@ -91,7 +92,7 @@ const BreakerController: React.FC<PasswordProps> = ({ gameId, sessionId, initial
                 try {
                     const token = localStorage.getItem('token');
                     const isTechnical = userData?.isTechnical || false;
-                    const res = await axios.post('http://localhost:5000/api/games/password/init-breaker', {
+                    const res = await axios.post(`${BASE_URL}/games/password/init-breaker`, {
                         gameId, level: initialLevel, isTechnical, excludeIds: []
                     }, { headers: { Authorization: `Bearer ${token}` } });
 
@@ -177,7 +178,7 @@ const BreakerController: React.FC<PasswordProps> = ({ gameId, sessionId, initial
             } else {
                 // فحص عبر الداتابيز (سنقل بلاير)
                 const token = localStorage.getItem('token');
-                const res = await axios.post('http://localhost:5000/api/games/password/verify-breaker', {
+                const res = await axios.post(`${BASE_URL}/games/password/verify-breaker`, {
                     challengeId, userGuess: breakerInput, gameId, duration: 180 - timeLeft
                 }, { headers: { Authorization: `Bearer ${token}` } });
                 

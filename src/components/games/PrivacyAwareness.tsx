@@ -5,7 +5,7 @@ import {
   ShieldCheck, Lock, Info, ChevronRight, LayoutDashboard,
   Trophy, LogOut, RotateCcw, Clock, Target, Activity, Loader2
 } from 'lucide-react';
-
+import { BASE_URL } from '../../api/auth.js';
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 
@@ -30,7 +30,7 @@ const fetchAIScenario = async () => {
   try {
     const token = localStorage.getItem('token'); 
     const response = await axios.get(
-      `http://localhost:5000/api/games/privacy/start?level=${initialLevel || 1}`, 
+      `${BASE_URL}/games/privacy/start?level=${initialLevel || 1}`, 
       { headers: { Authorization: `Bearer ${token}` } } 
     );
     

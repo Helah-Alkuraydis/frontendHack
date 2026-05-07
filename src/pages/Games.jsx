@@ -9,6 +9,7 @@ import {
 import MainLayout from "../components/MainLayout";
 import Swal from "sweetalert2";
 import confetti from "canvas-confetti";
+import { BASE_URL } from '../api/auth.js';
 
 const getLevelInfo = (level) => {
   if (level > 20) return { label: "MASTERED", color: "#EAB308", bonus: 1000 };
@@ -61,7 +62,7 @@ const Games = () => {
     const fetchFriends = async () => {
       try {
         const token = localStorage.getItem("token");
-        const res = await axios.get("http://localhost:5000/api/social/friends", {
+        const res = await axios.get(`${BASE_URL}/social/friends`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         setRealFriends(res.data);
@@ -75,7 +76,7 @@ const Games = () => {
     const fetchWeekly = async () => {
       try {
         const token = localStorage.getItem("token");
-        const res = await axios.get("http://localhost:5000/api/challenges/weekly", {
+        const res = await axios.get(`${BASE_URL}/challenges/weekly`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         setWeeklyChallenge(res.data);
@@ -143,14 +144,14 @@ const Games = () => {
           return;
         }
         const userResponse = await axios.get(
-          "http://localhost:5000/api/auth/me",
+          `${BASE_URL}/auth/me`,
           {
             headers: { Authorization: `Bearer ${token}` },
           },
         );
         setUser(userResponse.data);
         const gamesResponse = await axios.get(
-          "http://localhost:5000/api/games",
+          `${BASE_URL}/games`,
         );
         let gamesData = gamesResponse.data.data;
 
@@ -158,7 +159,7 @@ const Games = () => {
           gamesData.map(async (game) => {
             try {
               const lvlRes = await axios.get(
-                `http://localhost:5000/api/games/level/${game._id}`,
+                `${BASE_URL}/games/level/${game._id}`,
                 {
                   headers: { Authorization: `Bearer ${token}` },
                 },
@@ -260,7 +261,7 @@ const Games = () => {
       }
 
       const response = await axios.post(
-        "http://localhost:5000/api/games/session/start",
+        `${BASE_URL}/games/session/start`,
         { gameId: selectedGame._id },
         { headers: { Authorization: `Bearer ${token}` } },
       );
@@ -357,7 +358,7 @@ const Games = () => {
       try {
         const token = localStorage.getItem("token");
         const res = await axios.get(
-          "http://localhost:5000/api/challenges/weekly/progress",
+          `${BASE_URL}/challenges/weekly/progress`,
           {
             headers: { Authorization: `Bearer ${token}` },
           },
@@ -394,7 +395,7 @@ const Games = () => {
       const token = localStorage.getItem("token");
 
       const res = await axios.post(
-        "http://localhost:5000/api/multiplayer/create",
+        `${BASE_URL}/multiplayer/create`,
         {
           gameId: selectedGame._id,
           hostRole: role,

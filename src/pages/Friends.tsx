@@ -5,6 +5,7 @@ import { Users, Search, UserPlus, X, Filter, Loader2, Zap, Trophy, ShieldAlert, 
 import MainLayout from '../components/MainLayout';
 import Swal from 'sweetalert2';
 import { socket } from "../socket"; 
+import { BASE_URL } from '../api/auth.js';
 
 const Friends = () => {
   const [activeTab, setActiveTab] = useState('Friends'); 
@@ -123,12 +124,12 @@ const Friends = () => {
     setLoading(true);
     try {
       if (activeTab === 'Friends') {
-        const res = await axios.get('http://localhost:5000/api/social/friends', {
+        const res = await axios.get(`${BASE_URL}/social/friends`, {
           headers: { Authorization: `Bearer ${token}` }
         });
         setFriends(res.data);
       } else {
-        const res = await axios.get('http://localhost:5000/api/teams/my-teams', {
+        const res = await axios.get(`${BASE_URL}/teams/my-teams`, {
           headers: { Authorization: `Bearer ${token}` }
         });
         setTeams(res.data.data);
@@ -140,7 +141,7 @@ const Friends = () => {
 
   const sendFriendRequest = async (targetUser: any) => {
     try {
-      await axios.post('http://localhost:5000/api/social/friends/request', 
+      await axios.post(`${BASE_URL}/social/friends/request`, 
         { friendId: targetUser._id }, 
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -167,7 +168,7 @@ const Friends = () => {
     if (query.length < 2) return setSearchResults([]);
     setSearchLoading(true);
     try {
-      const res = await axios.get(`http://localhost:5000/api/auth/users?search=${query}`, {
+      const res = await axios.get(`${BASE_URL}/auth/users?search=${query}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setSearchResults(res.data);
@@ -184,7 +185,7 @@ const Friends = () => {
     });
     if (result.isConfirmed) {
       try {
-        await axios.delete(`http://localhost:5000/api/social/friends/${friendshipId}`, {
+        await axios.delete(`${BASE_URL}/social/friends/${friendshipId}`, {
           headers: { Authorization: `Bearer ${token}` }
         });
         setFriends(prev => prev.filter(f => f.friendshipId !== friendshipId));

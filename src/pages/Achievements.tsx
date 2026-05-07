@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import MainLayout from "../components/MainLayout";
 import AchievementCard from "../components/AchievementCard";
+import { BASE_URL } from "../api/auth.js";
 
 interface Achievement {
   _id: string;
@@ -28,18 +29,18 @@ const Achievements = () => {
         const headers = { Authorization: `Bearer ${token}` };
 
         // 1. جلب بيانات المستخدم
-        const userRes = await axios.get("http://localhost:5000/api/auth/me", { headers });
+        const userRes = await axios.get(`${BASE_URL}/auth/me`, { headers });
         setIsTechnical(userRes.data.isTechnical ?? false);
 
         // 2. التحقق من وجود إنجازات جديدة (لعرض النافذة المنبثقة)
-        const unseenRes = await axios.get("http://localhost:5000/api/achievements/unseen", { headers });
+        const unseenRes = await axios.get(`${BASE_URL}/achievements/unseen`, { headers });
         if (unseenRes.data.success && unseenRes.data.data.length > 0) {
           setNewAchievements(unseenRes.data.data);
           setShowModal(true); // إظهار النافذة
         }
 
         // 3. جلب كافة الإنجازات لعرضها في الصفحة
-        const response = await axios.get("http://localhost:5000/api/achievements", { headers });
+        const response = await axios.get(`${BASE_URL}/achievements`, { headers });
         if (response.data.success) {
           setAchievements(response.data.data);
         }
@@ -60,7 +61,7 @@ const Achievements = () => {
       setHideGlowNow(true); // 👈 إطفاء النور فوراً عن طريق تغيير الـ State
 
       const token = localStorage.getItem("token");
-      await axios.put("http://localhost:5000/api/achievements/mark-seen", {}, {
+      await axios.put(`${BASE_URL}/achievements/mark-seen`, {}, {
         headers: { Authorization: `Bearer ${token}` }
       });
     } catch (err) {

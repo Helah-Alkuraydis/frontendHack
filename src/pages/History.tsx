@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { ArrowLeft, Star, Loader2, History as HistoryIcon, Filter, ChevronDown } from 'lucide-react';
 import MainLayout from '../components/MainLayout';
-
+import { BASE_URL } from '../api/auth.js';
 const History = () => {
   const navigate = useNavigate();
   const [history, setHistory] = useState<any[]>([]);
@@ -49,12 +49,12 @@ const sortedHistory = useMemo(() => {
         const token = localStorage.getItem('token');
         if (!token) return;
 
-        const userRes = await axios.get('http://localhost:5000/api/auth/me', {
+        const userRes = await axios.get(`${BASE_URL}/auth/me`, {
           headers: { Authorization: `Bearer ${token}` }
         });
         
         const myId = userRes.data._id;
-        const res = await axios.get(`http://localhost:5000/api/dashboard/${myId}`, {
+        const res = await axios.get(`${BASE_URL}/dashboard/${myId}`, {
           headers: { Authorization: `Bearer ${token}` }
         });
         
