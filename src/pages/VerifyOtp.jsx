@@ -48,7 +48,7 @@ function VerifyOtpPage() {
     try {
       // التعديل هنا: استخدام الرابط المرفوع بدلاً من localhost
       const res = await axios.post(
-        `${BASE_URL}/verify-email`, 
+        `${BASE_URL}/auth/verify-email`, 
         { email, otp: otpString, type }
       );
 
@@ -93,7 +93,7 @@ function VerifyOtpPage() {
   const handleResend = async () => {
     try {
       // التعديل هنا: استخدام الرابط المرفوع
-      await axios.post(`${BASE_URL}/resend-otp`, { email });
+      await axios.post(`${BASE_URL}/auth/resend-otp`, { email });
       Swal.fire({
         icon: "success",
         title: "OTP Request Sent 📩",
