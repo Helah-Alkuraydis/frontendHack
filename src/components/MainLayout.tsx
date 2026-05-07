@@ -32,7 +32,7 @@ const MainLayout = ({ children, activePage, headerActions, highlightedId ,forceH
     try {
       const token = localStorage.getItem('token');
       if (!token) return;
-      const response = await axios.get(`${BASE_URL}/auth/me`, {
+      const response = await axios.get("https://hackhero-api.onrender.com/api/auth/me", {
         headers: { Authorization: `Bearer ${token}` }
       });
       setUser(response.data);
