@@ -9,6 +9,7 @@ import {
 // @ts-ignore
 import '../styles/AdminStyles.css';
 import NotificationsModal from './NotificationsModal'; 
+import { BASE_URL } from '../api/auth.js';
 
 interface AdminLayoutProps {
   children: ReactNode;
@@ -26,7 +27,7 @@ const AdminLayout = ({ children, activePage }: AdminLayoutProps) => {
     try {
       const token = localStorage.getItem('token');
       if (!token) return;
-      const res = await axios.get('http://localhost:5000/api/auth/me', {
+      const res = await axios.get(`${BASE_URL}/api/auth/me`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setUser(res.data);
@@ -37,7 +38,7 @@ const AdminLayout = ({ children, activePage }: AdminLayoutProps) => {
     try {
       const token = localStorage.getItem('token');
       if (!token) return;
-      const res = await axios.get('http://localhost:5000/api/social/notifications', {
+      const res = await axios.get(`${BASE_URL}/api/social/notifications`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setHasUnread(res.data.some((n: any) => !n.isRead));

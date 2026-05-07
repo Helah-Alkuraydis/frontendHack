@@ -10,6 +10,8 @@ import {
 import NotificationsModal from './NotificationsModal';
 import { socket } from '../socket';
 import Swal from "sweetalert2";
+import { BASE_URL } from '../api/auth.js';
+
 
 interface MainLayoutProps {
   children: ReactNode;
@@ -30,7 +32,7 @@ const MainLayout = ({ children, activePage, headerActions, highlightedId ,forceH
     try {
       const token = localStorage.getItem('token');
       if (!token) return;
-      const response = await axios.get('http://localhost:5000/api/auth/me', {
+      const response = await axios.get(`${BASE_URL}/api/auth/me`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setUser(response.data);
@@ -43,7 +45,7 @@ const MainLayout = ({ children, activePage, headerActions, highlightedId ,forceH
     try {
       const token = localStorage.getItem('token');
       if (!token) return;
-      const res = await axios.get('http://localhost:5000/api/social/notifications', {
+      const res = await axios.get(`${BASE_URL}/api/social/notifications`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setHasUnread(res.data.some((n: any) => !n.isRead));
@@ -55,7 +57,7 @@ const MainLayout = ({ children, activePage, headerActions, highlightedId ,forceH
     try {
       const token = localStorage.getItem('token');
       if (!token) return;
-      const res = await axios.get('http://localhost:5000/api/achievements/unseen', {
+      const res = await axios.get(`${BASE_URL}/api/achievements/unseen`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       if (res.data.success && res.data.data.length > 0) {
