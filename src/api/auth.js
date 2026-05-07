@@ -11,6 +11,7 @@ export const loginUser = async (data) => {
   return res.json();
 };
 
+
 export const registerUser = async (data) => {
   const res = await fetch(`${BASE_URL}/signup`, {
     method: "POST",
