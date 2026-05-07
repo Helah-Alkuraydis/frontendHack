@@ -4,9 +4,8 @@ import Swal from "sweetalert2";
 import axios from "axios";
 import secureImg from "../assets/images/secure.png";
 import "../styles/login.css";
-
+import { BASE_URL } from "../api/auth.js";
 // تعيين رابط السيرفر المرفوع لضمان الاتصال
-const API_BASE_URL = "https://hackhero-tpme.onrender.com/api/auth";
 
 function VerifyOtpPage() {
   const [otp, setOtp] = useState(new Array(4).fill(""));
@@ -49,7 +48,7 @@ function VerifyOtpPage() {
     try {
       // التعديل هنا: استخدام الرابط المرفوع بدلاً من localhost
       const res = await axios.post(
-        `${API_BASE_URL}/verify-email`, 
+        `${BASE_URL}/verify-email`, 
         { email, otp: otpString, type }
       );
 
@@ -94,7 +93,7 @@ function VerifyOtpPage() {
   const handleResend = async () => {
     try {
       // التعديل هنا: استخدام الرابط المرفوع
-      await axios.post(`${API_BASE_URL}/resend-otp`, { email });
+      await axios.post(`${BASE_URL}/resend-otp`, { email });
       Swal.fire({
         icon: "success",
         title: "OTP Request Sent 📩",
