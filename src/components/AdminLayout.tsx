@@ -27,7 +27,7 @@ const AdminLayout = ({ children, activePage }: AdminLayoutProps) => {
     try {
       const token = localStorage.getItem('token');
       if (!token) return;
-      const res = await axios.get(`${BASE_URL}/api/auth/me`, {
+      const res = await axios.get(`${BASE_URL}/auth/me`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setUser(res.data);
@@ -38,7 +38,7 @@ const AdminLayout = ({ children, activePage }: AdminLayoutProps) => {
     try {
       const token = localStorage.getItem('token');
       if (!token) return;
-      const res = await axios.get(`${BASE_URL}/api/social/notifications`, {
+      const res = await axios.get(`${BASE_URL}/social/notifications`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setHasUnread(res.data.some((n: any) => !n.isRead));
