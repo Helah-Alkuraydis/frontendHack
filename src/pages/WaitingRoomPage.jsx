@@ -678,6 +678,7 @@ const handleSearchUsers = async (query) => {
         const res = await axios.get(`${BASE_URL}/auth/me`, {
           headers: { Authorization: `Bearer ${token}` },
         });
+        
         setPlayers([
           {
             id: res.data._id,
