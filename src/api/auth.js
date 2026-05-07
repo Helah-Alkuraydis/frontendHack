@@ -1,4 +1,4 @@
-const BASE_URL = "https://hackhero-api.onrender.com";
+const BASE_URL = "https://hackhero-api.onrender.com/api";
 export const loginUser = async (data) => {
   const res = await fetch(`${BASE_URL}/login`, {
     method: "POST",
