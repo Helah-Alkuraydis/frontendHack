@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { User, Mail, MapPin, Calendar, Save, ShieldCheck, Image as ImageIcon, ChevronDown } from 'lucide-react';
 import AdminLayout from '../components/AdminLayout';
+import { BASE_URL } from '../api/auth.js';
 
 const AdminProfile = () => {
     const [profile, setProfile] = useState({
@@ -25,7 +26,7 @@ const AdminProfile = () => {
         const fetchProfile = async () => {
             try {
                 const token = localStorage.getItem('token');
-                const res = await axios.get('http://localhost:5000/api/auth/me', {
+                const res = await axios.get(`${BASE_URL}/auth/me`, {
                     headers: { Authorization: `Bearer ${token}` }
                 });
                 
@@ -62,7 +63,7 @@ const AdminProfile = () => {
         try {
             const token = localStorage.getItem('token');
             // إرسال البيانات الجديدة للباك إند
-            await axios.put('http://localhost:5000/api/auth/profile', 
+            await axios.put(`${BASE_URL}/auth/profile`, 
                 {
                     name: profile.name,
                     region: profile.region,

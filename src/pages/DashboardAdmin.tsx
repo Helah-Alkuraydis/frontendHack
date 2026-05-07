@@ -5,6 +5,7 @@ import AdminLayout from '../components/AdminLayout';
 import AnalyticsTab from './AnalyticsTab'; 
 import LeaderboardTab from './LeaderboardTab';
 import { getSocket } from '..//socket'; 
+import { BASE_URL } from '../api/auth.js';
 
 const DashboardAdmin = () => {
     const [activeTab, setActiveTab] = useState('overview');
@@ -25,7 +26,7 @@ const DashboardAdmin = () => {
         const fetchDashboardStats = async () => {
             try {
                 const token = localStorage.getItem('token');
-                const res = await axios.get('http://localhost:5000/api/admin/dashboard-stats', {
+                const res = await axios.get(`${BASE_URL}/admin/dashboard-stats`, {
                     headers: { Authorization: `Bearer ${token}` }
                 });
                 

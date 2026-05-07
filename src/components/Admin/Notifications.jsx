@@ -33,7 +33,7 @@ useEffect(() => {
 
 const handleSearch = async (query) => {
     try {
-        const res = await axios.get(`http://localhost:5000/api/admin-task/users/search?q=${query}`);
+        const res = await axios.get(`${BASE_URL}/admin-task/users/search?q=${query}`);
         setSearchResults(res.data);
     } catch (err) {
         console.error("Search failed");
@@ -46,7 +46,7 @@ const handleSearch = async (query) => {
 
     const fetchNotifications = async () => {
         try {
-            const res = await axios.get('http://localhost:5000/api/admin-task/notifications/history');
+            const res = await axios.get(`${BASE_URL}/admin-task/notifications/history`);
             setNotifications(res.data);
         } catch (err) {
             console.error("Error fetching notifications");
@@ -68,7 +68,7 @@ const handleSearch = async (query) => {
     }
     
     try {
-        await axios.post('http://localhost:5000/api/admin-task/notifications/send', {
+        await axios.post(`${BASE_URL}/admin-task/notifications/send`, {
             target: formData.target,
             content: formData.content,
             specificUser: formData.specificUser, 

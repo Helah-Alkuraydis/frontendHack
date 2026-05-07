@@ -7,6 +7,7 @@ import {
   Users, BarChart3, ChevronDown, Flame, X, Shield, Gamepad2, Coins, Zap, Repeat, Type, Pencil 
 } from 'lucide-react';
 import Swal from 'sweetalert2';
+import { BASE_URL } from '../api/auth.js';
 
 interface WeeklyChallenge {
     _id: string;
@@ -48,10 +49,10 @@ const AdminWeeklyChallenges = () => {
     const fetchData = async () => {
         try {
             const [resStats, resGames] = await Promise.all([
-                axios.get(`http://localhost:5000/api/challenges/admin/stats?search=${search}`, {
+                axios.get(`${BASE_URL}/challenges/admin/stats?search=${search}`, {
                     headers: { Authorization: `Bearer ${token}` }
                 }),
-                axios.get('http://localhost:5000/api/games', {
+                axios.get(`${BASE_URL}/games`, {
                     headers: { Authorization: `Bearer ${token}` }
                 })
             ]);
@@ -100,8 +101,8 @@ const AdminWeeklyChallenges = () => {
         e.preventDefault();
         try {
             const url = view === 'edit' 
-                ? `http://localhost:5000/api/challenges/weekly/${editingId}` 
-    : 'http://localhost:5000/api/challenges/weekly';
+                ? `${BASE_URL}/challenges/weekly/${editingId}` 
+    : `${BASE_URL}/challenges/weekly`;
             
             const method = view === 'edit' ? axios.put : axios.post;
 

@@ -5,6 +5,7 @@ import axios from 'axios';
 import { X, Check, BellOff, Loader2, UserPlus, Gamepad2, ShieldAlert } from 'lucide-react';
 import Swal from 'sweetalert2';
 import { socket } from '../socket';
+import { BASE_URL } from '../api/auth.js';
 
 const NotificationsModal = ({ isOpen, onClose }: any) => {
   const navigate = useNavigate();
@@ -25,7 +26,7 @@ const NotificationsModal = ({ isOpen, onClose }: any) => {
 
     try {
       await Promise.all(unreadIds.map(id =>
-        axios.put(`http://localhost:5000/api/social/notifications/${id}/read`, {}, {
+        axios.put(`${BASE_URL}/social/notifications/${id}/read`, {}, {
           headers: { Authorization: `Bearer ${token}` }
         })
       ));
@@ -37,7 +38,7 @@ const NotificationsModal = ({ isOpen, onClose }: any) => {
   const fetchNotifications = async () => {
     try {
       setLoading(true);
-      const res = await axios.get('http://localhost:5000/api/social/notifications', {
+      const res = await axios.get(`${BASE_URL}/social/notifications`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setNotifications(res.data);
@@ -55,7 +56,7 @@ const NotificationsModal = ({ isOpen, onClose }: any) => {
 
   const markAsRead = async (notifId: string) => {
     try {
-      await axios.put(`http://localhost:5000/api/social/notifications/${notifId}/read`, {}, {
+      await axios.put(`${BASE_URL}/social/notifications/${notifId}/read`, {}, {
         headers: { Authorization: `Bearer ${token}` }
       });
     } catch (err) {
@@ -68,7 +69,7 @@ const NotificationsModal = ({ isOpen, onClose }: any) => {
       const requestId = notif.friendshipId;
       if (!requestId) return;
 
-      await axios.put(`http://localhost:5000/api/social/friends/accept/${requestId}`, {}, {
+      await axios.put(`${BASE_URL}/social/friends/accept/${requestId}`, {}, {
         headers: { Authorization: `Bearer ${token}` }
       });
 
@@ -94,7 +95,7 @@ const NotificationsModal = ({ isOpen, onClose }: any) => {
       try {
         const requestId = notif.friendshipId;
         if (requestId) {
-          await axios.delete(`http://localhost:5000/api/social/friends/${requestId}`, {
+          await axios.delete(`${BASE_URL}/social/friends/${requestId}`, {
             headers: { Authorization: `Bearer ${token}` }
           });
         }
@@ -142,7 +143,7 @@ const handleJoinGame = async (notif: any) => {
 
     if (sId) {
       const token = localStorage.getItem('token');
-      await axios.post(`http://localhost:5000/api/multiplayer/join/${sId}`, {}, {
+      await axios.post(`${BASE_URL}/multiplayer/join/${sId}`, {}, {
         headers: { Authorization: `Bearer ${token}` }
       });
 

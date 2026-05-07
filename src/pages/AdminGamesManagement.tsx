@@ -4,6 +4,7 @@ import AdminLayout from '../components/AdminLayout';
 // @ts-ignore
 import '../styles/AdminStyles.css';
 import { Settings, Save, X, Eye, EyeOff, Edit3 } from 'lucide-react';
+import { BASE_URL } from '../api/auth.js';
 
 const getGameStyles = (gameId: string) => {
  const configs: any = {
@@ -74,7 +75,7 @@ const AdminGamesManagement = () => {
 const fetchGames = async () => {
     try {
         const token = localStorage.getItem('token');
-        const res = await axios.get('http://localhost:5000/api/games?all=true', {
+        const res = await axios.get(`${BASE_URL}/games?all=true`, {
             headers: { Authorization: `Bearer ${token}` }
         });
         setGames(res.data.data || []);
@@ -91,7 +92,7 @@ const fetchGames = async () => {
     e.preventDefault();
     try {
       const token = localStorage.getItem('token');
-      await axios.put(`http://localhost:5000/api/games/${editingGame._id}`, 
+      await axios.put(`${BASE_URL}/games/${editingGame._id}`, 
         { gameName: editingGame.gameName, isActive: editingGame.isActive },
         { headers: { Authorization: `Bearer ${token}` } }
       );

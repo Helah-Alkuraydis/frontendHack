@@ -9,6 +9,7 @@ import {
 } from 'lucide-react';
 import Swal from 'sweetalert2';
 import ChallengeModal from '../components/ChallengeModal';
+import { BASE_URL } from '../api/auth.js';
 
 interface publicChallenge {
     _id: string;
@@ -56,7 +57,7 @@ const AdminPublicChallenges = () => {
     const fetchData = async (searchQuery = '') => {
         setLoading(true);
         try {
-            const res = await axios.get(`http://localhost:5000/api/admin-task/public-challenges/stats?search=${searchQuery}`, {
+            const res = await axios.get(`${BASE_URL}/admin-task/public-challenges/stats?search=${searchQuery}`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             setStats(res.data.stats);
@@ -104,7 +105,7 @@ const AdminPublicChallenges = () => {
 
         if (result.isConfirmed) {
             try {
-                await axios.delete(`http://localhost:5000/api/admin-task/public-challenges/delete/${id}`, {
+                await axios.delete(`${BASE_URL}/admin-task/public-challenges/delete/${id}`, {
                     headers: { Authorization: `Bearer ${token}` }
                 });
                 Swal.fire('Deleted', 'Mission has been removed by Admin.', 'success');
@@ -119,8 +120,8 @@ const AdminPublicChallenges = () => {
         e.preventDefault();
         try {
             const url = editingId
-                ? `http://localhost:5000/api/admin-task/public-challenges/update/${editingId}`
-                : `http://localhost:5000/api/admin-task/public-challenges/create`;
+                ? `${BASE_URL}/admin-task/public-challenges/update/${editingId}`
+                : `${BASE_URL}/admin-task/public-challenges/create`;
 
             const method = editingId ? axios.put : axios.post;
             await method(url, formData, { headers: { Authorization: `Bearer ${token}` } });

@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import Swal from "sweetalert2";
 import secureImg from "../assets/images/secure.png";
 import "../styles/login.css";
+import { BASE_URL } from "../api/auth.js";
 
 function ForgotPasswordPage() {
   const [email, setEmail] = useState("");
@@ -19,7 +20,7 @@ function ForgotPasswordPage() {
     }
 
     try {
-      const res = await fetch("http://localhost:5000/api/auth/forgot-password", {
+      const res = await fetch(`${BASE_URL}/auth/forgot-password`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email }),
