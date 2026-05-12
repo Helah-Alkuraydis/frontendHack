@@ -102,8 +102,6 @@ const Friends = () => {
       }
         if (sortBy === 'xp-desc') return (b.totalScore || 0) - (a.totalScore || 0); // أعلى نقاط
         if (sortBy === 'xp-asc') return (a.totalScore || 0) - (b.totalScore || 0);  // أقل نقاط
-        if (sortBy === 'level-desc') return (b.level || 1) - (a.level || 1);       // أعلى مستوى
-        if (sortBy === 'level-asc') return (a.level || 1) - (b.level || 1);        // أقل مستوى
         return 0;
       });
     }
@@ -223,8 +221,6 @@ const Friends = () => {
                                 { id: 'online', label: 'Online First (Live) 🟢' }, 
                                 { id: 'xp-desc', label: 'Highest Points (XP) ⚡' },
                                 { id: 'xp-asc', label: 'Lowest Points (XP) 📉' },
-                                { id: 'level-desc', label: 'Highest Level 🏆' },
-                                { id: 'level-asc', label: 'Lowest Level 🥉' },
                             ].map(opt => (
                                 <button key={opt.id} onClick={() => { setSortBy(opt.id); setIsFilterMenuOpen(false); }} className={`w-full text-left px-4 py-3 rounded-xl text-[10px] font-bold transition-all ${sortBy === opt.id ? 'bg-[#ff3b6b]/10 text-[#ff3b6b] border border-[#ff3b6b]/30' : 'bg-white/5 text-gray-400 hover:bg-white/10'}`}>
                                     {opt.label}
@@ -274,8 +270,15 @@ const Friends = () => {
                                     </div>
                                 </td>
                                 <td className="py-4 font-black italic text-sm text-yellow-500">{friend.totalScore || 0} XP</td>
-                                <td className="py-4 text-gray-400 text-sm font-medium italic uppercase opacity-60">None</td>
-                                <td className="py-4 text-center font-black text-sm italic opacity-40">0</td>
+                                <td className="py-4 text-gray-400 text-sm font-medium italic uppercase opacity-60">
+                                    { (friend.lastSharedGame && friend.lastSharedGame.toUpperCase() !== "NONE") 
+                                        ? friend.lastSharedGame 
+                                        : "NEVER" 
+                                    }
+                                </td>
+                                <td className="py-4 text-center font-black text-sm italic opacity-40">
+                                    {friend.sharedGamesCount || 0}
+                                </td>
                                 <td className="py-4 pr-6 rounded-r-2xl text-right">
                                     {isEditing && (
                                       <button onClick={() => handleDeleteFriend(friend.friendshipId)} className="bg-[#ff3b6b] p-2 rounded-full hover:scale-125 transition-all shadow-lg active:bg-red-700 shadow-[#ff3b6b]/30"><X size={14} className="text-white" /></button>
@@ -287,8 +290,16 @@ const Friends = () => {
                     </tbody>
                 </table>
               ) : (
-                <div className="grid grid-cols-1 gap-8">
-    {processedList.map((team) => {
+  <div className="grid grid-cols-1 gap-8">
+    {loading ? (
+      <div className="py-20 text-center"><Loader2 className="animate-spin mx-auto text-[#ff3b6b]" /></div>
+    ) : processedList.length === 0 ? (
+      <div className="text-center py-24 opacity-30">
+        <ShieldHalf size={60} className="mb-4 mx-auto text-gray-600" />
+        <p className="text-lg font-black italic uppercase tracking-widest">No teams found</p>
+      </div>
+    ) : (
+      processedList.map((team) => {
         const totalGames = (team.performance?.totalWins || 0) + (team.performance?.totalLosses || 0);
         const winRate = totalGames > 0 ? Math.round((team.performance.totalWins / totalGames) * 100) : 0;
         
@@ -296,7 +307,7 @@ const Friends = () => {
         const isEscape = team.lastGamePlayed?.toLowerCase().includes("escape");
 
         return (
-            <div key={team._id} className="relative group overflow-hidden bg-[#0a1120] border-2 border-white/5 rounded-[3.5rem] p-8 hover:border-[#ff3b6b]/50 transition-all duration-500 shadow-2xl hover:shadow-[0_0_50px_rgba(255,59,107,0.1)]">
+          <div key={team._id} className="relative group overflow-hidden bg-[#0a1120] border-2 border-white/5 rounded-[3.5rem] p-8 hover:border-[#ff3b6b]/50 transition-all duration-500 shadow-2xl hover:shadow-[0_0_50px_rgba(255,59,107,0.1)]">
                 
                 <div className="absolute inset-0 bg-[radial-gradient(circle_at_15%_50%,rgba(255,59,107,0.08),transparent)] pointer-events-none"></div>
 
@@ -383,7 +394,7 @@ const Friends = () => {
                 )}
             </div>
         );
-    })}
+    }))}
 </div>
 )}
           </div>

@@ -649,7 +649,7 @@ if (!scenario) {
                             onClick={() => triggerHint('unmask', 30)} 
                             className="text-[13px] bg-orange-500/10 border border-orange-500/30 text-orange-400 px-4 py-1.5 rounded-full font-black hover:bg-orange-500 hover:text-black transition-all animate-pulse flex items-center gap-2"
                           >
-                            <Zap size={10} /> Hints of THREATS (-30s)
+                            <Zap size={10} /> Hints of THREATS (-30 XP)
                           </button>
                         ) : (
                           <div className="flex items-center gap-2 text-[15px] text-orange-500 font-black italic tracking-widest bg-orange-500/5 px-3 py-1 rounded-lg border border-orange-500/20">
