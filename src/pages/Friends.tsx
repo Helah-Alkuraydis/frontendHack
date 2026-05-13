@@ -59,24 +59,25 @@ const Friends = () => {
     return style.startsWith('/') ? style : `/${style}`;
   };
 
- useEffect(() => {
+useEffect(() => {
   const storedUser = JSON.parse(localStorage.getItem('user') || '{}');
-  
-  if (storedUser?._id) {
+  if (!storedUser?._id) return;
+
+  const register = () => {
     socket.emit("register_user", {
       userId: storedUser._id,
       onlineStatus: storedUser.onlineStatus || 'Public'
     });
-  }
-
-  const handleUpdate = (ids: string[]) => {
-    console.log("Friends Page - Online IDs (Privacy Enabled):", ids);
-    setSocketOnlineIds(ids);
   };
 
+  if (socket.connected) register();
+  socket.on("connect", register); 
+
+  const handleUpdate = (ids: string[]) => setSocketOnlineIds(ids);
   socket.on("update_online_users_list", handleUpdate);
 
   return () => {
+    socket.off("connect", register);
     socket.off("update_online_users_list", handleUpdate);
   };
 }, []);
