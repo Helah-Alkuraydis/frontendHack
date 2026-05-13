@@ -130,8 +130,7 @@ const SingleController: React.FC<HackRaceProps> = ({
                    setScenarios(premiumFallbackScenarios);
                    setLoading(false);
                }
-            setScenarios(premiumFallbackScenarios);
-            setLoading(false);
+            
         };
 
         fetchGameData();
