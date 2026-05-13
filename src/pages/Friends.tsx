@@ -144,7 +144,6 @@ const Friends = () => {
         { headers: { Authorization: `Bearer ${token}` } }
       );
       
-      // إغلاق المودال أولاً لضمان تجربة مستخدم سريعة
       setIsModalOpen(false); 
 
       // عرض التنبيه المطلوب
