@@ -46,57 +46,57 @@ const SecureCodingChallenge = ({ level = 1, gameId, sessionId, onFinish, mode }:
         if (u) setUser(JSON.parse(u));
     }, []);
 
-  useEffect(() => {
-    if (!hasFetched.current) {
-        if (mode !== 'multiplayer') {
-            hasFetched.current = true;
-            fetchScenario();
-        }
-        else if (mode === 'multiplayer' && sessionId) {
-            if (isHost || location.state?.isHost === undefined) { 
+    useEffect(() => {
+        if (!hasFetched.current) {
+            if (mode !== 'multiplayer') {
                 hasFetched.current = true;
-                fetchScenario().then((challengeData) => {
-                    if (challengeData) {
-                        socket.emit("start_secure_race", { 
-                            sessionId, 
-                            challengeData: challengeData 
-                        });
-                    }
-                });
+                fetchScenario();
+            }
+            else if (mode === 'multiplayer' && sessionId) {
+                if (isHost || location.state?.isHost === undefined) { 
+                    hasFetched.current = true;
+                    fetchScenario().then((challengeData) => {
+                        if (challengeData) {
+                            socket.emit("start_secure_race", { 
+                                sessionId, 
+                                challengeData: challengeData 
+                            });
+                        }
+                    });
+                }
             }
         }
-    }
 
-    if (mode === 'multiplayer' && sessionId) {
-        socket.on("race_initiated", (data: any) => {
-            if (data.challenge) {
-                setScenario(data.challenge);
-                setUserCode(data.challenge.vulnerable_code);
-                setLoading(false); 
-            }
-        });
+        if (mode === 'multiplayer' && sessionId) {
+            socket.on("race_initiated", (data: any) => {
+                if (data.challenge) {
+                    setScenario(data.challenge);
+                    setUserCode(data.challenge.vulnerable_code);
+                    setLoading(false); 
+                }
+            });
 
-        socket.on("opponent_race_progress", (data: any) => {
-            if (data.userId !== user?._id) {
-                setOpponentProgress(data.progress);
-            }
-        });
+            socket.on("opponent_race_progress", (data: any) => {
+                if (data.userId !== user?._id) {
+                    setOpponentProgress(data.progress);
+                }
+            });
 
-        socket.on("race_finished", (data: any) => {
-            setWinner(data.winnerName);
-            if (data.winnerId !== user?._id) {
-                setFeedback({ message: `DEFEAT! ${data.winnerName} secured the system first! 🏁`, isError: true });
-                setPhase(1); 
-            }
-        });
-    }
+            socket.on("race_finished", (data: any) => {
+                setWinner(data.winnerName);
+                if (data.winnerId !== user?._id) {
+                    setFeedback({ message: `DEFEAT! ${data.winnerName} secured the system first! 🏁`, isError: true });
+                    setPhase(1); 
+                }
+            });
+        }
 
-    return () => {
-        socket.off("race_initiated");
-        socket.off("opponent_race_progress");
-        socket.off("race_finished");
-    };
-}, [sessionId, isHost, localLevel, user?._id, mode]);
+        return () => {
+            socket.off("race_initiated");
+            socket.off("opponent_race_progress");
+            socket.off("race_finished");
+        };
+    }, [sessionId, isHost, localLevel, user?._id, mode]);
 
     useEffect(() => {
         if (loading || isTimeUp || winner) return;
@@ -163,7 +163,7 @@ const SecureCodingChallenge = ({ level = 1, gameId, sessionId, onFinish, mode }:
         }
     };
 
-   const handleCodeSubmit = async (e?: any) => {
+    const handleCodeSubmit = async (e?: any) => {
         if (e && e.preventDefault) e.preventDefault();
         if (!scenario || winner) return;
 
@@ -196,7 +196,6 @@ const SecureCodingChallenge = ({ level = 1, gameId, sessionId, onFinish, mode }:
                     confetti({ particleCount: 150, spread: 80, origin: { y: 0.6 } });
                 }
             } else {
-              
                 setFeedback({ message: result.message || "Incorrect patch! Try again.", isError: true });
                 setMistakes(prev => prev + 1);
             }
@@ -204,6 +203,7 @@ const SecureCodingChallenge = ({ level = 1, gameId, sessionId, onFinish, mode }:
             setFeedback({ message: "Backend connection error.", isError: true });
         }
     };
+
     const handleEndGame = () => {
         if (onFinish) {
             onFinish({
@@ -286,10 +286,30 @@ const SecureCodingChallenge = ({ level = 1, gameId, sessionId, onFinish, mode }:
                                 spellCheck="false"
                                 disabled={!!winner}
                             />
+                            
+                            {/* 🔥 شاشة التنبيه للحل الخاطئ أو الصحيح 🔥 */}
+                            {feedback && (
+                                <div className={`mt-4 p-4 rounded-xl flex items-center gap-3 font-bold transition-all duration-300 ${
+                                    feedback.isError 
+                                    ? 'bg-red-500/20 border border-red-500 text-red-400 animate-pulse' 
+                                    : 'bg-green-500/20 border border-green-500 text-green-400'
+                                }`}>
+                                    {feedback.isError ? <AlertTriangle className="w-6 h-6" /> : <CheckCircle className="w-6 h-6" />}
+                                    <span>{feedback.message}</span>
+                                    
+                                    {/* تلميح ذكي يظهر إذا اللاعب أخطأ أكثر من مرتين */}
+                                    {feedback.isError && mistakes > 2 && (
+                                        <span className="ml-auto text-xs bg-red-900/80 px-3 py-1 rounded-full text-red-100">
+                                            Hint: Use data sanitization functions!
+                                        </span>
+                                    )}
+                                </div>
+                            )}
+
                             <button 
                                 onClick={handleCodeSubmit}
                                 disabled={!!winner}
-                                className="mt-6 w-full py-4 bg-[#00ff9d] hover:bg-[#00e68e] text-black font-black uppercase italic rounded-xl transition-all shadow-lg disabled:opacity-50"
+                                className="mt-4 w-full py-4 bg-[#00ff9d] hover:bg-[#00e68e] text-black font-black uppercase italic rounded-xl transition-all shadow-lg disabled:opacity-50"
                             >
                                 <ShieldCheck className="w-5 h-5 inline-block mr-2" /> SUBMIT SECURE PATCH
                             </button>
@@ -298,27 +318,27 @@ const SecureCodingChallenge = ({ level = 1, gameId, sessionId, onFinish, mode }:
                 </div>
             </div>
 
-{winner && (
-    <div className="fixed inset-0 bg-black/80 backdrop-blur-md z-[100] flex items-center justify-center">
-        <div className="text-center p-12 bg-[#0f172a] border border-white/10 rounded-[3rem] shadow-2xl max-w-md w-full">
-            <div className={`w-20 h-20 mx-auto mb-6 rounded-full flex items-center justify-center ${winner === user?.username || !sessionId ? 'bg-green-500/20 text-green-500' : 'bg-red-500/20 text-red-500'}`}>
-                {winner === user?.username || !sessionId ? <Zap size={40} fill="currentColor"/> : <AlertTriangle size={40}/>}
-            </div>
-            <h2 className="text-4xl font-black italic uppercase text-white mb-2">
-                {winner === user?.username || !sessionId ? "Victory!" : "Defeat!"}
-            </h2>
-            <p className="text-slate-400 mb-8 font-medium italic">
-                {winner === user?.username || !sessionId ? "System secured! Mission Accomplished." : `${winner} was faster.`}
-            </p>
-            <button 
-                onClick={handleEndGame} 
-                className="w-full py-4 bg-white text-black font-black uppercase rounded-2xl hover:bg-gray-200 transition-all"
-            >
-                RETURN TO HQ
-            </button>
-        </div>
-    </div>
-)}
+            {winner && (
+                <div className="fixed inset-0 bg-black/80 backdrop-blur-md z-[100] flex items-center justify-center">
+                    <div className="text-center p-12 bg-[#0f172a] border border-white/10 rounded-[3rem] shadow-2xl max-w-md w-full">
+                        <div className={`w-20 h-20 mx-auto mb-6 rounded-full flex items-center justify-center ${winner === user?.username || !sessionId ? 'bg-green-500/20 text-green-500' : 'bg-red-500/20 text-red-500'}`}>
+                            {winner === user?.username || !sessionId ? <Zap size={40} fill="currentColor"/> : <AlertTriangle size={40}/>}
+                        </div>
+                        <h2 className="text-4xl font-black italic uppercase text-white mb-2">
+                            {winner === user?.username || !sessionId ? "Victory!" : "Defeat!"}
+                        </h2>
+                        <p className="text-slate-400 mb-8 font-medium italic">
+                            {winner === user?.username || !sessionId ? "System secured! Mission Accomplished." : `${winner} was faster.`}
+                        </p>
+                        <button 
+                            onClick={handleEndGame} 
+                            className="w-full py-4 bg-white text-black font-black uppercase rounded-2xl hover:bg-gray-200 transition-all"
+                        >
+                            RETURN TO HQ
+                        </button>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };
