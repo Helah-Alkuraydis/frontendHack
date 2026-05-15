@@ -199,9 +199,10 @@ const WaitingRoomPage = () => {
       const userData = JSON.parse(localStorage.getItem("user"));
       if (userData?._id) {
       socket.emit("register_user", {
-        userId: userData._id,
-        onlineStatus: userData.onlineStatus || 'Public'
-      });      }
+      userId: userData._id,
+      onlineStatus: userData.onlineStatus
+});
+     }
       socket.emit("join_room", sessionId);
       fetchLobbyData();
     };
@@ -278,17 +279,6 @@ const WaitingRoomPage = () => {
         },
     });
     console.log("🎯 Navigating to:", gameSlug);
-
-    navigate(`/play/${sessionId}/${gameSlug}`, {
-        state: {
-            sessionId: sessionId,
-            mode: "multiplayer",
-            gameId: data?.gameId || lobbyInfo?.gameId,
-            gameName: rawName,
-            historyId: myDataInLobby?.dbSessionId,
-            isHost: myDataInLobby?.isHost
-        },
-    });
 });
 
     socket.on("update_online_users_list", (ids) => {
