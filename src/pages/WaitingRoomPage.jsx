@@ -193,34 +193,40 @@ const WaitingRoomPage = () => {
   };
 
   useEffect(() => {
-    if (!sessionId || !socket) return;
+  if (!sessionId || !socket) return;
 
-    const setupRoom = () => {
-      const userData = JSON.parse(localStorage.getItem("user"));
-      if (userData?._id) {
+  const onConnect = () => {
+    console.log("🟢 CONNECTED");
+
+    const userData = JSON.parse(localStorage.getItem("user"));
+
+    if (userData?._id) {
+      console.log("🚀 SENDING REGISTER");
+
       socket.emit("register_user", {
-      userId: userData._id,
-      onlineStatus: userData.onlineStatus
-});
-     }
-      socket.emit("join_room", sessionId);
-      fetchLobbyData();
-    };
-
-        socket.on("connect", setupRoom);
-
-    if (socket.connected) {
-      setupRoom();
-    } else {
-      socket.connect();
+        userId: userData._id,
+        onlineStatus: userData.onlineStatus || "Public"
+      });
     }
 
+    socket.emit("join_room", sessionId);
 
-    socket.on("player_joined", () => {
-      console.log("🔔 Room Update: Refreshing players list...");
-      fetchLobbyData();
-    });
+    fetchLobbyData();
+  };
 
+  // إذا متصل بالفعل
+  if (socket.connected) {
+    onConnect();
+  } else {
+    socket.connect();
+  }
+
+  socket.on("connect", onConnect);
+
+  socket.on("player_joined", () => {
+    console.log("🔔 Room Update: Refreshing players list...");
+    fetchLobbyData();
+  });
     socket.on("invite_accepted_feedback", () => {
       console.log("✅ Invite accepted feedback received");
       Swal.fire({
@@ -282,9 +288,10 @@ const WaitingRoomPage = () => {
     console.log("🎯 Navigating to:", gameSlug);
 });
 
-    socket.on("update_online_users_list", (ids) => {
-        setOnlineUserIds(ids);
-    });
+     socket.on("update_online_users_list", (ids) => {
+    console.log("📡 ONLINE IDS:", ids);
+    setOnlineUserIds(ids);
+  });
     socket.on("lobby_updated", () => {
       fetchLobbyData(); // نستدعي دالة جلب البيانات عشان تتحدث الشاشة عند الطرفين
     });
@@ -304,13 +311,14 @@ const WaitingRoomPage = () => {
     });
 
     return () => {
-      socket.off("connect", setupRoom);
+   socket.off("connect", onConnect);
       socket.off("player_joined");
       socket.off("invite_accepted_feedback");
       socket.off("player_ready_update");
       socket.off("game_starts");
       socket.off("lobby_updated");
       socket.off("host_disconnected");
+      socket.off("update_online_users_list");
     };
   }, [sessionId, socket]);
 

@@ -4,7 +4,7 @@ const SOCKET_URL = "https://hackhero-tpme.onrender.com";
 export const socket = io(SOCKET_URL, {
     withCredentials: true,
     transports: ["websocket"],
-    autoConnect: true 
+    autoConnect: false 
 });
 
 export const getSocket = () => socket;
