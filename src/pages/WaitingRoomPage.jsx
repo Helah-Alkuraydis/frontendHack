@@ -747,8 +747,10 @@ const handleSearchUsers = async (query) => {
         }, 800);
       }
     } catch (err) {
-      setInvitedIds((prev) => prev.filter((id) => id !== friendId));
-      const errMsg = err.response?.data?.message || "Agent Offline";
+      console.log("🕵️‍♂️ تحريات السيرفر:", err.response?.data?.DEBUG_INFO);
+
+    setInvitedIds((prev) => prev.filter((id) => id !== friendId));
+    const errMsg = err.response?.data?.message || "Agent Offline";
       Swal.fire({
         title: "Mission Failed",
         text: errMsg,
