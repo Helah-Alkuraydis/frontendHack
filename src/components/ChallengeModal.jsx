@@ -1,5 +1,6 @@
 import React, { useMemo, useState } from "react";
 import { X, Plus, Trash2, Zap } from "lucide-react";
+import EscapeRoomBuilder from '../components/EscapeRoomBuilder';
 
 const ChallengeModal = ({
   isOpen,
@@ -13,7 +14,7 @@ const ChallengeModal = ({
   userLevels = [],
   editingId,
 }) => {
-  const selectedGame = games.find((g) => g._id === formData.gameId);
+  const selectedGame = games.find((g) => g._id === formData.gameId );
   const selectedGameName = selectedGame ? selectedGame.gameName : "";
   const [activeRoomIdx, setActiveRoomIdx] = useState(0);
 
@@ -29,8 +30,7 @@ const ChallengeModal = ({
 
       if (editingId && game._id === formData.gameId) return true;
       if (userLevels.length === 0) return true;
-      
-      
+
       const userGameInfo = userLevels.find((ul) => {
         const ulGameId = ul.gameId?._id
           ? ul.gameId._id.toString()
@@ -40,6 +40,7 @@ const ChallengeModal = ({
       });
       const userLevel = userGameInfo ? userGameInfo.level : 1;
       return userLevel >= 3;
+      
     });
   }, [games, userLevels, editingId, formData.gameId]);
 
@@ -48,6 +49,7 @@ const ChallengeModal = ({
   const handleOverlayClick = (e) => {
     if (e.target === e.currentTarget) {
       onClose();
+      
     }
   };
 
@@ -218,6 +220,8 @@ const ChallengeModal = ({
                       setFormData({ ...formData, points_pool: e.target.value })
                     }
                   />
+
+                  
                 </div>
               </div>
             </div>
@@ -364,14 +368,14 @@ const ChallengeModal = ({
                       <input
                         placeholder="Target Name (e.g. Elias)"
                         className="w-full bg-black/40 border border-gray-800 rounded-xl px-4 py-2 text-sm text-white focus:border-blue-500 outline-none"
-                        value={formData.scenarioData?.name || ""}
+                        value={formData.scenarioData?.userData?.name || ""}
                         onChange={(e) => updateUserData("name", e.target.value)}
                       />
                       <input
                         placeholder="Birth Year (e.g. 1992)"
                         type="number"
                         className="w-full bg-black/40 border border-gray-800 rounded-xl px-4 py-2 text-sm text-white focus:border-blue-500 outline-none"
-                        value={formData.scenarioData?.birthYear || ""}
+                        value={formData.scenarioData?.userData?.birthYear || ""}
                         onChange={(e) =>
                           updateUserData("birthYear", e.target.value)
                         }
@@ -379,20 +383,20 @@ const ChallengeModal = ({
                       <input
                         placeholder="City (e.g. Austin)"
                         className="w-full bg-black/40 border border-gray-800 rounded-xl px-4 py-2 text-sm text-white focus:border-blue-500 outline-none"
-                        value={formData.scenarioData?.city || ""}
+                        value={formData.scenarioData?.userData?.city || ""}
                         onChange={(e) => updateUserData("city", e.target.value)}
                       />
                       <input
                         placeholder="Pet Name (e.g. Sparky)"
                         className="w-full bg-black/40 border border-gray-800 rounded-xl px-4 py-2 text-sm text-white focus:border-blue-500 outline-none"
-                        value={formData.scenarioData?.pet || ""}
+                        value={formData.scenarioData?.userData?.pet || ""}
                         onChange={(e) => updateUserData("pet", e.target.value)}
                       />
                     </div>
                     <input
                       placeholder="Hobby (e.g. Baking)"
                       className="w-full bg-black/40 border border-gray-800 rounded-xl px-4 py-2 text-sm text-white focus:border-blue-500 outline-none"
-                      value={formData.scenarioData?.hobby || ""}
+                      value={formData.scenarioData?.userData?.hobby || ""}
                       onChange={(e) => updateUserData("hobby", e.target.value)}
                     />
                   </div>
@@ -1085,178 +1089,13 @@ const ChallengeModal = ({
 
               {/* 6. إذا كانت اللعبة Cyber Escape Room */}
               {selectedGameName === "Cyber Escape Room" && (
-                <div className="space-y-6 animate-in fade-in duration-500 max-h-[60vh] overflow-y-auto pr-2 custom-scrollbar text-left">
-                  <div className="p-5 bg-blue-500/5 border border-blue-500/10 rounded-[2rem] space-y-2">
-                    <label className="text-blue-400 text-[10px] font-black uppercase tracking-widest ml-2 flex items-center gap-2">
-                      <Zap size={14} className="fill-blue-400" /> Escape Mission
-                      Architecture
-                    </label>
-                    <p className="text-gray-500 text-[11px] px-2 italic font-medium">
-                      Design 4 security layers. Click the blue pulse to expand
-                      or collapse each layer.
-                    </p>
-                  </div>
-
-                  <div className="space-y-4">
-                    {[0, 1, 2, 3].map((roomIdx) => {
-                      const isExpanded = activeRoomIdx === roomIdx;
-
-                      return (
-                        <div
-                          key={roomIdx}
-                          className={`transition-all duration-500 rounded-[2.5rem] border ${
-                            isExpanded
-                              ? "bg-white/5 border-blue-500/30 p-6"
-                              : "bg-black/40 border-gray-800 p-4 hover:border-blue-500/20"
-                          } relative overflow-hidden`}
-                        >
-                          <div
-                            className="flex justify-between items-center cursor-pointer"
-                            onClick={() =>
-                              setActiveRoomIdx(isExpanded ? null : roomIdx)
-                            }
-                          >
-                            <div className="flex items-center gap-4">
-                              <span
-                                className={`font-black italic text-sm uppercase transition-colors ${isExpanded ? "text-blue-400" : "text-gray-600"}`}
-                              >
-                                # Security Layer 0{roomIdx + 1}
-                              </span>
-                              {!isExpanded && (
-                                <span className="text-[10px] text-gray-500 font-bold uppercase tracking-widest opacity-60">
-                                  —{" "}
-                                  {formData.scenarioData?.rooms?.[roomIdx]
-                                    ?.puzzleType || "Not Configured"}
-                                </span>
-                              )}
-                            </div>
-
-                            <button
-                              type="button"
-                              className="relative group p-2"
-                            >
-                              <div
-                                className={`w-3 h-3 rounded-full transition-all duration-500 ${
-                                  isExpanded
-                                    ? "bg-blue-500 shadow-[0_0_15px_#3b82f6]"
-                                    : "bg-gray-700 group-hover:bg-blue-900"
-                                }`}
-                              />
-                              {isExpanded && (
-                                <div className="absolute inset-0 w-7 h-7 -left-[2px] -top-[2px] rounded-full border border-blue-500/50 animate-ping opacity-20" />
-                              )}
-                            </button>
-                          </div>
-
-                          <div
-                            className={`transition-all duration-500 ease-in-out overflow-hidden ${
-                              isExpanded
-                                ? "max-h-[500px] mt-6 opacity-100"
-                                : "max-h-0 opacity-0"
-                            }`}
-                          >
-                            <div className="space-y-5">
-                              {/* اختيار نوع اللغز */}
-                              {/* <div className="space-y-2">
-                                <label className="text-gray-500 text-[9px] font-black uppercase tracking-[0.2em] ml-2">
-                                  Layer Protocol Type
-                                </label>
-                                <div className="grid grid-cols-4 gap-2">
-                                  {[
-                                    "Encryption",
-                                    "Threats",
-                                    "Logic",
-                                    "Firewall",
-                                  ].map((type) => (
-                                    <button
-                                      key={type}
-                                      type="button"
-                                      onClick={() =>
-                                        updateRoom(roomIdx, "puzzleType", type)
-                                      }
-                                      className={`py-2 rounded-xl text-[9px] font-black uppercase transition-all border ${
-                                        formData.scenarioData?.rooms?.[roomIdx]
-                                          ?.puzzleType === type
-                                          ? "bg-blue-600 border-blue-400 text-white"
-                                          : "bg-black/20 border-gray-800 text-gray-500 hover:text-blue-400"
-                                      }`}
-                                    >
-                                      {type}
-                                    </button>
-                                  ))}
-                                </div>
-                              </div> */}
-
-                              <div className="space-y-2">
-                                <label className="text-gray-500 text-[10px] uppercase font-bold tracking-wider ml-2">
-                                  Puzzle Content
-                                </label>
-                                <textarea
-                                  placeholder="Enter the security challenge..."
-                                  className="w-full bg-black/40 border border-gray-800 rounded-2xl px-4 py-3 text-xs text-white h-24 resize-none focus:border-blue-500 outline-none"
-                                  value={
-                                    formData.scenarioData?.rooms?.[roomIdx]
-                                      ?.puzzle_data || ""
-                                  }
-                                  onChange={(e) =>
-                                    updateRoom(
-                                      roomIdx,
-                                      "puzzle_data",
-                                      e.target.value,
-                                    )
-                                  }
-                                />
-                              </div>
-
-                              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                <div className="space-y-2">
-                                  <label className="text-gray-500 text-[10px] uppercase font-bold tracking-wider ml-2">
-                                    Breach Key
-                                  </label>
-                                  <input
-                                    placeholder="Required key..."
-                                    className="w-full bg-black/20 border border-gray-800 rounded-xl px-4 py-3 text-sm text-white outline-none focus:border-blue-500"
-                                    value={
-                                      formData.scenarioData?.rooms?.[roomIdx]
-                                        ?.answer || ""
-                                    }
-                                    onChange={(e) =>
-                                      updateRoom(
-                                        roomIdx,
-                                        "answer",
-                                        e.target.value,
-                                      )
-                                    }
-                                  />
-                                </div>
-                                <div className="space-y-2">
-                                  <label className="text-gray-500 text-[10px] uppercase font-bold tracking-wider ml-2">
-                                    Intel Hint
-                                  </label>
-                                  <input
-                                    placeholder="Support data..."
-                                    className="w-full bg-black/20 border border-gray-800 rounded-xl px-4 py-3 text-sm text-white outline-none focus:border-blue-500"
-                                    value={
-                                      formData.scenarioData?.rooms?.[roomIdx]
-                                        ?.hint || ""
-                                    }
-                                    onChange={(e) =>
-                                      updateRoom(
-                                        roomIdx,
-                                        "hint",
-                                        e.target.value,
-                                      )
-                                    }
-                                  />
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      );
-                    })}
-                  </div>
-                </div>
+                  <EscapeRoomBuilder
+                    formData={formData}
+                    setFormData={setFormData}
+                    onSubmit={onSubmit}
+                    onBack={() => setStep(1)} 
+                  />
+                
               )}
             </div>
           )}

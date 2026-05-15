@@ -45,7 +45,7 @@ const PrivacyAwarenessLayout: React.FC<PrivacyLayoutProps> = ({
         <div className="flex flex-col h-full w-full bg-[#f4f7fa] p-4 md:p-6 font-sans overflow-y-auto text-left">
 
             {/* 1. Header القسم العلوي */}
-            <div className="bg-white p-5 rounded-[2rem] border border-gray-200 shadow-sm mb-6 flex justify-between items-center animate-in slide-in-from-top duration-500">
+            {/* <div className="bg-white p-5 rounded-[2rem] border border-gray-200 shadow-sm mb-6 flex justify-between items-center animate-in slide-in-from-top duration-500">
                 <div className="flex items-center gap-4">
                     <div className="bg-gray-900 text-white p-3 rounded-2xl shadow-lg">
                         <ShieldCheck className="text-blue-400" size={24} />
@@ -68,7 +68,7 @@ const PrivacyAwarenessLayout: React.FC<PrivacyLayoutProps> = ({
                         {Math.floor(timeLeft / 60).toString().padStart(2, '0')}:{(timeLeft % 60).toString().padStart(2, '0')}
                     </div>
                 </div>
-            </div>
+            </div> */}
 
             {/* 2. Context Box - صندوق المعلومات */}
             <div className="bg-white border-2 border-dashed border-blue-100 rounded-[2.5rem] p-6 mb-8 flex flex-col md:flex-row gap-8 items-center animate-in fade-in duration-700 shadow-sm">

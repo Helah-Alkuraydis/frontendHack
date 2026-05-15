@@ -97,7 +97,7 @@ const ChallengeCard = ({
               >
                 <ShieldCheck size={14} /> Your Mission
               </button>
-            ) : userPlayStatus === "Completed" ? (
+            ) : status === "Completed" ? (
               <div className="px-5 py-2.5 rounded-full font-black text-[10px] uppercase tracking-widest flex items-center gap-2 bg-emerald-500/5 border border-emerald-500/20 text-emerald-500 cursor-not-allowed shadow-[inset_0_0_12px_rgba(16,185,129,0.05)]">
                 <ShieldCheck size={14} /> Mission Secured
               </div>
@@ -114,11 +114,11 @@ const ChallengeCard = ({
                   <Play size={12} fill="currentColor" /> Accept
                 </button>
 
-                {userPlayStatus === "Playing" && (
+                {/* {userPlayStatus === "Playing" && (
                   <span className="flex items-center gap-1 text-[10px] font-bold text-red-400 uppercase tracking-widest animate-pulse">
                     <Heart size={12} fill="currentColor" /> {attemptsLeft} Left
                   </span>
-                )}
+                )} */}
               </div>
             )}
           </div>

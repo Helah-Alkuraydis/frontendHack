@@ -119,7 +119,7 @@ const EscapeRoomLayout = ({
       `}</style>
       
       {/* 1. Header */}
-      <header className="flex items-center justify-between px-8 py-5 bg-[#080c16] border-b border-[#00ff9610] relative z-20 shadow-2xl">
+      {/* <header className="flex items-center justify-between px-8 py-5 bg-[#080c16] border-b border-[#00ff9610] relative z-20 shadow-2xl">
         <div className="flex items-center gap-4">
           <div className="w-2.5 h-2.5 bg-[#00ff96] rounded-full animate-pulse shadow-[0_0_10px_#00ff96]"></div>
           <div className="text-xs font-black text-[#00ff96] tracking-[0.4em] uppercase italic opacity-80">HACKHERO_ESCAPE</div>
@@ -131,7 +131,9 @@ const EscapeRoomLayout = ({
              <span className={`text-3xl font-black ${timeLeft < 30 ? 'text-red-500' : 'text-[#00ff96]'}`}>{formatTime(timeLeft)}</span>
           </div>
         </div>
-      </header>
+      </header> */}
+
+      
 
       {/* 2. Progress Bar */}
       <div className="flex h-1.5 bg-[#1a1a2e] relative z-20">

@@ -32,7 +32,7 @@ const BreakerLayout: React.FC<BreakerLayoutProps> = ({
         <div className="max-w-7xl mx-auto w-full flex flex-col gap-10 animate-in slide-in-from-bottom-12 duration-1000 font-mono relative p-6">
 
             {/* 1. العداد والقلوب العلوي */}
-            <div className="flex justify-center mb-4">
+            {/* <div className="flex justify-center mb-4">
                 <div className="flex items-center gap-8 bg-[#1c2438]/60 px-6 py-2 rounded-full border border-white/5 backdrop-blur-xl shadow-xl">
                     <div className="flex items-center gap-2 text-amber-500 font-bold border-r border-white/10 pr-5 text-sm">
                         <Key size={14} fill="currentColor" /> <span>Points: {points_pool} XP</span>
@@ -49,7 +49,7 @@ const BreakerLayout: React.FC<BreakerLayoutProps> = ({
                         ))}
                     </div>
                 </div>
-            </div>
+            </div> */}
 
             {/* 2. ملف الهدف (Target Dossier) */}
             <div className="bg-[#0a0000] border-2 border-red-500/20 rounded-[2.5rem] p-10 shadow-[0_0_50px_rgba(239,68,68,0.05)] relative overflow-hidden group">
