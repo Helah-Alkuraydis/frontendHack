@@ -19,10 +19,10 @@ interface HackRaceLayoutProps {
     selectedOptionIndex: number | null;
     showExplanation: boolean;
     userData: any;
-    gameResult: "win" | "loss" | null; // أضفنا هذه لدعم شاشات النهاية
+    gameResult: "win" | "loss" | null; 
     onAnswer: (index: number) => void;
-    onReset: () => void; // للزر Reboot
-    onNavigateGames: () => void; // للزر Abort
+    onReset: () => void;
+    onNavigateGames: () => void; 
 }
 
 const HackRaceLayout: React.FC<HackRaceLayoutProps> = ({
@@ -35,8 +35,7 @@ const HackRaceLayout: React.FC<HackRaceLayoutProps> = ({
 
     return (
         <div className="flex flex-col items-center p-8 text-white w-full max-w-6xl mx-auto font-sans">
-
-            {/* 1. HEADER (نفس الستايل الأصلي) */}
+{/* 
             <div className="flex items-center gap-8 bg-[#1c2438]/60 px-8 py-3 rounded-full border border-white/10 mb-10 backdrop-blur-md">
                 <div className="flex items-center gap-2 text-amber-500 font-bold border-r border-white/10 pr-5 text-sm">
                         <Key size={14} fill="currentColor" /> <span>Points: {points_pool} XP</span>
@@ -71,12 +70,10 @@ const HackRaceLayout: React.FC<HackRaceLayoutProps> = ({
                         />
                     ))}
                 </div>
-            </div>
+            </div> */}
 
-            {/* 2. RACE TRACK (نفس الستايل الأصلي مع اللاعب والهكر) */}
             <div className="relative w-full max-w-5xl h-40 bg-gradient-to-r from-emerald-950/30 to-black rounded-[2.5rem] border border-emerald-500/20 mb-10 p-6 overflow-hidden shadow-2xl">
 
-                {/* Track Lines */}
                 <div className="absolute inset-0 flex flex-col justify-around px-10 opacity-20">
                     <div className="h-[2px] bg-gradient-to-r from-transparent via-emerald-500 to-transparent"></div>
                     <div className="h-[2px] bg-gradient-to-r from-transparent via-emerald-400 to-transparent"></div>

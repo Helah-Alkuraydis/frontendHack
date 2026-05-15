@@ -39,7 +39,7 @@ const SecureCodingLayout: React.FC<SecureCodingLayoutProps> = ({
     return (
         <div className="min-h-screen bg-[#0b1121] text-slate-300 p-8 font-mono text-left">
             {/* Header القسم العلوي */}
-            <div className="flex justify-center mb-4">
+            {/* <div className="flex justify-center mb-4">
                 <div className="flex items-center gap-8 bg-[#1c2438]/60 px-6 py-2 rounded-full border border-white/5 backdrop-blur-xl shadow-xl">
                     <div className="flex items-center gap-2 text-amber-500 font-bold border-r border-white/10 pr-5 text-sm">
                         <Key size={14} fill="currentColor" /> <span>Points: {points_pool} XP</span>
@@ -56,7 +56,7 @@ const SecureCodingLayout: React.FC<SecureCodingLayoutProps> = ({
                         ))}
                     </div>
                 </div>
-            </div>
+            </div> */}
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
                 
