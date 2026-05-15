@@ -198,8 +198,10 @@ const WaitingRoomPage = () => {
     const setupRoom = () => {
       const userData = JSON.parse(localStorage.getItem("user"));
       if (userData?._id) {
-        socket.emit("register_user", userData._id);
-      }
+      socket.emit("register_user", {
+        userId: userData._id,
+        onlineStatus: userData.onlineStatus || 'Public'
+      });      }
       socket.emit("join_room", sessionId);
       fetchLobbyData();
     };
