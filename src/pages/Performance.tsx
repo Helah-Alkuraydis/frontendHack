@@ -5,7 +5,6 @@ import { ArrowLeft, Loader2, Activity } from 'lucide-react';
 import MainLayout from '../components/MainLayout';
 import { BASE_URL } from '../api/auth.js';
 
-
 const Performance = () => {
   const navigate = useNavigate();
   const [performanceData, setPerformanceData] = useState<any[]>([]);
@@ -47,61 +46,70 @@ const Performance = () => {
 
   return (
     <MainLayout activePage="dashboard">
-      <div className="w-full max-w-[1400px] mx-auto flex flex-col flex-1 pb-10 px-4">
+      <div className="w-full max-w-[1400px] mx-auto flex flex-col flex-1 pb-10 px-4 md:px-6">
         
         {/* Header */}
-        <div className="flex items-center gap-6 mb-8">
+        <div className="flex items-center gap-4 md:gap-6 mb-6 md:mb-8">
           <button 
             onClick={() => navigate('/dashboard')} 
-            className="p-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-full transition-all text-gray-400 hover:text-white group"
+            className="p-2 md:p-3 bg-white/5 hover:bg-white/10 border border-white/10 rounded-full transition-all text-gray-400 hover:text-white group"
           >
-            <ArrowLeft size={20} className="group-hover:-translate-x-1 transition-transform" />
+            <ArrowLeft size={20} className="w-4 h-4 md:w-5 md:h-5 group-hover:-translate-x-1 transition-transform" />
           </button>
-          <h1 className="text-3xl font-black tracking-widest text-white uppercase italic drop-shadow-md">
+          <h1 className="text-xl md:text-3xl font-black tracking-widest text-white uppercase italic drop-shadow-md">
             PERFORMANCE
           </h1>
         </div>
 
-        <div className="bg-[#050810]/60 border border-white/10 rounded-[2.5rem] p-10 w-full shadow-[0_8px_32px_0_rgba(0,0,0,0.5)] backdrop-blur-xl min-h-[500px]">
+        {/* Container */}
+        <div className="bg-[#050810]/60 border border-white/10 rounded-3xl md:rounded-[2.5rem] p-5 md:p-10 w-full shadow-[0_8px_32px_0_rgba(0,0,0,0.5)] backdrop-blur-xl min-h-[500px]">
           
           {performanceData.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            /* 🔥 استخدام sm:grid-cols-2 لترتيب أفضل بالشاشات المتوسطة 🔥 */
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 lg:gap-8">
               {performanceData.map((game, index) => (
-                <div key={index} className="relative rounded-[2rem] p-[1.5px] bg-gradient-to-br from-cyan-400/40 to-purple-500/40 shadow-lg group hover:scale-[1.02] transition-all duration-300">
-                  <div className="bg-[#0a0f1c] rounded-[calc(2rem-1.5px)] p-8 h-full flex flex-col justify-center border border-white/5">
+                <div key={index} className="relative rounded-2xl md:rounded-[2rem] p-[1.5px] bg-gradient-to-br from-cyan-400/40 to-purple-500/40 shadow-lg group hover:scale-[1.02] transition-all duration-300">
+                  {/* 🔥 تغيير الـ flex ليكون طبيعي بدون justify-center اللي خرب المساحات 🔥 */}
+                  <div className="bg-[#0a0f1c] rounded-[calc(1.5rem-1.5px)] md:rounded-[calc(2rem-1.5px)] p-6 lg:p-8 h-full flex flex-col border border-white/5">
                     
-                    <h3 className="text-[15px] font-black text-white mb-8 uppercase italic tracking-wider group-hover:text-cyan-400 transition-colors">
-                      {game.gameName}
-                    </h3>
+                    {/* 🔥 العنوان: أضفنا min-h عشان نوحد طول العناوين سواء سطر أو سطرين 🔥 */}
+                    <div className="min-h-[48px] md:min-h-[56px] flex items-start">
+                        <h3 className="text-[14px] md:text-[16px] font-black text-white uppercase italic tracking-widest group-hover:text-cyan-400 transition-colors leading-snug break-words">
+                        {game.gameName}
+                        </h3>
+                    </div>
                     
-                    <div className="mb-6">
-                      <div className="flex justify-between text-[10px] font-black uppercase text-gray-500 mb-2 italic">
-                        <span>Accuracy</span>
-                        <span className="text-cyan-400">{game.accuracy}%</span>
-                      </div>
-                      <div className="h-1.5 w-full bg-white/5 rounded-full overflow-hidden">
-                        <div className="h-full bg-gradient-to-r from-cyan-400 to-blue-500 rounded-full transition-all duration-1000" style={{ width: `${game.accuracy}%` }}></div>
-                      </div>
-                    </div>
+                    {/* 🔥 تجميع الأشرطة في مساحات متساوية space-y-5 🔥 */}
+                    <div className="space-y-5 mt-4">
+                        <div>
+                        <div className="flex justify-between text-[10px] font-black uppercase text-gray-500 mb-2 italic">
+                            <span>Accuracy</span>
+                            <span className="text-cyan-400">{game.accuracy}%</span>
+                        </div>
+                        <div className="h-1.5 w-full bg-white/5 rounded-full overflow-hidden">
+                            <div className="h-full bg-gradient-to-r from-cyan-400 to-blue-500 rounded-full transition-all duration-1000" style={{ width: `${game.accuracy}%` }}></div>
+                        </div>
+                        </div>
 
-                    <div className="mb-6">
-                      <div className="flex justify-between text-[10px] font-black uppercase text-gray-500 mb-2 italic">
-                        <span>Speed</span>
-                        <span className="text-purple-400">{game.speed}%</span>
-                      </div>
-                      <div className="h-1.5 w-full bg-white/5 rounded-full overflow-hidden">
-                        <div className="h-full bg-gradient-to-r from-blue-500 to-purple-500 rounded-full transition-all duration-1000" style={{ width: `${game.speed}%` }}></div>
-                      </div>
-                    </div>
+                        <div>
+                        <div className="flex justify-between text-[10px] font-black uppercase text-gray-500 mb-2 italic">
+                            <span>Speed</span>
+                            <span className="text-purple-400">{game.speed}%</span>
+                        </div>
+                        <div className="h-1.5 w-full bg-white/5 rounded-full overflow-hidden">
+                            <div className="h-full bg-gradient-to-r from-blue-500 to-purple-500 rounded-full transition-all duration-1000" style={{ width: `${game.speed}%` }}></div>
+                        </div>
+                        </div>
 
-                    <div>
-                      <div className="flex justify-between text-[10px] font-black uppercase text-gray-500 mb-2 italic">
-                        <span>Consistency</span>
-                        <span className="text-pink-400">{game.winRate}%</span>
-                      </div>
-                      <div className="h-1.5 w-full bg-white/5 rounded-full overflow-hidden">
-                        <div className="h-full bg-gradient-to-r from-purple-500 to-pink-500 rounded-full transition-all duration-1000" style={{ width: `${game.winRate}%` }}></div>
-                      </div>
+                        <div>
+                        <div className="flex justify-between text-[10px] font-black uppercase text-gray-500 mb-2 italic">
+                            <span>Consistency</span>
+                            <span className="text-pink-400">{game.winRate}%</span>
+                        </div>
+                        <div className="h-1.5 w-full bg-white/5 rounded-full overflow-hidden">
+                            <div className="h-full bg-gradient-to-r from-purple-500 to-pink-500 rounded-full transition-all duration-1000" style={{ width: `${game.winRate}%` }}></div>
+                        </div>
+                        </div>
                     </div>
 
                   </div>
@@ -109,9 +117,9 @@ const Performance = () => {
               ))}
             </div>
           ) : (
-            <div className="flex flex-col items-center justify-center py-32 opacity-20">
-              <Activity size={80} className="mb-6 text-gray-500" />
-              <p className="text-xl font-black italic uppercase tracking-[0.3em]">No Performance Data Found</p>
+            <div className="flex flex-col items-center justify-center py-20 md:py-32 opacity-20 text-center">
+              <Activity className="mb-4 md:mb-6 text-gray-500 w-12 h-12 md:w-20 md:h-20" />
+              <p className="text-sm md:text-xl font-black italic uppercase tracking-[0.2em] md:tracking-[0.3em]">No Performance Data Found</p>
             </div>
           )}
 
