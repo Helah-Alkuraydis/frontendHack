@@ -5,9 +5,7 @@ export const socket = io(SOCKET_URL, {
     withCredentials: true,
     transports: ["polling", "websocket"], 
     autoConnect: true,
-    reconnection: true,
-    reconnectionAttempts: 5,
-    reconnectionDelay: 1000,
+    reconnection: true
 });
 
 export const getSocket = () => socket;

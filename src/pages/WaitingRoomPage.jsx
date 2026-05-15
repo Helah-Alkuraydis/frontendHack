@@ -197,29 +197,23 @@ const WaitingRoomPage = () => {
 
     const setupRoom = () => {
   const userData = JSON.parse(localStorage.getItem("user") || "{}");
-  
   if (userData?._id) {
     socket.emit("register_user", {
       userId: userData._id,
       onlineStatus: userData.onlineStatus || 'Public'
     });
-    console.log("📡 Agent Registered in Waiting Room:", userData._id);
   }
-  
   socket.emit("join_room", sessionId);
   fetchLobbyData();
 };
 
-  socket.on("connect", setupRoom);
+    if (socket.connected) {
+      setupRoom();
+    } else {
+      socket.connect();
+    }
 
-  socket.on("reconnect", () => {
-    console.log("♻️ Connection restored! Re-registering...");
-    setupRoom();
-  });
-
-
-   if (socket.connected) setupRoom();
-
+    socket.on("connect", setupRoom);
 
     socket.on("player_joined", () => {
       console.log("🔔 Room Update: Refreshing players list...");
@@ -321,7 +315,6 @@ const WaitingRoomPage = () => {
 
     return () => {
       socket.off("connect", setupRoom);
-      socket.off("reconnect");
       socket.off("player_joined");
       socket.off("invite_accepted_feedback");
       socket.off("player_ready_update");
@@ -688,7 +681,6 @@ const handleSearchUsers = async (query) => {
         const res = await axios.get(`${BASE_URL}/auth/me`, {
           headers: { Authorization: `Bearer ${token}` },
         });
-        
         setPlayers([
           {
             id: res.data._id,

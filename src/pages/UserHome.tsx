@@ -113,7 +113,7 @@ if (dashboardRes.data.latestAchievement) {
           </div>
       </div>
 
-      <h3 className="text-2xl font-black mb-8 tracking-tighter italic uppercase text-white/90">popular games
+      <h3 className="text-2xl font-black mb-8 tracking-tighter italic uppercase text-white/90">Most popular games
 </h3>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
           <Link to="/games"><GameCard title="Fast, smart, unstoppable !" desc="Race against time and other hackers to capture the flag first" gradient="bg-gradient-to-br from-emerald-600/40 to-emerald-900/5" borderColor="border-emerald-500/20" btnColor="text-white bg-emerald-600 hover:bg-emerald-700" icon={<Zap className="text-emerald-300 mb-3" size={32} />} bgImage="/game-runner.png" /></Link>
