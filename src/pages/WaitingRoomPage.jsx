@@ -207,13 +207,14 @@ const WaitingRoomPage = () => {
       fetchLobbyData();
     };
 
+        socket.on("connect", setupRoom);
+
     if (socket.connected) {
       setupRoom();
     } else {
       socket.connect();
     }
 
-    socket.on("connect", setupRoom);
 
     socket.on("player_joined", () => {
       console.log("🔔 Room Update: Refreshing players list...");
