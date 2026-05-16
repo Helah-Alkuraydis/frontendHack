@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
-import { LogOut, Play, PlusCircle, X, Search, Loader2, Check } from "lucide-react";
+import { LogOut, Play, PlusCircle, X, Search, Loader2, Check, Lock } from "lucide-react";
 import MainLayout from "../components/MainLayout";
 import { Sparkles } from "../components/sparkles";
 import axios from "axios";
@@ -29,14 +29,14 @@ const InviteTable = ({ data, onInvite, type, invitedIds, onlineUserIds = [], pla
 
 
   return (
-    <div className="w-full overflow-hidden rounded-2xl border border-white/5 bg-white/[0.02]">
-      <table className="w-full text-left border-collapse">
+    <div className="w-full overflow-hidden rounded-2xl border border-white/5 bg-white/[0.02] overflow-x-auto">
+      <table className="w-full text-left border-collapse min-w-[400px]">
         <thead>
           <tr className="bg-white/5 text-[10px] uppercase tracking-[0.2em] text-white/50">
-            <th className="px-6 py-4 font-black">No.</th>
-            <th className="px-6 py-4 font-black">Username</th>
-            <th className="px-6 py-4 font-black text-center">Points</th>
-            <th className="px-6 py-4 font-black text-right">Invite</th>
+            <th className="px-3 py-3 md:px-6 md:py-4 font-black">No.</th>
+            <th className="px-3 py-3 md:px-6 md:py-4 font-black">Username</th>
+            <th className="px-3 py-3 md:px-6 md:py-4 font-black text-center">Points</th>
+            <th className="px-3 py-3 md:px-6 md:py-4 font-black text-right">Invite</th>
           </tr>
         </thead>
         <tbody className="divide-y divide-white/5">
@@ -54,33 +54,33 @@ const InviteTable = ({ data, onInvite, type, invitedIds, onlineUserIds = [], pla
                   key={item._id || item.id}
                   className={`group transition-colors ${isOnline ? "hover:bg-white/[0.03]" : "opacity-40 grayscale"}`}
                 >
-                  <td className="px-6 py-4 text-xs font-mono text-white/30">{index + 1}</td>
-                  <td className="px-6 py-4">
-                     <div className="flex items-center gap-3">
+                  <td className="px-3 py-3 md:px-6 md:py-4 text-[10px] md:text-xs font-mono text-white/30">{index + 1}</td>
+                  <td className="px-3 py-3 md:px-6 md:py-4">
+                     <div className="flex items-center gap-2 md:gap-3">
                         <img 
                           src={item.characterStyle?.startsWith("/") ? item.characterStyle : `/${item.characterStyle || "Avatar.png"}`}
-                          className={`w-8 h-8 rounded-full border ${isOnline ? "border-emerald-500/50" : "border-white/10"}`} 
+                          className={`w-6 h-6 md:w-8 md:h-8 rounded-full border ${isOnline ? "border-emerald-500/50" : "border-white/10"}`} 
                           alt="avatar" 
                         />
                         <div className="flex flex-col">
-                           <span className="text-sm font-bold text-white">{item.username}</span>
-                           <span className={`text-[9px] font-black ${isOnline ? "text-emerald-500" : "text-gray-500"}`}>
+                           <span className="text-xs md:text-sm font-bold text-white">{item.username}</span>
+                           <span className={`text-[8px] md:text-[9px] font-black ${isOnline ? "text-emerald-500" : "text-gray-500"}`}>
                              {isOnline ? "● Available" : "Offline"}
                            </span>
                         </div>
                      </div>
                   </td>
-                  <td className="px-6 py-4 text-center">
-                    <span className="text-xs font-black text-amber-500 bg-amber-500/10 px-3 py-1 rounded-full">
+                  <td className="px-3 py-3 md:px-6 md:py-4 text-center">
+                    <span className="text-[10px] md:text-xs font-black text-amber-500 bg-amber-500/10 px-2 py-1 md:px-3 rounded-full whitespace-nowrap">
                         {item.totalScore || 0} XP
                     </span>
                   </td>
                
-                  <td className="px-6 py-4 text-right">
+                  <td className="px-3 py-3 md:px-6 md:py-4 text-right">
                     <button
                       onClick={() => isOnline && !isInRoom && onInvite(item._id || item.id)}
                       disabled={!isOnline || isInvited || isInRoom}
-                      className={`text-[10px] font-black px-4 py-1.5 rounded-lg uppercase transition-all 
+                      className={`text-[9px] md:text-[10px] font-black px-3 py-1.5 md:px-4 rounded-lg uppercase transition-all whitespace-nowrap 
                         ${isInRoom ? "bg-emerald-500/20 text-emerald-500" : isInvited ? "bg-gray-600 text-gray-400" : isOnline ? "bg-blue-600 hover:bg-blue-500 text-white" : "bg-white/5 text-gray-500 cursor-not-allowed"}`}
                     >
                       {isInRoom ? "IN ROOM" : isInvited ? "Pending..." : "Invite"}
@@ -568,20 +568,20 @@ const handleSearchUsers = async (query) => {
         );
       case "search":
         return (
-          <div className="space-y-6">
+          <div className="space-y-4 md:space-y-6">
             <div className="relative group">
               <div className="absolute inset-y-0 left-4 flex items-center pointer-events-none text-gray-500 group-focus-within:text-blue-500 transition-colors">
                 {searchLoading ? (
-                  <Loader2 size={18} className="animate-spin" />
+                  <Loader2 className="animate-spin w-[16px] h-[16px] md:w-[18px] md:h-[18px]" />
                 ) : (
-                  <Search size={18} />
+                  <Search className="w-[16px] h-[16px] md:w-[18px] md:h-[18px]" />
                 )}
               </div>
               <input
                 type="text"
                 value={searchQuery}
                 placeholder="Enter agent name to track..."
-                className="w-full bg-white/5 border border-white/10 rounded-2xl py-4 pl-12 pr-4 text-white placeholder:text-gray-600 focus:outline-none focus:border-blue-500/50 focus:bg-white/[0.08] transition-all shadow-inner"
+                className="w-full bg-white/5 border border-white/10 rounded-xl md:rounded-2xl py-3 md:py-4 pl-10 md:pl-12 pr-4 text-xs md:text-sm text-white placeholder:text-gray-600 focus:outline-none focus:border-blue-500/50 focus:bg-white/[0.08] transition-all shadow-inner"
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
             </div>
@@ -609,13 +609,13 @@ const handleSearchUsers = async (query) => {
             const isInvited = invitedTeamIds.includes(team._id);
 
             return (
-                <div key={team._id} className="bg-white/5 border border-white/10 rounded-[2rem] p-6 hover:bg-white/[0.08] transition-all">
-                    <div className="flex justify-between items-center">
+                <div key={team._id} className="bg-white/5 border border-white/10 rounded-2xl md:rounded-[2rem] p-4 md:p-6 hover:bg-white/[0.08] transition-all">
+                    <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 sm:gap-0">
                         <div>
-                            <h3 className="text-xl font-black text-white italic uppercase">{team.name}</h3>
-                            <div className="flex gap-4 mt-2">
-                                <span className="text-[10px] font-bold text-emerald-400">WINS: {team.performance?.totalWins || 0}</span>
-                                <span className="text-[10px] font-bold text-red-400">LOSSES: {team.performance?.totalLosses || 0}</span>
+                            <h3 className="text-lg md:text-xl font-black text-white italic uppercase">{team.name}</h3>
+                            <div className="flex gap-3 md:gap-4 mt-1 md:mt-2">
+                                <span className="text-[9px] md:text-[10px] font-bold text-emerald-400">WINS: {team.performance?.totalWins || 0}</span>
+                                <span className="text-[9px] md:text-[10px] font-bold text-red-400">LOSSES: {team.performance?.totalLosses || 0}</span>
                             </div>
                         </div>
 
@@ -623,7 +623,7 @@ const handleSearchUsers = async (query) => {
                         <button 
                             onClick={() => !isInvited && !isTeamInRoom && inviteFullTeam(team._id)}
                             disabled={isInvited || isTeamInRoom}
-                            className={`px-6 py-3 rounded-xl font-black uppercase text-[10px] transition-all shadow-lg 
+                            className={`w-full sm:w-auto px-4 md:px-6 py-2 md:py-3 rounded-lg md:rounded-xl font-black uppercase text-[9px] md:text-[10px] transition-all shadow-lg 
                                 ${isTeamInRoom 
                                     ? "bg-emerald-500/20 text-emerald-500 border border-emerald-500/30 shadow-none" 
                                     : isInvited 
@@ -632,7 +632,7 @@ const handleSearchUsers = async (query) => {
                                 }`}
                         >
                             {isTeamInRoom ? (
-                                <span className="flex items-center gap-2">
+                                <span className="flex items-center justify-center gap-2">
                                     <Check size={12} /> IN ROOM
                                 </span>
                             ) : isInvited ? (
@@ -643,15 +643,15 @@ const handleSearchUsers = async (query) => {
                         </button>
                     </div>
 
-                    <div className="flex mt-4 -space-x-3">
+                    <div className="flex mt-3 md:mt-4 -space-x-2 md:-space-x-3">
                         {team.members?.map(member => {
                             // فحص حالة كل عضو بشكل منفرد (اختياري لو تبين تلونين آفاتارهم)
                             const memberInRoom = players.some(p => p.id.toString() === (member._id || member.id).toString());
                             return (
                                 <img 
                                     key={member._id}
-                                    src={`/${member.characterStyle || 'Avatar.png'}`} 
-                                    className={`w-8 h-8 rounded-full border-2 ${memberInRoom ? 'border-emerald-500' : 'border-[#0f172a]'} transition-all`} 
+                                    src={member.characterStyle?.startsWith("/") ? member.characterStyle : `/${member.characterStyle || 'Avatar.png'}`} 
+                                    className={`w-6 h-6 md:w-8 md:h-8 rounded-full border-2 ${memberInRoom ? 'border-emerald-500' : 'border-[#0f172a]'} transition-all`} 
                                     title={member.username}
                                 />
                             );
@@ -661,7 +661,7 @@ const handleSearchUsers = async (query) => {
             );
         })
     ) : (
-                <div className="px-6 py-10 text-center text-gray-500 italic text-sm">
+                <div className="px-6 py-10 text-center text-gray-500 italic text-xs md:text-sm">
                     No recent teams found...
                 </div>
             )}
@@ -819,22 +819,22 @@ const handleSearchUsers = async (query) => {
 
   return (
     <MainLayout activePage="games">
-      <div className="text-3xl font-black tracking-tight text-white uppercase italic mb-5">
+      <div className="text-xl md:text-3xl font-black tracking-tight text-white uppercase italic mb-4 md:mb-5 px-2">
         Waiting Room
       </div>
 
       <div className="flex-1 flex flex-col items-center justify-center p-2 relative">
-        <div className="w-full max-w-6xl h-[750px] bg-[#0a0f1d]/90 backdrop-blur-2xl border border-white/10 rounded-[3rem] p-7 shadow-2xl relative overflow-hidden flex flex-col">
+        <div className="w-full max-w-6xl min-h-[500px] md:h-[750px] bg-[#0a0f1d]/90 backdrop-blur-2xl border border-white/10 rounded-3xl md:rounded-[3rem] p-4 md:p-7 shadow-2xl relative overflow-hidden flex flex-col">
           <div className="flex justify-end items-center mb-4 relative z-30">
-            <div className="bg-white/5 border border-white/10 px-6 py-2 rounded-full flex items-center gap-3">
-              <span className="text-white/60 font-bold">Players</span>
-              <span className="text-2xl font-black text-blue-400">
+            <div className="bg-white/5 border border-white/10 px-4 md:px-6 py-1.5 md:py-2 rounded-full flex items-center gap-2 md:gap-3">
+              <span className="text-white/60 font-bold text-xs md:text-base">Players</span>
+              <span className="text-lg md:text-2xl font-black text-blue-400">
                 {players.length} / 4
               </span>
             </div>
           </div>
 
-          <div className="flex-1 grid grid-cols-2 grid-rows-[auto_auto] gap-x-36 gap-y-0 relative content-center">
+          <div className="flex-1 grid grid-cols-2 grid-rows-[auto_auto] gap-x-4 md:gap-x-36 gap-y-8 md:gap-y-0 relative content-center">
             {[0, 1, 2, 3].map((idx) => {
               const player = players[idx];
               const isTop = idx < 2;
@@ -844,25 +844,23 @@ const handleSearchUsers = async (query) => {
                 <div
                   key={idx}
                   className={`relative flex flex-col items-center justify-end h-full transition-all duration-700
-                    ${isTop ? "scale-110 z-0" : "scale-150 z-10"} 
-                    ${isLeft ? "justify-self-start" : "justify-self-end"}`}
-                  style={{
-                    paddingLeft: isTop && isLeft ? "30px" : "0",
-                    paddingRight: isTop && !isLeft ? "30px" : "0",
-                    marginLeft: !isTop && isLeft ? "160px" : "0",
-                    marginRight: !isTop && !isLeft ? "160px" : "0",
-                    marginBottom: !isTop ? "40px" : "0",
-                  }}
+                    ${isTop ? "md:scale-110 z-0" : "md:scale-150 z-10"} 
+                    ${isLeft ? "justify-self-start" : "justify-self-end"}
+                    ${isTop && isLeft ? "md:pl-[30px]" : ""}
+                    ${isTop && !isLeft ? "md:pr-[30px]" : ""}
+                    ${!isTop && isLeft ? "md:ml-[160px]" : ""}
+                    ${!isTop && !isLeft ? "md:mr-[160px]" : ""}
+                    ${!isTop ? "mb-4 md:mb-[40px]" : ""}`}
                 >
                   {player ? (
                     <div className="flex flex-col items-center animate-in fade-in zoom-in duration-1000">
-                      <div className="mb-2 text-center">
+                      <div className="mb-1 md:mb-2 text-center">
                         {player.isHost && (
-                          <span className="text-[10px] text-cyan-400 font-black uppercase tracking-widest block mb-1 font-mono">
+                          <span className="text-[8px] md:text-[10px] text-cyan-400 font-black uppercase tracking-widest block mb-0.5 md:mb-1 font-mono">
                             'Host'
                           </span>
                         )}
-                        <h3 className="font-bold text-white italic tracking-tight text-lg">
+                        <h3 className="font-bold text-white italic tracking-tight text-xs md:text-lg">
                           {player.username}
                         </h3>
                       </div>
@@ -880,13 +878,13 @@ const handleSearchUsers = async (query) => {
                         />
                         <img
                           src={getStandingAvatar(player.characterStyle)}
-                          className={`${isTop ? "w-48" : "w-96"} h-auto z-10 drop-shadow-[0_20px_40px_rgba(59,130,246,0.4)] animate-float`}
+                          className={`${isTop ? "w-24 md:w-48" : "w-36 md:w-96"} h-auto z-10 drop-shadow-[0_20px_40px_rgba(59,130,246,0.4)] animate-float`}
                           alt="Hero"
                         />
                       </div>
                       <img
                         src="/stage.png"
-                        className={`${isTop ? "w-56" : "w-80"} h-auto mt-[-2px] opacity-90`}
+                        className={`${isTop ? "w-32 md:w-56" : "w-48 md:w-80"} h-auto mt-[-2px] opacity-90`}
                         alt="Platform"
                       />
                     </div>
@@ -897,11 +895,11 @@ const handleSearchUsers = async (query) => {
     if (isPasswordGame && players.length >= 2) {
       return (
         <div className="flex flex-col items-center opacity-20 grayscale">
-          <div className="mb-12 flex flex-col items-center gap-2">
-             <Lock size={20} className="text-gray-500" />
-             <span className="text-[8px] font-black uppercase tracking-tighter text-gray-500">Dual Access Only</span>
+          <div className="mb-6 md:mb-12 flex flex-col items-center gap-1 md:gap-2">
+             <Lock className="text-gray-500 w-4 h-4 md:w-5 md:h-5" />
+             <span className="text-[6px] md:text-[8px] font-black uppercase tracking-tighter text-gray-500">Dual Access Only</span>
           </div>
-          <img src="/stage.png" className={`${isTop ? "w-56" : "w-64"} grayscale brightness-50 opacity-30 mt-[-50px]`} alt="Locked Stage" />
+          <img src="/stage.png" className={`${isTop ? "w-32 md:w-56" : "w-40 md:w-64"} grayscale brightness-50 opacity-30 mt-[-25px] md:mt-[-50px]`} alt="Locked Stage" />
         </div>
       );
     }
@@ -910,13 +908,13 @@ const handleSearchUsers = async (query) => {
     return (
       <div className="flex flex-col items-center opacity-30 hover:opacity-100 transition-all duration-500">
         <button
-          className="group flex items-center gap-2 bg-blue-500/10 border border-blue-500/20 px-3 py-1.5 rounded-xl mb-12 hover:bg-blue-500 transition-all z-20"
+          className="group flex items-center gap-1 md:gap-2 bg-blue-500/10 border border-blue-500/20 px-2 py-1 md:px-3 md:py-1.5 rounded-lg md:rounded-xl mb-6 md:mb-12 hover:bg-blue-500 transition-all z-20"
           onClick={() => setIsInviteModalOpen(true)}
         >
-          <PlusCircle size={14} className="text-blue-400 group-hover:text-white" />
-          <span className="text-[9px] font-black uppercase tracking-widest text-blue-400 group-hover:text-white">Invite</span>
+          <PlusCircle className="text-blue-400 group-hover:text-white w-3 h-3 md:w-4 md:h-4" />
+          <span className="text-[7px] md:text-[9px] font-black uppercase tracking-widest text-blue-400 group-hover:text-white">Invite</span>
         </button>
-        <img src="/stage.png" className={`${isTop ? "w-56" : "w-64"} grayscale brightness-50 opacity-50 mt-[-50px]`} alt="Empty Stage" />
+        <img src="/stage.png" className={`${isTop ? "w-32 md:w-56" : "w-40 md:w-64"} grayscale brightness-50 opacity-50 mt-[-25px] md:mt-[-50px]`} alt="Empty Stage" />
       </div>
     );
   })()
@@ -926,10 +924,10 @@ const handleSearchUsers = async (query) => {
             })}
           </div>
 
-          <div className="flex justify-between items-center mt-6 relative z-30">
+          <div className="flex flex-col md:flex-row justify-between items-center mt-8 md:mt-6 relative z-30 gap-4 md:gap-0">
             <button
               onClick={handleLeaveRoom}
-              className="flex items-center gap-2 px-8 py-3 rounded-2xl bg-white/5 border border-white/10 text-gray-400 font-black uppercase text-xs hover:bg-red-500/20 hover:text-red-500 transition-all"
+              className="flex items-center justify-center gap-2 w-full md:w-auto px-6 py-3 md:px-8 md:py-3 rounded-xl md:rounded-2xl bg-white/5 border border-white/10 text-gray-400 font-black uppercase text-[10px] md:text-xs hover:bg-red-500/20 hover:text-red-500 transition-all"
             >
               <LogOut size={16} /> Leaving
             </button>
@@ -949,7 +947,7 @@ const handleSearchUsers = async (query) => {
                   <button
                     onClick={handleStartMission}
                     disabled={!hasGuests || !allGuestsReady}
-                    className={`flex items-center gap-3 px-14 py-4 rounded-2xl font-black text-xl italic uppercase tracking-widest transition-all shadow-lg 
+                    className={`flex items-center justify-center gap-2 md:gap-3 w-full md:w-auto px-8 py-3 md:px-14 md:py-4 rounded-xl md:rounded-2xl font-black text-sm md:text-xl italic uppercase tracking-widest transition-all shadow-lg 
                       ${
                         hasGuests && allGuestsReady
                           ? "bg-gradient-to-r from-emerald-500 to-emerald-700 text-white hover:scale-105 shadow-emerald-500/50 animate-pulse"
@@ -959,7 +957,7 @@ const handleSearchUsers = async (query) => {
                     {hasGuests && allGuestsReady
                       ? "Start Mission"
                       : "Waiting for Agents"}{" "}
-                    <Play size={20} fill="currentColor" />
+                    <Play className="w-4 h-4 md:w-5 md:h-5" fill="currentColor" />
                   </button>
                 );
               } else {
@@ -967,7 +965,7 @@ const handleSearchUsers = async (query) => {
                   <button
                     onClick={handleReady}
                     disabled={me?.isReady}
-                    className={`flex items-center gap-3 px-14 py-4 rounded-2xl font-black text-xl italic uppercase tracking-widest transition-all shadow-lg 
+                    className={`flex items-center justify-center gap-2 md:gap-3 w-full md:w-auto px-8 py-3 md:px-14 md:py-4 rounded-xl md:rounded-2xl font-black text-sm md:text-xl italic uppercase tracking-widest transition-all shadow-lg 
                       ${
                         me?.isReady
                           ? "bg-blue-900/50 text-blue-300 cursor-wait border border-blue-500/30"
@@ -975,7 +973,7 @@ const handleSearchUsers = async (query) => {
                       }`}
                   >
                     {me?.isReady ? "Waiting for Host..." : "Ready"}{" "}
-                    <Play size={20} fill="currentColor" />
+                    <Play className="w-4 h-4 md:w-5 md:h-5" fill="currentColor" />
                   </button>
                 );
               }
@@ -986,40 +984,40 @@ const handleSearchUsers = async (query) => {
 
       {isInviteModalOpen && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 backdrop-blur-sm bg-black/60">
-          <div className="relative w-full max-w-2xl bg-[#0f172a]/95 border border-white/10 rounded-[2.5rem] p-10 shadow-2xl shadow-blue-500/10">
-            <div className="flex flex-col items-center mb-8">
-              <h2 className="text-3xl font-black text-white italic uppercase tracking-widest mb-6">
+          <div className="relative w-full max-w-2xl bg-[#0f172a]/95 border border-white/10 rounded-[2rem] md:rounded-[2.5rem] p-6 md:p-10 shadow-2xl shadow-blue-500/10 max-h-[90vh] flex flex-col">
+            <div className="flex flex-col items-center mb-6 md:mb-8">
+              <h2 className="text-xl md:text-3xl font-black text-white italic uppercase tracking-widest mb-4 md:mb-6">
                 Inviting Players
               </h2>
-              <div className="flex bg-white/5 p-1.5 rounded-2xl border border-white/5 w-full">
+              <div className="flex flex-col sm:flex-row bg-white/5 p-1.5 rounded-2xl border border-white/5 w-full gap-1 sm:gap-0">
                 <button
                   onClick={() => setInviteTab("friends")}
-                  className={`flex-1 py-3 rounded-xl font-bold uppercase text-[10px] transition-all ${inviteTab === "friends" ? "bg-blue-600 text-white shadow-lg" : "text-gray-400 hover:text-white"}`}
+                  className={`flex-1 py-2.5 md:py-3 rounded-xl font-bold uppercase text-[9px] md:text-[10px] transition-all ${inviteTab === "friends" ? "bg-blue-600 text-white shadow-lg" : "text-gray-400 hover:text-white"}`}
                 >
                   Invite Friends
                 </button>
                 <button
                   onClick={() => setInviteTab("search")}
-                  className={`flex-1 py-3 rounded-xl font-bold uppercase text-[10px] transition-all ${inviteTab === "search" ? "bg-blue-600 text-white shadow-lg" : "text-gray-400 hover:text-white"}`}
+                  className={`flex-1 py-2.5 md:py-3 rounded-xl font-bold uppercase text-[9px] md:text-[10px] transition-all ${inviteTab === "search" ? "bg-blue-600 text-white shadow-lg" : "text-gray-400 hover:text-white"}`}
                 >
                   Searching for Players
                 </button>
                 <button
                   onClick={() => setInviteTab("recent")}
-                  className={`flex-1 py-3 rounded-xl font-bold uppercase text-[10px] transition-all ${inviteTab === "recent" ? "bg-blue-600 text-white shadow-lg" : "text-gray-400 hover:text-white"}`}
+                  className={`flex-1 py-2.5 md:py-3 rounded-xl font-bold uppercase text-[9px] md:text-[10px] transition-all ${inviteTab === "recent" ? "bg-blue-600 text-white shadow-lg" : "text-gray-400 hover:text-white"}`}
                 >
                   Recent Team
                 </button>
               </div>
             </div>
-            <div className="min-h-[300px] max-h-[400px] overflow-y-auto custom-scrollbar pr-2">
+            <div className="flex-1 overflow-y-auto custom-scrollbar pr-1 md:pr-2 min-h-[200px] max-h-[400px]">
               {renderTabContent()}
             </div>
             <button
               onClick={() => setIsInviteModalOpen(false)}
-              className="absolute top-8 right-8 text-gray-500 hover:text-white transition-colors"
+              className="absolute top-4 right-4 md:top-8 md:right-8 text-gray-500 hover:text-white transition-colors bg-white/5 p-1.5 rounded-full md:bg-transparent md:p-0"
             >
-              <X size={24} />
+              <X className="w-5 h-5 md:w-6 md:h-6" />
             </button>
           </div>
         </div>
