@@ -7,7 +7,6 @@ import PhishingHunter from '../components/games/PhishingHunter';
 import HackRace from '../components/games/hack-race/HackRace';
 import FirewallDefender from '../components/games/FirewallDefender';
 import PrivacyAwareness from '../components/games/PrivacyAwareness';
-// import PasswordMakerBreaker from '../components/games/PasswordMakerBreaker';
 import PasswordMakerBreaker from '../components/games/password-game/PasswordMakerBreaker';
 import SecureCodingChallenge from '../components/games/SecureCodingChallenge';
 import CyberEscapeRoom from '../components/games/EscapeRoom/CyberEscapeRoom';
@@ -27,8 +26,6 @@ const getLevelCategory = (level: number) => {
 
 const getGameStyles = (gameId: string) => {
   const configs: Record<string, { img: string; btnGradient: string; description: string; gradient: string; border: string; glow: string }> = {
-
-    // 1. Phishing Hunter 
     "69cee7269c67c2d9c0ae209d": {
       img: "/image_1.png",
       btnGradient: "bg-gradient-to-r from-blue-600 to-cyan-400",
@@ -37,8 +34,6 @@ const getGameStyles = (gameId: string) => {
       glow: "shadow-blue-500/20",
       description: "Identify safe from malicious emails by analyzing sender address, links, and language urgency"
     },
-
-    // 2. Firewall Defender 
     "69cee7269c67c2d9c0ae209e": {
       img: "/game-shield.png",
       btnGradient: "bg-gradient-to-r from-orange-500 to-red-600",
@@ -47,8 +42,6 @@ const getGameStyles = (gameId: string) => {
       glow: "shadow-red-500/20",
       description: "Defend a digital network from moving cyberattacks by deploying specialized defensive tools"
     },
-
-    // 3. Cyber Escape Room 
     "69cee7269c67c2d9c0ae209f": {
       img: "/game-escape.png",
       btnGradient: "bg-gradient-to-r from-purple-500 to-purple-700",
@@ -57,8 +50,6 @@ const getGameStyles = (gameId: string) => {
       glow: "shadow-purple-500/20",
       description: "Collaborative multiplayer game to escape a breached network by solving four security puzzles in 10 minutes"
     },
-
-    // 4. Hack Race 
     "69cee7269c67c2d9c0ae20a0": {
       img: "/game-runner.png",
       btnGradient: "bg-gradient-to-br from-emerald-500 to-emerald-700",
@@ -67,8 +58,6 @@ const getGameStyles = (gameId: string) => {
       glow: "shadow-emerald-500/20",
       description: "Fast-paced scenario-based game to choose the best response to cybersecurity threats under pressure"
     },
-
-    // 5. Password Maker/Breaker 🔑
     "69cee7269c67c2d9c0ae20a2": {
       img: "/game-key.png",
       btnGradient: "bg-gradient-to-br from-amber-500 to-orange-600",
@@ -77,8 +66,6 @@ const getGameStyles = (gameId: string) => {
       glow: "shadow-amber-500/20",
       description: "Learn to create strong passwords and understand how weak ones are exploited via cracking simulations"
     },
-
-    // 6. Secure Coding Challenge 💻
     "69cee7269c67c2d9c0ae20a3": {
       img: "/Secure Coding Challenge.png",
       btnGradient: "bg-gradient-to-br from-rose-600 to-rose-800",
@@ -87,8 +74,6 @@ const getGameStyles = (gameId: string) => {
       glow: "shadow-rose-500/20",
       description: "Analyze code snippets to find and fix vulnerabilities like SQL Injection and XSS"
     },
-
-    // 7. Privacy Awareness 🔒
     "69cee7269c67c2d9c0ae20a1": {
       img: "/blue.png",
       btnGradient: "bg-gradient-to-br from-blue-400 to-blue-600",
@@ -109,8 +94,6 @@ const getGameStyles = (gameId: string) => {
   };
 };
 
-
-
 const PlayGame = () => {
   const { sessionId: urlSessionId, gameSlug } = useParams();
   const navigate = useNavigate();
@@ -123,22 +106,17 @@ const PlayGame = () => {
   const [isPlaying, setIsPlaying] = useState(mode === 'weekly');
   const [currentLevel, setCurrentLevel] = useState(1);
   
-
-  // For Password Maker/Breaker ONLY :
   const [chosenRole, setChosenRole] = useState<'maker' | 'breaker' | null>(null);
-
-  // Multiplayer state 
   const [myRole, setMyRole] = useState<'maker' | 'breaker' | null>(null);
   const [lobbyData, setLobbyData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [dbSessionId, setDbSessionId] = useState<string | null>(null);
 
-
   useEffect(() => {
     const fetchData = async () => {
       try {
         const token = localStorage.getItem('token');
-        const { mode, initialLevel } = location.state || {}; // جلب الداتا من الـ navigate
+        const { mode, initialLevel } = location.state || {}; 
 
         const gamesRes = await axios.get(`${BASE_URL}/games`);
         const currentGame = gamesRes.data.data.find((g: any) => {
@@ -192,8 +170,6 @@ const PlayGame = () => {
 
         setTimeout(() => navigate('/games'), 1500);
       } else {
-        
-        // 🛡️ التعديل الذكي: نمنع إرسال كود الغرفة للباك أند عشان ما يكراش
         const isRoomCode = sessionId?.toString().startsWith('GG-');
         const validSessionId = dbSessionId || (isRoomCode ? null : sessionId);
 
@@ -218,20 +194,17 @@ const PlayGame = () => {
           );
         }
         
-        // الانتقال لصفحة الألعاب بنجاح
         setTimeout(() => navigate('/games'), 1500);
       }
 
     } catch (err) {
       console.error("Sync Failure:", err);
-      // 🚀 أضفنا هذا السطر عشان حتى لو الباك أند رفض الطلب، الزر يمشيك وما يعلق الشاشة!
       setTimeout(() => navigate('/games'), 1500);
     }
   };
 
   const styles = getGameStyles(dbGame?._id);
   const category = getLevelCategory(currentLevel);
-
 
   useEffect(() => {
     if (mode !== "multiplayer" || !sessionId) {
@@ -251,7 +224,6 @@ const PlayGame = () => {
 
         const userData = JSON.parse(localStorage.getItem("user") || "{}");
 
-        // ✅ التعديل الثاني: إعطاء نوع صريح للمتغير p لحل مشكلة implicit any
         const me = lobby.players.find((p: any) => p.user.toString() === userData._id);
 
         if (me) {
@@ -275,7 +247,6 @@ useEffect(() => {
                 const token = localStorage.getItem('token');
                 
                 const ESCAPE_GAME_ID = "69cee7269c67c2d9c0ae209f";
-                // 🛡️ الحارس حق لعبتك
                 if (dbGame?._id?.toString() === "69cee7269c67c2d9c0ae20a3") { 
                   console.log("💻 Secure Coding API initialization skipped. Using internal logic.");
                      return; 
@@ -333,13 +304,12 @@ useEffect(() => {
 
     socket.on("game_roles_updated", (updatedPlayers: any) => {
       console.log("🎮 Roles updated in-game:", updatedPlayers);
-      // setLobbyData((prev: any) => ({ ...prev, players: updatedPlayers }));
       setLobbyData((prev: any) => {
         const ESCAPE_ROOM_ID = "69cee7269c67c2d9c0ae209f";
         if (prev?.gameId === ESCAPE_ROOM_ID) {
           return { ...prev, players: updatedPlayers };
         }
-        return prev; // باقي الألعاب ترجع زي ما هي بدون تحديث يزعج شغل صديقتك
+        return prev;
       });
       const me = updatedPlayers.find((p: any) => p.user.toString() === userData?._id);
       if (me) {
@@ -397,7 +367,6 @@ if (loading || (mode === 'multiplayer' && !myRole && !isEscapeRoom && !isSecureC
     );
   }
 
-
 const handleRoleSelect = (roleName: string) => {
     if (!userData?._id || !sessionId) return;
     
@@ -412,7 +381,7 @@ const handleRoleSelect = (roleName: string) => {
   return (
     <MainLayout activePage="games">
         {mode !== 'multiplayer' && (
-          <div className="flex justify-between items-center mb-6 relative z-10">
+          <div className="flex justify-between items-center mb-6 relative z-10 px-2 md:px-0">
             <button 
               onClick={() => navigate("/games")} 
               className="p-2 text-gray-400 hover:text-white bg-white/5 rounded-full border border-white/10 transition-all focus:outline-none"
@@ -422,37 +391,45 @@ const handleRoleSelect = (roleName: string) => {
           </div>
         )}
 
-      <div className={`flex-1 relative rounded-[3rem] overflow-hidden border border-white/5 bg-[#0a0f1d]/40 backdrop-blur-3xl shadow-2xl flex flex-col mb-4 min-h-[640px]`}>
-
+      {/* 🔥 التعديل هنا: صغرنا البوردر راديوس وخلينا min-height يتجاوب مع الجوال */}
+      <div className={`flex-1 relative rounded-[2rem] md:rounded-[3rem] overflow-hidden border border-white/5 bg-[#0a0f1d]/40 backdrop-blur-3xl shadow-2xl flex flex-col mb-4 min-h-[500px] md:min-h-[640px] mx-2 md:mx-0`}>
 
         {
           (!isPlaying && mode !== 'weekly' && mode !== 'multiplayer') ? (
-            <div className={`flex flex-col md:flex-row h-full px-20 items-center justify-center gap-10 z-10 animate-in fade-in duration-1000 translate-y-20 pb-40 `}>
-              <div className="flex flex-col justify-center h-full space-y-6">
-                <div className="space-y-4 animate-in slide-in-from-left duration-1000">
-                  <div className={`flex items-center gap-2 ${category.color} font-mono text-[10px] font-black uppercase tracking-widest bg-white/5 w-fit px-3 py-1 rounded-full border border-white/10`}>
+            /* 🔥 التعديل هنا: flex-col للجوال و flex-row للابتوب + ترتيب المسافات */
+            <div className={`flex flex-col-reverse md:flex-row h-full px-6 md:px-20 items-center justify-center gap-8 md:gap-10 z-10 animate-in fade-in duration-1000 md:translate-y-20 py-12 md:pb-40 text-center md:text-left`}>
+              
+              <div className="flex flex-col justify-center h-full space-y-5 md:space-y-6 w-full md:w-auto">
+                <div className="space-y-3 md:space-y-4 animate-in slide-in-from-left duration-1000 flex flex-col items-center md:items-start">
+                  
+                  <div className={`flex items-center gap-2 ${category.color} font-mono text-[9px] md:text-[10px] font-black uppercase tracking-widest bg-white/5 w-fit px-3 py-1.5 rounded-full border border-white/10`}>
                     {currentLevel > 20 ? <Crown size={14} /> : <Trophy size={14} />}
                     {currentLevel > 20 ? "MISSION CONQUERED" : `${category.label} - LEVEL: ${currentLevel}`}
                   </div>
-                  <h1 className="text-5xl font-black italic uppercase text-white leading-[1.1] tracking-tighter">{dbGame?.gameName.toUpperCase()}</h1>
-                  <p className="text-gray-400 text-base max-w-sm italic border-l-4 border-white/10 pl-5 opacity-80">{styles.description}</p>
+                  
+                  <h1 className="text-3xl md:text-5xl font-black italic uppercase text-white leading-[1.1] tracking-tighter w-full">{dbGame?.gameName.toUpperCase()}</h1>
+                  
+                  <p className="text-gray-400 text-xs md:text-base max-w-sm italic border-l-2 md:border-l-4 border-white/10 pl-3 md:pl-5 opacity-80 leading-relaxed">
+                    {styles.description}
+                  </p>
                 </div>
-                <button onClick={() => setIsPlaying(true)} className={`px-14 py-5 rounded-full font-black text-xl text-white hover:scale-105 transition-all shadow-lg focus:outline-none uppercase italic tracking-widest ${styles.btnGradient}`}>
+                
+                <button onClick={() => setIsPlaying(true)} className={`w-full md:w-auto px-8 py-3.5 md:px-14 md:py-5 rounded-full font-black text-sm md:text-xl text-white hover:scale-105 transition-all shadow-lg focus:outline-none uppercase italic tracking-widest ${styles.btnGradient}`}>
                   {currentLevel > 20 ? "Replay Mastered" : "Deploy Mission"}
                 </button>
               </div>
-              <div className="flex justify-center items-center h-full relative translate-y-10">
-                <img src={styles.img} alt="Game Icon" className="relative w-[380px] drop-shadow-[0_20px_60px_rgba(0,0,0,0.8)] animate-float" />
+              
+              <div className="flex justify-center items-center h-full relative mt-6 md:mt-0 md:translate-y-10">
+                <img src={styles.img} alt="Game Icon" className="relative w-48 md:w-[380px] drop-shadow-[0_20px_60px_rgba(0,0,0,0.8)] animate-float" />
               </div>
             </div>
           ) : (
             /* 2. هنا الجزء الثاني (بدأ اللعب أو وضع التحدي الأسبوعي) */
             <>
-              {/* حارس البيانات: إذا البيانات لسه ما وصلت، نعرض لودينق بدال ما تطلع صفحة الـ Deploy */}
               {(!dbGame || !userData) ? (
                 <div className="flex-1 flex flex-col items-center justify-center gap-4 text-blue-400">
                   <Loader2 className="animate-spin" size={48} />
-                  <p className="font-mono text-xs tracking-widest animate-pulse">SYNCHRONIZING CHALLENGE DATA...</p>
+                  <p className="font-mono text-xs tracking-widest animate-pulse text-center px-4">SYNCHRONIZING CHALLENGE DATA...</p>
                 </div>
               ) : (
                 <>

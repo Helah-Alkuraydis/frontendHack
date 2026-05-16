@@ -60,28 +60,27 @@ const Friends = () => {
     return style.startsWith('/') ? style : `/${style}`;
   };
 
-  useEffect(() => {
-    const storedUser = JSON.parse(localStorage.getItem('user') || '{}');
-    if (!storedUser?._id) return;
+ useEffect(() => {
+  const storedUser = JSON.parse(localStorage.getItem('user') || '{}');
+  
+  if (storedUser?._id) {
+    socket.emit("register_user", {
+      userId: storedUser._id,
+      onlineStatus: storedUser.onlineStatus || 'Public'
+    });
+  }
 
-    const register = () => {
-      socket.emit("register_user", {
-        userId: storedUser._id,
-        onlineStatus: storedUser.onlineStatus || 'Public'
-      });
-    };
+  const handleUpdate = (ids: string[]) => {
+    console.log("Friends Page - Online IDs (Privacy Enabled):", ids);
+    setSocketOnlineIds(ids);
+  };
 
-    if (socket.connected) register();
-    socket.on("connect", register); 
+  socket.on("update_online_users_list", handleUpdate);
 
-    const handleUpdate = (ids: string[]) => setSocketOnlineIds(ids);
-    socket.on("update_online_users_list", handleUpdate);
-
-    return () => {
-      socket.off("connect", register);
-      socket.off("update_online_users_list", handleUpdate);
-    };
-  }, []);
+  return () => {
+    socket.off("update_online_users_list", handleUpdate);
+  };
+}, []);
 
   const processedList = useMemo(() => {
     let list = activeTab === 'Friends' ? [...friends] : [...teams];
@@ -102,6 +101,7 @@ const Friends = () => {
         if (!aOnline && bOnline) return 1;
         return (b.totalScore || 0) - (a.totalScore || 0);
       }
+
         if (sortBy === 'xp-desc') return (b.totalScore || 0) - (a.totalScore || 0); 
         if (sortBy === 'xp-asc') return (a.totalScore || 0) - (b.totalScore || 0);  
         return 0;
@@ -146,6 +146,7 @@ const Friends = () => {
         { headers: { Authorization: `Bearer ${token}` } }
       );
       
+      // إغلاق المودال أولاً لضمان تجربة مستخدم سريعة
       setIsModalOpen(false); 
 
       await HackHeroAlert.fire({
@@ -194,6 +195,7 @@ const Friends = () => {
 
   return (
     <MainLayout activePage="friends">
+
       {/* 🚀 Wrapper للحماية من السايد بار 🚀 */}
       <div className="w-full max-w-[1400px] mx-auto flex flex-col flex-1 pb-10 px-4 md:px-6">
         
@@ -205,6 +207,7 @@ const Friends = () => {
                 <button onClick={() => setActiveTab('Friends')} className={`flex-1 md:flex-none px-4 md:px-12 py-3 rounded-xl md:rounded-2xl text-sm md:text-xl font-black italic transition-all border ${activeTab === 'Friends' ? 'bg-white/5 border-[#ff3b6b] text-[#ff3b6b]' : 'text-gray-500 hover:text-white border-transparent'}`}>Friends</button>
                 <button onClick={() => setActiveTab('Team')} className={`flex-1 md:flex-none px-4 md:px-12 py-3 rounded-xl md:rounded-2xl text-sm md:text-xl font-black italic transition-all border ${activeTab === 'Team' ? 'bg-white/5 border-[#ff3b6b] text-[#ff3b6b]' : 'text-gray-500 hover:text-white border-transparent'}`}>Team</button>
             </div>
+
 
             {/* 🎯 Search & Action Bar */}
             <div className="flex flex-col xl:flex-row gap-4 mb-8 md:mb-12 items-center w-full">

@@ -30,8 +30,6 @@ const GameOverOverlay: React.FC<GameOverOverlayProps> = ({ isWinner, title, mess
         }
     }, [isWinner, xpGained]);
 
-    // 🔥 الحل السحري لمشكلة تيلويند (Tailwind JIT Purge)
-    // لازم نكتب الكلاسات صريحة عشان تيلويند يفهمها وما يمسحها
     const theme = isWinner ? {
         text: "text-emerald-400",
         textDark: "text-emerald-500",
@@ -55,63 +53,59 @@ const GameOverOverlay: React.FC<GameOverOverlayProps> = ({ isWinner, title, mess
     const Icon = isWinner ? Trophy : ShieldAlert;
 
     return (
-        // الخلفية صارت شفافة أكثر (bg-[#0a0f1d]/70) عشان تبين الغرفة وراها
         <div className="fixed inset-0 z-[200] flex items-center justify-center backdrop-blur-md bg-[#0a0f1d]/70 animate-in fade-in duration-500 font-mono p-4">
             
-            {/* 🔥 هنا حقنّا ستايلات الـ CSS عشان تشتغل الحركات! */}
             <style>{customStyles}</style>
 
-            {/* صغرنا الحجم من max-w-3xl إلى max-w-2xl عشان يكون مرتب */}
-            <div className={`relative w-full max-w-2xl ${theme.glow} border-t-4 ${theme.border} bg-[#050810]/95 rounded-[2rem] p-8 overflow-hidden shadow-2xl`}>
+            {/* 🔥 التعديل هنا: صغرنا البادينق للجوال p-5 وللابتوب p-8 🔥 */}
+            <div className={`relative w-full max-w-2xl ${theme.glow} border-t-4 ${theme.border} bg-[#050810]/95 rounded-[2rem] p-5 sm:p-8 overflow-hidden shadow-2xl`}>
                 
-                {/* شبكة نيون للخلفية */}
                 <div className={`absolute inset-0 opacity-20 CyberGrid ${theme.grid} pointer-events-none`}></div>
                 
-                {/* خط Scanner لامع */}
                 <div className={`absolute inset-x-0 h-1 bg-current opacity-30 ScannerLine ${theme.textDark} pointer-events-none`}></div>
 
                 {/* الهيدر */}
-                <div className="flex flex-col sm:flex-row items-center gap-6 mb-8 pb-6 border-b border-white/5 relative z-10 text-center sm:text-left">
-                    <div className={`p-4 rounded-2xl ${theme.bgDark} border border-white/10 ${theme.pulse}`}>
-                        <Icon size={40} className={`${theme.text} drop-shadow-[0_0_10px_currentColor]`} />
+                <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-6 mb-6 sm:mb-8 pb-6 border-b border-white/5 relative z-10 text-center sm:text-left">
+                    <div className={`p-3 sm:p-4 rounded-2xl ${theme.bgDark} border border-white/10 ${theme.pulse}`}>
+                        <Icon size={36} className={`${theme.text} drop-shadow-[0_0_10px_currentColor] sm:w-10 sm:h-10`} />
                     </div>
                     <div className="flex flex-col">
-                        <h1 className={`text-2xl sm:text-3xl font-black uppercase italic tracking-widest ${theme.text} drop-shadow-[0_0_15px_currentColor] GlitchText`}>
+                        <h1 className={`text-xl sm:text-3xl font-black uppercase italic tracking-widest ${theme.text} drop-shadow-[0_0_15px_currentColor] GlitchText`}>
                             {title}
                         </h1>
-                        <span className="text-[10px] text-gray-500 font-bold uppercase tracking-[0.3em] mt-1">
+                        <span className="text-[9px] sm:text-[10px] text-gray-500 font-bold uppercase tracking-[0.2em] sm:tracking-[0.3em] mt-1">
                              Match concluded / Protocol summary
                         </span>
                     </div>
                 </div>
 
                 {/* محتوى الرسالة */}
-                <div className="relative z-10 mb-8 bg-[#080c16]/80 border border-white/5 p-5 rounded-2xl shadow-inner">
-                    <p className={`text-sm text-gray-300 leading-relaxed italic`}>
-                        <span className={`${theme.textDark} font-bold mr-2`}>  [SYSTEM_LOG]:</span> 
+                <div className="relative z-10 mb-6 sm:mb-8 bg-[#080c16]/80 border border-white/5 p-4 sm:p-5 rounded-2xl shadow-inner">
+                    <p className={`text-xs sm:text-sm text-gray-300 leading-relaxed italic`}>
+                        <span className={`${theme.textDark} font-bold mr-2`}>[SYSTEM_LOG]:</span> 
                         {message}
                     </p>
                 </div>
 
-                {/* قسم النقاط والدور */}
-                <div className="relative z-10 grid grid-cols-2 gap-4 mb-8 items-center">
-                    <div className="border border-white/5 bg-white/[0.02] p-4 rounded-2xl flex items-center gap-4">
-                        <Award size={28} className="text-amber-400" />
+                {/* 🔥 التعديل هنا: grid-cols-1 بالجوال و sm:grid-cols-2 للابتوب 🔥 */}
+                <div className="relative z-10 grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 mb-6 sm:mb-8 items-center">
+                    <div className="border border-white/5 bg-white/[0.02] p-3 sm:p-4 rounded-xl sm:rounded-2xl flex items-center gap-3 sm:gap-4">
+                        <Award size={24} className="text-amber-400 sm:w-7 sm:h-7" />
                         <div className="flex flex-col">
-                            <span className="text-gray-500 text-[9px] font-bold uppercase">XP Extraction</span>
+                            <span className="text-gray-500 text-[8px] sm:text-[9px] font-bold uppercase">XP Extraction</span>
                             <div className="flex items-end gap-1">
-                                <span className={`text-3xl font-black ${isWinner ? 'text-amber-400' : 'text-gray-600'} XPCount transition-all`}>
+                                <span className={`text-2xl sm:text-3xl font-black ${isWinner ? 'text-amber-400' : 'text-gray-600'} XPCount transition-all`}>
                                     {animatedXP}
                                 </span>
-                                <span className="text-amber-400/70 text-xs font-bold pb-1">XP</span>
+                                <span className="text-amber-400/70 text-[10px] sm:text-xs font-bold pb-1">XP</span>
                             </div>
                         </div>
                     </div>
-                    <div className="border border-white/5 bg-white/[0.02] p-4 rounded-2xl flex items-center gap-4">
-                        <Zap size={28} className="text-blue-400" />
+                    <div className="border border-white/5 bg-white/[0.02] p-3 sm:p-4 rounded-xl sm:rounded-2xl flex items-center gap-3 sm:gap-4">
+                        <Zap size={24} className="text-blue-400 sm:w-7 sm:h-7" />
                         <div className="flex flex-col">
-                            <span className="text-gray-500 text-[9px] font-bold uppercase">Operative Role</span>
-                            <span className="text-sm font-bold text-white uppercase tracking-wider">{role}</span>
+                            <span className="text-gray-500 text-[8px] sm:text-[9px] font-bold uppercase">Operative Role</span>
+                            <span className="text-xs sm:text-sm font-bold text-white uppercase tracking-wider">{role}</span>
                         </div>
                     </div>
                 </div>
@@ -120,7 +114,7 @@ const GameOverOverlay: React.FC<GameOverOverlayProps> = ({ isWinner, title, mess
                 <div className="relative z-10 flex justify-center sm:justify-end">
                     <button 
                         onClick={onClose}
-                        className={`group flex items-center gap-3 px-8 py-3 rounded-full font-black uppercase text-xs italic tracking-widest transition-all ${theme.btn} ${isWinner ? theme.pulse : ''} hover:scale-105 active:scale-95`}
+                        className={`group flex items-center gap-3 px-6 py-3 sm:px-8 sm:py-3 rounded-full font-black uppercase text-[10px] sm:text-xs italic tracking-widest transition-all ${theme.btn} ${isWinner ? theme.pulse : ''} hover:scale-105 active:scale-95 w-full sm:w-auto justify-center`}
                     >
                         {isWinner ? 'Claim Rewards' : 'Acknowledge'}
                         <ChevronsRight size={16} className="group-hover:translate-x-1 transition-transform" />
