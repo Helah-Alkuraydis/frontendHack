@@ -238,28 +238,28 @@ const NavItem = ({ icon, label, active, isCollapsed, isDanger }: any) => (
 // MobileNav Component
 const MobileNav = ({ activePage }: any) => {
   return (
-    // 🟢 وزنا الـ padding عشان تطلع الأيقونات كاملة بدون قص، وثبتناها بأسفل الشاشة بـ safe-area
     <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-[#050810] border-t border-gray-800/50 px-2 pt-3 pb-5 flex justify-around items-center z-[100006] shadow-[0_-10px_20px_rgba(0,0,0,0.5)]">
       <Link to="/home">
         <Home size={22} className={activePage === 'home' ? 'text-[#ff3b6b]' : 'text-gray-500'} />
-      </Link>
-      
-      <Link to="/dashboard" id="dashboard-step" className="relative z-[100007]">
-        <LayoutDashboard size={22} className={activePage === 'dashboard' ? 'text-[#ff3b6b]' : 'text-gray-500'} />
       </Link>
 
       <Link to="/games" id="games-step" className="relative z-[100007]">
         <Gamepad2 size={22} className={activePage === 'games' ? 'text-[#ff3b6b]' : 'text-gray-500'} />
       </Link>
-      
-      <Link to="/friends" id="friends-step" className="relative z-[100007]">
-        <Users size={22} className={activePage === 'friends' ? 'text-[#ff3b6b]' : 'text-gray-500'} />
+      <Link to="/challenges" id="challenge-step" className="relative z-[100007]">
+        <Swords size={22} className={activePage === 'challenge' ? 'text-[#ff3b6b]' : 'text-gray-500'} />
       </Link>
 
       <Link to="/achievements" id="achievements-step" className="relative z-[100007]">
         <Trophy size={22} className={activePage === 'achievements' ? 'text-[#ff3b6b]' : 'text-gray-500'} />
       </Link>
 
+      <Link to="/dashboard" id="dashboard-step" className="relative z-[100007]">
+        <LayoutDashboard size={22} className={activePage === 'dashboard' ? 'text-[#ff3b6b]' : 'text-gray-500'} />
+      </Link>
+      <Link to="/friends" id="friends-step" className="relative z-[100007]">
+        <Users size={22} className={activePage === 'friends' ? 'text-[#ff3b6b]' : 'text-gray-500'} />
+      </Link>
       <Link to="/profile" id="profile-step" className="relative z-[100007]">
         <User size={22} className={activePage === 'profile' ? 'text-[#ff3b6b]' : 'text-gray-500'} />
       </Link>
