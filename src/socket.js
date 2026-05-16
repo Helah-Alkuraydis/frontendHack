@@ -1,10 +1,11 @@
 import { io } from "socket.io-client";
 
-const SOCKET_URL = "https://hackhero-api.onrender.com";
+const SOCKET_URL = "https://hackhero-tpme.onrender.com"; 
+
 export const socket = io(SOCKET_URL, {
     withCredentials: true,
     transports: ["polling", "websocket"], 
-    autoConnect: false 
+    autoConnect: true 
 });
 
 export const getSocket = () => socket;
