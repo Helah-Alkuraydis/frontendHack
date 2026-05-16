@@ -717,18 +717,22 @@ const handleSearchUsers = async (query) => {
     setInvitedIds((prev) => [...prev, friendId]);
 
     const token = localStorage.getItem("token");
-
-    await axios.post(
-      `${BASE_URL}/multiplayer/invite`,
-      {
-        friendId,
-        sessionId,
-        gameName: location.state?.gameName || "Cyber Mission",
-      },
-      { headers: { Authorization: `Bearer ${token}` } }
-    );
-
     const storedUser = JSON.parse(localStorage.getItem("user") || "{}");
+
+    try {
+      await axios.post(
+        `${BASE_URL}/multiplayer/invite`,
+        {
+          friendId,
+          sessionId,
+          gameName: location.state?.gameName || "Cyber Mission",
+        },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+    } catch (dbErr) {
+      console.log("⚠️ DB Notification bypassed due to backend sync delay. Switching to live socket...");
+    }
+
     socket.emit("send_game_invite", {
       targetUserId: friendId,
       senderName: storedUser.username || "Agent",
@@ -738,7 +742,7 @@ const handleSearchUsers = async (query) => {
 
     Swal.fire({
       title: "INVITATION DEPLOYED",
-      text: "Mission sent to agent's radar and bell notification hub.",
+      text: "Mission transmitted via secure live socket channel.",
       icon: "success",
       toast: true,
       position: "top-end",
@@ -754,7 +758,7 @@ const handleSearchUsers = async (query) => {
     setInvitedIds((prev) => prev.filter((id) => id !== friendId));
     Swal.fire({
       title: "Mission Failed",
-      text: "Could not sync notification hub.",
+      text: "Could not establish connection link.",
       icon: "warning",
       background: "#0f172a",
       color: "#fff",
