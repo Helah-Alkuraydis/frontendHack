@@ -716,6 +716,18 @@ const handleSearchUsers = async (query) => {
   try {
     setInvitedIds((prev) => [...prev, friendId]);
 
+    const token = localStorage.getItem("token");
+
+    await axios.post(
+      `${BASE_URL}/multiplayer/invite`,
+      {
+        friendId,
+        sessionId,
+        gameName: location.state?.gameName || "Cyber Mission",
+      },
+      { headers: { Authorization: `Bearer ${token}` } }
+    );
+
     const storedUser = JSON.parse(localStorage.getItem("user") || "{}");
     socket.emit("send_game_invite", {
       targetUserId: friendId,
@@ -725,12 +737,12 @@ const handleSearchUsers = async (query) => {
     });
 
     Swal.fire({
-      title: "INVITATION SENT",
-      text: "Agent notified via secure socket channel.",
+      title: "INVITATION DEPLOYED",
+      text: "Mission sent to agent's radar and bell notification hub.",
       icon: "success",
       toast: true,
       position: "top-end",
-      timer: 2000,
+      timer: 3000,
       showConfirmButton: false,
     });
 
@@ -742,14 +754,13 @@ const handleSearchUsers = async (query) => {
     setInvitedIds((prev) => prev.filter((id) => id !== friendId));
     Swal.fire({
       title: "Mission Failed",
-      text: "Could not establish secure invite channel.",
+      text: "Could not sync notification hub.",
       icon: "warning",
       background: "#0f172a",
       color: "#fff",
     });
   }
 };
-
   const getStandingAvatar = (style) => {
     const avatars = {
       "Avatar.png": "/Avatar-standing.png",
