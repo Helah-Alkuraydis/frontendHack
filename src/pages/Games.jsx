@@ -31,11 +31,11 @@ const Games = () => {
   const [progressIndex, setProgressIndex] = useState(0);
   const [weeklyWins, setWeeklyWins] = useState(0);
   
-  // 🟢 التعديل الوحيد باللوجيك: خليناه يتعرف على حجم الشاشة عشان يعرض 1 كرت بالجوال و 3 باللابتوب
+  // 🟢 التعديل هنا: يعرض 2 في الجوال و 3 في اللابتوب
   const [gamesPerPage, setGamesPerPage] = useState(3);
   useEffect(() => {
-    const handleResize = () => setGamesPerPage(window.innerWidth < 768 ? 1 : 3);
-    handleResize(); // تفعيل مبدئي
+    const handleResize = () => setGamesPerPage(window.innerWidth < 768 ? 2 : 3);
+    handleResize(); 
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
@@ -425,7 +425,7 @@ const Games = () => {
 
   return (
     <MainLayout activePage="games">
-      <div className="max-w-[1400px] mx-auto px-4 md:px-6 py-6 md:py-8 space-y-10 md:space-y-12">
+      <div className="max-w-7xl mx-auto px-4 md:px-6 py-8 space-y-12">
         {weeklyChallenge &&
           (() => {
             const styles = getGameStyles(weeklyChallenge.gameId);
@@ -436,14 +436,14 @@ const Games = () => {
             );
 
             return (
-              <div className="relative mb-12 md:mb-16 animate-in fade-in slide-in-from-top-10 duration-1000">
-                <h3 className="text-white text-[12px] md:text-[15px] font-bold uppercase tracking-[0.3em] md:tracking-[0.5em] mb-4 md:mb-4 ml-2 md:ml-4 italic">
+              <div className="relative mb-16 animate-in fade-in slide-in-from-top-10 duration-1000">
+                <h3 className="text-white text-[12px] md:text-[15px] font-bold uppercase tracking-[0.3em] md:tracking-[0.5em] mb-4 ml-4 italic">
                   Weekly Challenge
                 </h3>
 
                 <div className="flex flex-col lg:flex-row items-stretch gap-4 md:gap-6">
                   <div
-                    className={`flex-[6] relative overflow-hidden rounded-[2rem] md:rounded-[2.5rem] bg-gradient-to-r ${styles.gradient} backdrop-blur-3xl border border-white/10 shadow-[0_20px_50px_rgba(0,0,0,0.5)] p-6 md:p-8 min-h-[240px] md:min-h-[220px] flex items-center group transition-all`}
+                    className={`flex-[6] relative overflow-hidden rounded-[2rem] bg-gradient-to-r ${styles.gradient} backdrop-blur-3xl border border-white/10 shadow-[0_20px_50px_rgba(0,0,0,0.5)] p-6 md:p-8 min-h-[220px] flex items-center group transition-all`}
                   >
                     <canvas
                       ref={confettiCanvasRef}
@@ -456,10 +456,10 @@ const Games = () => {
                       <Zap size={12} className="text-yellow-400 fill-current" />
                     </div>
 
-                    <div className="flex flex-col md:flex-row items-center w-full relative z-10 gap-6 md:gap-10 mt-4 md:mt-0">
-                      <div className="w-full md:w-[25%] flex justify-center items-center opacity-80 group-hover:opacity-60 transition-opacity">
+                    <div className="flex flex-col md:flex-row items-center w-full relative z-10 gap-6 md:gap-10 mt-6 md:mt-0">
+                      <div className="w-[40%] md:w-[25%] flex justify-center items-center opacity-80 group-hover:opacity-60 transition-opacity">
                         <Trophy
-                          className="w-[80px] h-[80px] md:w-[140px] md:h-[140px] text-white drop-shadow-[0_0_40px_rgba(255,255,255,0.3)]"
+                          className="w-20 h-20 md:w-[140px] md:h-[140px] text-white drop-shadow-[0_0_40px_rgba(255,255,255,0.3)]"
                           strokeWidth={1}
                         />
                       </div>
@@ -473,25 +473,25 @@ const Games = () => {
                           {weeklyChallenge.description}
                         </p>
                         {isCompleted ? (
-                          <div className="mx-auto lg:mx-0 px-8 md:px-12 py-3 md:py-4 bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 rounded-full font-black uppercase italic text-[10px] md:text-xs flex items-center justify-center gap-3 md:gap-4 mb-4 shadow-[0_0_20px_rgba(16,185,129,0.2)]">
+                          <div className="mx-auto lg:mx-0 px-6 md:px-12 py-3 md:py-4 bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 rounded-full font-black uppercase italic text-[10px] md:text-xs flex items-center justify-center gap-3 md:gap-4 mb-4 shadow-[0_0_20px_rgba(16,185,129,0.2)]">
                             <ShieldCheck size={18} className="animate-pulse" />
                             <span>Mission Accomplished</span>
                           </div>
                         ) : (
                           <button
                             onClick={handleStartWeekly}
-                            className="mx-auto lg:mx-0 px-8 md:px-12 py-3 md:py-4 bg-white text-black hover:bg-black hover:text-white rounded-full font-black uppercase italic text-[10px] md:text-xs transition-all flex items-center justify-center gap-3 md:gap-4 group shadow-2xl active:scale-95 mb-4"
+                            className="mx-auto lg:mx-0 px-6 md:px-12 py-3 md:py-4 bg-white text-black hover:bg-black hover:text-white rounded-full font-black uppercase italic text-[10px] md:text-xs transition-all flex items-center justify-center gap-3 md:gap-4 group shadow-2xl active:scale-95 mb-4"
                           >
                             <Play size={16} fill="currentColor" />
                             <span>Start Challenge Now</span>
                           </button>
                         )}
-                        <div className="w-full max-w-3xl">
+                        <div className="w-full max-w-3xl mt-4 md:mt-0">
                           <div className="flex justify-between items-center mb-2 px-1 md:px-2">
-                            <span className="text-[8px] md:text-[9px] font-black text-white/30 uppercase tracking-[0.3em]">
+                            <span className="text-[7px] md:text-[8px] font-black text-white/30 uppercase tracking-[0.3em]">
                               Mission Progress
                             </span>
-                            <span className="text-[10px] md:text-[11px] font-black text-white italic bg-white/10 px-2 md:px-3 py-0.5 rounded-lg border border-white/5">
+                            <span className="text-[9px] md:text-[11px] font-black text-white italic bg-white/10 px-2 md:px-3 py-0.5 rounded-lg border border-white/5">
                               {weeklyWins} <span className="opacity-30">/</span>{" "}
                               {weeklyChallenge.required_wins} WINS
                             </span>
@@ -507,8 +507,8 @@ const Games = () => {
                     </div>
                   </div>
 
-                {/* 👥 Squad SideBar - Socket.io Real-Time Edition */}
-                      <div className="w-full lg:w-20 flex flex-row lg:flex-col justify-start lg:justify-center items-center gap-4 lg:gap-5 bg-black/20 rounded-3xl lg:rounded-[2.5rem] border border-white/5 p-4 lg:py-8 backdrop-blur-md shadow-2xl overflow-x-auto">
+                {/* 👥 Squad SideBar */}
+                      <div className="w-full lg:w-16 flex flex-row lg:flex-col justify-center items-center gap-3 md:gap-5 bg-black/20 rounded-3xl lg:rounded-[2.5rem] border border-white/5 p-4 lg:py-8 backdrop-blur-md shadow-2xl">
                         
                         <div className="w-10 h-10 md:w-11 md:h-11 rounded-full border-2 border-blue-500 overflow-hidden shadow-[0_0_15px_rgba(59,130,246,0.3)] transition-transform hover:scale-105 shrink-0">
                           <img
@@ -520,10 +520,10 @@ const Games = () => {
 
                         <div className="flex flex-row lg:flex-col items-center gap-1 shrink-0">
                           <Users size={16} className="text-[#ff3b6b]" />
-                          <div className="w-[1px] h-4 lg:w-4 lg:h-[1px] bg-white/50"></div>
+                          <div className="w-4 h-[1px] bg-white/50 hidden lg:block"></div>
                         </div>
 
-                        <div className="flex flex-row lg:flex-col gap-3 lg:gap-4 shrink-0">
+                        <div className="flex flex-row lg:flex-col gap-2 md:gap-4 shrink-0">
                           {(() => {
                             const liveFriends = realFriends.filter(f => socketOnlineIds.includes(f._id));
 
@@ -537,12 +537,12 @@ const Games = () => {
                                   />
                                 </div>
                                 <div className="absolute -top-0.5 -right-0.5 w-3 h-3 bg-emerald-500 border-2 border-[#0b1224] rounded-full animate-pulse shadow-[0_0_8px_#10b981]"></div>
-                                <div className="absolute top-full lg:left-full mt-2 lg:mt-0 lg:ml-4 lg:top-1/2 -translate-x-1/2 lg:-translate-x-0 lg:-translate-y-1/2 px-3 py-1.5 bg-[#0f172a] border border-white/10 text-white text-[10px] font-black italic uppercase tracking-widest rounded-lg opacity-0 group-hover/avatar:opacity-100 pointer-events-none transition-all duration-300 whitespace-nowrap z-50 shadow-2xl">
+                                <div className="hidden lg:block absolute left-full ml-4 top-1/2 -translate-y-1/2 px-3 py-1.5 bg-[#0f172a] border border-white/10 text-white text-[10px] font-black italic uppercase tracking-widest rounded-lg opacity-0 group-hover/avatar:opacity-100 pointer-events-none transition-all duration-300 whitespace-nowrap z-50 shadow-2xl">
                                   <div className="flex items-center gap-2">
                                     <div className="w-1 h-1 bg-emerald-500 rounded-full"></div>
                                     {friend.username}
                                   </div>
-                                  <div className="hidden lg:block absolute top-1/2 -left-1 -translate-y-1/2 w-2 h-2 bg-[#0f172a] border-l border-b border-white/10 rotate-45"></div>
+                                  <div className="absolute top-1/2 -left-1 -translate-y-1/2 w-2 h-2 bg-[#0f172a] border-l border-b border-white/10 rotate-45"></div>
                                 </div>
                               </div>
                             ));
@@ -575,9 +575,10 @@ const Games = () => {
           >
             <ChevronLeft className="w-6 h-6 md:w-8 md:h-8" strokeWidth={2.5} />
           </button>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 mb-10 md:mb-12">
+          {/* 🟢 التعديل هنا: grid-cols-2 في الجوال عشان يصف كرتين جنب بعض */}
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-8 mb-10 md:mb-12">
             {loading ? (
-              <div className="col-span-1 md:col-span-3 flex justify-center py-12">
+              <div className="col-span-2 md:col-span-3 flex justify-center py-12">
                 <Loader2 className="animate-spin text-blue-500" size={48} />
               </div>
             ) : (
@@ -637,10 +638,10 @@ const Games = () => {
               onClick={prevProgress}
               className="absolute -left-2 md:-left-12 top-1/2 -translate-y-1/2 z-20 p-2 md:p-3 rounded-full bg-white/5 border border-white/10 text-gray-400 hover:text-white hover:bg-white/10 transition-all opacity-100 md:opacity-0 group-hover/progress:opacity-100 backdrop-blur-md"
             >
-              <ChevronLeft size={24} />
+              <ChevronLeft className="w-5 h-5 md:w-6 md:h-6" />
             </button>
 
-            <div className="flex justify-around items-center gap-2 md:gap-4 min-h-[180px] md:min-h-[200px]">
+            <div className="flex justify-around items-center gap-2 md:gap-4 min-h-[140px] md:min-h-[200px]">
               {visibleProgress.map((game, idx) => {
                 const styles = getGameStyles(game.gameId || game._id);
                 const info = getLevelInfo(game.currentLevel || 1);
@@ -648,7 +649,7 @@ const Games = () => {
                 return (
                   <div
                     key={`${game._id}-${idx}`}
-                    className="animate-in fade-in zoom-in duration-500"
+                    className="animate-in fade-in zoom-in duration-500 w-1/2 md:w-auto flex justify-center"
                   >
                     <LevelCircle
                       title={game.gameName}
@@ -672,22 +673,22 @@ const Games = () => {
               onClick={nextProgress}
               className="absolute -right-2 md:-right-12 top-1/2 -translate-y-1/2 z-20 p-2 md:p-3 rounded-full bg-white/5 border border-white/10 text-gray-400 hover:text-white hover:bg-white/10 transition-all opacity-100 md:opacity-0 group-hover/progress:opacity-100 backdrop-blur-md"
             >
-              <ChevronRight size={24} />
+              <ChevronRight className="w-5 h-5 md:w-6 md:h-6" />
             </button>
           </div>
         </div>
 
         {isModalOpen && selectedGame && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+          <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
             <div
-              className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+              className="absolute inset-0 bg-black/80 backdrop-blur-sm"
               onClick={() => {
                 setIsModalOpen(false);
                 setModalStep("mode");
               }}
             ></div>
 
-            <div className="relative w-full max-w-3xl bg-gradient-to-b from-[#1e293b]/90 to-[#0f172a]/95 backdrop-blur-xl border border-white/10 rounded-[2rem] md:rounded-[2.5rem] p-6 md:p-10 shadow-2xl animate-in zoom-in duration-300 max-h-[90vh] overflow-y-auto">
+            <div className="relative w-full max-w-3xl bg-gradient-to-b from-[#1e293b]/95 to-[#0f172a]/95 backdrop-blur-xl border border-white/10 rounded-[2rem] md:rounded-[2.5rem] p-6 md:p-10 shadow-2xl animate-in zoom-in duration-300 max-h-[90vh] overflow-y-auto">
               <button
                 onClick={() => {
                   setIsModalOpen(false);
@@ -695,7 +696,7 @@ const Games = () => {
                 }}
                 className="absolute top-4 right-4 md:top-6 md:right-6 text-gray-400 hover:text-white bg-white/5 p-2 rounded-full transition-colors"
               >
-                <X className="w-5 h-5 md:w-6 md:h-6" />
+                <X size={20} className="md:w-6 md:h-6" />
               </button>
 
               <h2 className="text-2xl md:text-4xl font-extrabold text-center text-white mb-2 pr-6 md:pr-0">
@@ -803,16 +804,6 @@ const Games = () => {
                         if (tempMode === "single") {
                           handleStartGame("maker"); // يروح للبلاي قيم
                         } else {
-                          //   const sessionId = `GG-${Math.random().toString(36).substr(2, 9).toUpperCase()}`;
-                          //   navigate(`/waiting-room/${sessionId}`, {
-                          //     state: {
-                          //       gameId: selectedGame._id,
-                          //       gameName: selectedGame.gameName,
-                          //       mode: "multiplayer",
-                          //       initialRole: "maker",
-                          //     },
-                          //   });
-
                           handleCreateMultiplayer("maker"); // أنشئ الغرفة مع تحديد الدور كـ Maker
                         }
                       }}
@@ -831,15 +822,6 @@ const Games = () => {
                         if (tempMode === "single") {
                           handleStartGame("breaker");
                         } else {
-                          // const sessionId = `GG-${Math.random().toString(36).substr(2, 9).toUpperCase()}`;
-                          // navigate(`/waiting-room/${sessionId}`, {
-                          //   state: {
-                          //     gameId: selectedGame._id,
-                          //     gameName: selectedGame.gameName,
-                          //     mode: "multiplayer",
-                          //     initialRole: "breaker",
-                          //   },
-                          // });
                           handleCreateMultiplayer("breaker");
                         }
                       }}
@@ -855,7 +837,7 @@ const Games = () => {
                   </div>
                   <button
                     onClick={() => setModalStep("mode")}
-                    className=" bg-slate-800 border-none text-[10px] md:text-[12px] text-gray-400 hover:text-white uppercase font-bold tracking-widest transition-colors"
+                    className=" bg-slate-800 border-none text-[10px] md:text-[12px] text-gray-400 hover:text-white uppercase font-bold tracking-widest transition-colors px-4 py-2 rounded-lg"
                   >
                     ← Back to Mode Selection
                   </button>
@@ -877,10 +859,10 @@ const Games = () => {
 const LevelCircle = ({ title, level, color, icon, label }) => {
   const isMastered = level > 20;
   return (
-    <div className="flex flex-col items-center gap-4 md:gap-6 group">
-      <div className="relative">
+    <div className="flex flex-col items-center gap-3 md:gap-6 group">
+      <div className="relative flex justify-center w-full">
         <div
-          className={`w-28 h-28 md:w-32 md:h-32 rounded-full border-[2.5px] md:border-[3px] flex items-center justify-center transition-all duration-700 group-hover:scale-110 relative ${isMastered ? "mastered-glow" : ""}`}
+          className={`w-20 h-20 md:w-32 md:h-32 rounded-full border-[2px] md:border-[3px] flex items-center justify-center transition-all duration-700 group-hover:scale-110 relative ${isMastered ? "mastered-glow" : ""}`}
           style={{
             borderColor: color,
             boxShadow: `0 0 20px ${color}33, inset 0 0 15px ${color}22`,
@@ -889,30 +871,32 @@ const LevelCircle = ({ title, level, color, icon, label }) => {
               : `radial-gradient(circle, ${color}05 0%, transparent 70%)`,
           }}
         >
+          {/* 🟢 التعديل: تصغير الآيكون بالجوال بدون تغيير مكونك الأصلي */}
           <div
             style={{ color: color, filter: `drop-shadow(0 0 8px ${color}aa)` }}
+            className="scale-75 md:scale-100 flex items-center justify-center"
           >
             {icon}
           </div>
         </div>
-        <div className="absolute -top-4 md:-top-6 left-1/2 -translate-x-1/2 flex flex-col items-center">
+        <div className="absolute -top-3 md:-top-6 left-1/2 -translate-x-1/2 flex flex-col items-center">
           <div className="relative px-2 md:px-4 py-0.5 md:py-1 flex flex-col items-center justify-center">
             <div className="absolute inset-0 bg-[#050810] skew-x-[-12deg] border border-white/10 shadow-xl"></div>
             <span
-              className="relative z-10 text-[9px] md:text-[11px] font-black uppercase tracking-[0.2em] leading-tight"
+              className="relative z-10 text-[8px] md:text-[11px] font-black uppercase tracking-[0.2em] leading-tight whitespace-nowrap"
               style={{ color: color }}
             >
               {label}
             </span>
             {!isMastered && (
-              <span className="relative z-10 text-[7px] md:text-[9px] font-bold text-white/80 uppercase tracking-tighter mt-0.5">
+              <span className="relative z-10 text-[6px] md:text-[9px] font-bold text-white/80 uppercase tracking-tighter mt-0.5">
                 Level {level}
               </span>
             )}
           </div>
         </div>
       </div>
-      <h4 className="font-black text-white text-[10px] md:text-xs uppercase tracking-[0.15em] opacity-70 transition-opacity duration-300 group-hover:opacity-100 text-center truncate px-1 w-full max-w-[100px] md:max-w-none">
+      <h4 className="font-black text-white text-[9px] md:text-xs uppercase tracking-[0.15em] opacity-70 transition-opacity duration-300 group-hover:opacity-100 text-center truncate px-1 w-full max-w-[90px] md:max-w-none">
         {title}
       </h4>
     </div>
@@ -938,61 +922,63 @@ const GameCardPopOut = ({
   const rank = getLevelInfo(level || 1);
 
   return (
+    // 🟢 التعديل: تصغير الكرت بالجوال ليناسب العرض المزدوج
     <div
-      className={`relative rounded-[2rem] md:rounded-[2.5rem] ${gradient} backdrop-blur-md border ${borderColor} p-6 md:p-8 flex flex-col h-[380px] md:h-[420px] shadow-2xl group transition-all duration-500 hover:scale-[1.02] overflow-visible ${isMastered ? "mastered-card" : ""}`}
+      className={`relative rounded-[1.5rem] md:rounded-[2.5rem] ${gradient} backdrop-blur-md border ${borderColor} p-3 md:p-8 flex flex-col h-[280px] md:h-[420px] shadow-2xl group transition-all duration-500 hover:scale-[1.02] overflow-visible ${isMastered ? "mastered-card" : ""}`}
     >
       {/* 🏆 الختم التكتيكي الإبداعي (يظهر عند الماسترد) */}
       {isMastered && (
-        <div className="absolute inset-0 z-40 flex items-center justify-center pointer-events-none rounded-[2rem] md:rounded-[2.5rem] overflow-hidden">
+        <div className="absolute inset-0 z-40 flex items-center justify-center pointer-events-none rounded-[1.5rem] md:rounded-[2.5rem] overflow-hidden">
           <div className="absolute inset-0 bg-black/40 backdrop-blur-[1.5px]" />
 
-          <div className="relative flex flex-col items-center gap-2 bg-gradient-to-b from-yellow-400 to-orange-600 p-4 md:p-6 rounded-2xl shadow-[0_0_40px_rgba(234,179,8,0.5)] border border-white/30 transform -rotate-12 group-hover:rotate-0 transition-all duration-700 animate-in zoom-in scale-90 md:scale-100">
+          <div className="relative flex flex-col items-center gap-1 md:gap-2 bg-gradient-to-b from-yellow-400 to-orange-600 p-2 md:p-6 rounded-xl md:rounded-2xl shadow-[0_0_40px_rgba(234,179,8,0.5)] border border-white/30 transform -rotate-12 group-hover:rotate-0 transition-all duration-700 animate-in zoom-in scale-90 md:scale-100">
             <Trophy
-              className="w-10 h-10 md:w-[48px] md:h-[48px] text-white drop-shadow-lg"
+              className="w-6 h-6 md:w-[48px] md:h-[48px] text-white drop-shadow-lg"
               fill="currentColor"
             />
             <div className="flex flex-col items-center leading-none">
-              <span className="text-[8px] md:text-[10px] font-black uppercase tracking-[0.2em] text-black/50">
+              <span className="text-[6px] md:text-[10px] font-black uppercase tracking-[0.2em] text-black/50">
                 Mission
               </span>
-              <span className="text-xl md:text-2xl font-black italic uppercase tracking-tighter text-white drop-shadow-md">
+              <span className="text-[10px] md:text-2xl font-black italic uppercase tracking-tighter text-white drop-shadow-md">
                 Mastered
               </span>
             </div>
-            <div className="absolute top-2 left-2 w-2 h-2 border-t border-l border-white/40" />
-            <div className="absolute bottom-2 right-2 w-2 h-2 border-b border-r border-white/40" />
+            <div className="absolute top-1 md:top-2 left-1 md:left-2 w-1 md:w-2 h-1 md:h-2 border-t border-l border-white/40" />
+            <div className="absolute bottom-1 md:bottom-2 right-1 md:right-2 w-1 md:w-2 h-1 md:h-2 border-b border-r border-white/40" />
           </div>
 
-          <div className="absolute top-6 -right-12 md:top-8 md:-right-12 bg-yellow-500 text-black font-black py-1 px-12 rotate-45 shadow-2xl text-[8px] md:text-[10px] uppercase tracking-widest border-y border-black/10">
+          <div className="absolute top-4 -right-10 md:top-8 md:-right-12 bg-yellow-500 text-black font-black py-1 px-10 md:px-12 rotate-45 shadow-2xl text-[6px] md:text-[10px] uppercase tracking-widest border-y border-black/10">
             Top Agent
           </div>
         </div>
       )}
 
-      <div className="relative z-10 flex flex-col h-full items-center justify-center text-center pb-10 md:pb-12">
-        <h3 className="text-2xl md:text-3xl font-extrabold mb-2 md:mb-3 text-white drop-shadow-md tracking-tight leading-tight">
+      {/* 🟢 التعديل: تصغير النصوص والمسافات بالجوال */}
+      <div className="relative z-10 flex flex-col h-full items-center justify-center text-center pb-8 md:pb-12">
+        <h3 className="text-[14px] md:text-3xl font-extrabold mb-1 md:mb-3 text-white drop-shadow-md tracking-tight leading-tight line-clamp-2 md:line-clamp-none px-1">
           {title}
         </h3>
-        <p className="text-white/95 text-xs md:text-sm font-medium leading-relaxed px-1 mb-6 md:mb-8 line-clamp-3 md:line-clamp-none">
+        <p className="text-white/95 text-[9px] md:text-sm font-medium leading-snug md:leading-relaxed px-0.5 md:px-1 mb-4 md:mb-8 line-clamp-2 md:line-clamp-none">
           {desc}
         </p>
 
         <button
           onClick={onPlayClick}
-          className={`px-6 py-2.5 md:px-8 md:py-3 rounded-full text-sm md:text-base font-bold flex items-center gap-2 backdrop-blur-sm transition-all active:scale-95 shadow-lg border border-white/10 ${isMastered ? "bg-yellow-600/90 text-black border-yellow-400" : `${btnStyle} text-white`}`}
+          className={`px-3 py-1.5 md:px-8 md:py-3 rounded-full text-[9px] md:text-base font-bold flex items-center justify-center gap-1 md:gap-2 backdrop-blur-sm transition-all active:scale-95 shadow-lg border border-white/10 w-full md:w-auto ${isMastered ? "bg-yellow-600/90 text-black border-yellow-400" : `${btnStyle} text-white`}`}
         >
           {isMastered ? (
-            <Trophy size={16} className="md:w-[18px] md:h-[18px]" fill="currentColor" />
+            <Trophy className="w-3 h-3 md:w-[18px] md:h-[18px]" fill="currentColor" />
           ) : (
-            <Play size={16} className="md:w-[18px] md:h-[18px]" fill="currentColor" />
+            <Play className="w-3 h-3 md:w-[18px] md:h-[18px]" fill="currentColor" />
           )}
-          {isMastered ? "Mission Review" : "Play Now"}
+          <span className="whitespace-nowrap">{isMastered ? "Review" : "Play Now"}</span>
         </button>
       </div>
 
       {/* 🏅 وسام المستوى المصغر - تصميم نيون صافي */}
       <div
-        className="absolute bottom-4 left-4 md:bottom-5 md:left-5 z-20 flex items-center gap-1 md:gap-1.5 bg-black/70 backdrop-blur-md px-2 py-1 rounded-lg md:rounded-xl border transition-all duration-300 shadow-lg"
+        className="absolute bottom-2.5 left-2.5 md:bottom-5 md:left-5 z-20 flex items-center gap-1 md:gap-1.5 bg-black/70 backdrop-blur-md px-1.5 md:px-2 py-0.5 md:py-1 rounded-md md:rounded-xl border transition-all duration-300 shadow-lg"
         style={{
           borderColor: `${rank.color}30`, // حدود أنحف وأكثر شفافية
           boxShadow: `0 0 12px ${rank.color}15`,
@@ -1000,7 +986,7 @@ const GameCardPopOut = ({
       >
         <div className="relative flex items-center justify-center">
           <Zap
-            className="w-2.5 h-2.5 md:w-[10px] md:h-[10px] animate-pulse z-10"
+            className="w-[8px] h-[8px] md:w-[10px] md:h-[10px] animate-pulse z-10"
             style={{
               color: "#FACC15",
               fill: "#FACC15",
@@ -1009,13 +995,13 @@ const GameCardPopOut = ({
           />
         </div>
 
-        <span className="text-[12px] md:text-[15px] font-black text-white/90 tracking-tighter italic leading-none">
+        <span className="text-[8px] md:text-[15px] font-black text-white/90 tracking-tighter italic leading-none">
           {isMastered ? "MAX" : `LEVEL ${level.toString()}`}
         </span>
       </div>
-      {/* 🖼️ الصورة (w-64) */}
+      {/* 🖼️ الصورة (w-64) 🟢 التعديل: تصغيرها بالجوال كي لا تخرج من الكرت المزدوج */}
       <div
-        className={`absolute ${imagePosition} z-30 transition-transform duration-700 group-hover:scale-110 -translate-y-2 scale-75 md:scale-100 origin-bottom-right pointer-events-none`}
+        className={`absolute ${imagePosition} z-30 transition-transform duration-700 group-hover:scale-110 -translate-y-2 scale-[0.55] md:scale-100 origin-bottom-right pointer-events-none`}
       >
         <img
           src={bgImage}
