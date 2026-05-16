@@ -712,53 +712,43 @@ const handleSearchUsers = async (query) => {
     if (isInviteModalOpen) fetchFriends();
   }, [isInviteModalOpen]);
 
-  const sendInvite = async (friendId) => {
-    try {
-      // 1. يتحول الزر فوراً إلى Pending
-      setInvitedIds((prev) => [...prev, friendId]);
+ const sendInvite = async (friendId) => {
+  try {
+    setInvitedIds((prev) => [...prev, friendId]);
 
-      const token = localStorage.getItem("token");
-      const response = await axios.post(
-        `${BASE_URL}/multiplayer/invite`,
-        {
-          friendId,
-          sessionId,
-          gameName: location.state?.gameName || "Cyber Mission",
-        },
-        { headers: { Authorization: `Bearer ${token}` } },
-      );
+    const storedUser = JSON.parse(localStorage.getItem("user") || "{}");
+    socket.emit("send_game_invite", {
+      targetUserId: friendId,
+      senderName: storedUser.username || "Agent",
+      gameName: location.state?.gameName || "Cyber Escape Room",
+      sessionId: sessionId
+    });
 
-      if (response.status === 200) {
-        // 2. إشعار صغير بالإرسال
-        Swal.fire({
-          title: "INVITATION SENT",
-          text: "Agent notified. Waiting for join...",
-          icon: "success",
-          toast: true,
-          position: "top-end",
-          timer: 2000,
-          showConfirmButton: false,
-        });
+    Swal.fire({
+      title: "INVITATION SENT",
+      text: "Agent notified via secure socket channel.",
+      icon: "success",
+      toast: true,
+      position: "top-end",
+      timer: 2000,
+      showConfirmButton: false,
+    });
 
-        // 3. نقفل المودال بعد تأخير بسيط عشان يلمح المستخدم إن الزر صار رمادي
-        setTimeout(() => {
-          setIsInviteModalOpen(false);
-        }, 800);
-      }
-    } catch (err) {
-      console.log("🕵️‍♂️ تحريات السيرفر:", err.response?.data?.DEBUG_INFO);
+    setTimeout(() => {
+      setIsInviteModalOpen(false);
+    }, 800);
 
+  } catch (err) {
     setInvitedIds((prev) => prev.filter((id) => id !== friendId));
-    const errMsg = err.response?.data?.message || "Agent Offline";
-      Swal.fire({
-        title: "Mission Failed",
-        text: errMsg,
-        icon: "warning",
-        background: "#0f172a",
-        color: "#fff",
-      });
-    }
-  };
+    Swal.fire({
+      title: "Mission Failed",
+      text: "Could not establish secure invite channel.",
+      icon: "warning",
+      background: "#0f172a",
+      color: "#fff",
+    });
+  }
+};
 
   const getStandingAvatar = (style) => {
     const avatars = {
