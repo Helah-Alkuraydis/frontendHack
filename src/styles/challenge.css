@@ -106,3 +106,59 @@
   color: #8a96a3;
   text-transform: uppercase;
 }
+/* --- تعديلات التجاوب للجوال (Media Queries) --- */
+
+@media (max-width: 768px) {
+  /* تصغير مساحات البانر */
+  .challenge-banner-style {
+    padding: 1.5rem; /* تقليل الحشو الكبير */
+    margin-bottom: 1.5rem;
+    border-radius: 1.5rem;
+    flex-direction: column;
+    text-align: center;
+  }
+
+  /* تصغير عنوان التحديات الكبير */
+  .banner-title-style {
+    font-size: 1.8rem; /* بدل 3.5 عشان ما يطلع برا الشاشة */
+    line-height: 1.2;
+  }
+
+  /* تصغير الخط الفرعي */
+  .banner-subtitle-style {
+    font-size: 0.6rem;
+    letter-spacing: 0.15em;
+  }
+
+  /* ضبط حجم البطاقات في الجوال */
+  .challenge-card-custom {
+    padding: 1.5rem;
+    border-radius: 1.5rem;
+    min-height: auto; /* السماح للبطاقة بالانكماش حسب المحتوى */
+    gap: 1rem;
+  }
+
+  .challenge-card-title-style {
+    font-size: 1.3rem; /* تصغير عنوان البطاقة */
+    margin: 1rem 0 0.5rem 0;
+  }
+
+  .challenge-card-desc-style {
+    font-size: 0.8rem; /* تصغير الوصف */
+    line-height: 1.4;
+  }
+
+  /* تصغير رأس القسم */
+  .section-header-style {
+    font-size: 1.1rem;
+    margin-bottom: 1.5rem;
+    text-align: center;
+  }
+
+  /* تعديل زر اللعب ليناسب شاشة اللمس */
+  .play-btn-style {
+    width: 100%; /* جعل الزر بعرض البطاقة ليسهل الضغط عليه */
+    justify-content: center;
+    padding: 0.8rem;
+  }
+}

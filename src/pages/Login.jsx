@@ -4,12 +4,16 @@ import "../styles/login.css";
 
 function Login() {
   return (
-    <div className="login-page">
-      <div className="left-side">
-        <img src={secureImg} alt="Cyber Illustration" />
+    <div className="login-page flex flex-col md:flex-row items-center justify-center min-h-screen">
+      
+      <div className="left-side hidden md:flex md:w-1/2 justify-center items-center">
+        <img src={secureImg} alt="Cyber Illustration" className="max-w-[80%] object-contain" />
       </div>
 
-      <LoginCard />
+      <div className="w-full md:w-1/2 flex justify-center items-center p-6">
+        <LoginCard />
+      </div>
+      
     </div>
   );
 }

@@ -486,18 +486,20 @@ const ChallengePage = () => {
         Challenges
       </div>
 
-      {/*shadow-[0_20px_60px_-15px_rgba(6,182,212,0.15)]*/}
-      <div className="w-full relative overflow-hidden rounded-[2.5rem] bg-gradient-to-r from-[#1c2438]/60 to-[#0a0f1d]/20 backdrop-blur-md border border-cyan-500/10  mb-12 h-[340px] animate-in fade-in duration-500 text-left">
-        <div className="relative z-10 w-full h-full flex items-center px-12">
-          <div className="flex-1 flex flex-col items-start justify-center ">
-            <h2 className="text-5xl font-black text-white mb-3 tracking-tighter italic uppercase leading-tight drop-shadow-sm">
+{/* --- البارت 1: البانر العلوي - نسخة محسنة للجوال واللابتوب --- */}
+      <div className="w-full relative overflow-hidden rounded-[2.5rem] bg-gradient-to-r from-[#1c2438]/60 to-[#0a0f1d]/20 backdrop-blur-md border border-cyan-500/10 mb-8 md:mb-12 min-h-[350px] md:h-[340px] animate-in fade-in duration-500">
+        <div className="relative z-10 w-full h-full flex flex-col md:flex-row items-center justify-center md:justify-between px-6 md:px-12 py-10 md:py-0">
+          
+          <div className="flex-1 flex flex-col items-center md:items-start text-center md:text-left">
+            <h2 className="text-3xl md:text-5xl font-black text-white mb-3 tracking-tighter italic uppercase leading-tight drop-shadow-sm">
               Challenge <span className="text-cyan-400">Yourself</span>
             </h2>
-            <p className="text-cyan-100/60 text-lg font-medium mb-1 italic leading-relaxed">
+            <p className="text-cyan-100/60 text-sm md:text-lg font-medium mb-1 italic leading-relaxed max-w-xs md:max-w-none">
               Face the challenge, shine like a cyber hero.
             </p>
 
-            <div className="flex flex-wrap  gap-2 mt-8 bg-black/20 p-2 rounded-2xl border border-white/5 backdrop-blur-sm">
+            {/* قائمة الفلاتر: في الجوال تظهر مرتبة وبدون تداخل */}
+            <div className="flex flex-wrap justify-center md:justify-start gap-2 mt-8 bg-black/20 p-3 rounded-2xl border border-white/5 backdrop-blur-sm w-full md:w-auto">
               {[
                 "All",
                 "Phishing Hunter",
@@ -510,27 +512,20 @@ const ChallengePage = () => {
                 <button
                   key={filter}
                   onClick={() => setSelectedFilter(filter)}
-                  className={`px-4 py-1.5 rounded-xl text-[9px] font-black uppercase tracking-widest transition-all duration-300 border ${
+                  className={`px-3 py-1.5 rounded-xl text-[8px] md:text-[9px] font-black uppercase tracking-widest transition-all duration-300 border ${
                     selectedFilter === filter
                       ? "bg-cyan-500 text-black border-cyan-400 shadow-[0_0_15px_rgba(6,182,212,0.4)]"
-                      : "bg-white/5 border-transparent text-gray-400 hover:text-white hover:bg-white/10"
+                      : "bg-white/5 border-transparent text-gray-400 hover:text-white"
                   }`}
                 >
                   {filter}
                 </button>
               ))}
             </div>
-
-            {/* Create Button */}
-            {/* <button 
-             onClick={() => { setActiveTab("my"); setShowModal(true); }}
-               className="bg-cyan-500/10 border border-cyan-500/20 hover:bg-cyan-500/30 text-white px-10 py-4 rounded-full font-bold flex items-center gap-3 transition-all backdrop-blur-sm shadow-lg group text-lg active:scale-95"
-              >
-            <Plus size={22} className="text-cyan-400 group-hover:rotate-90 transition-transform"/> Deploy New Mission
-            </button> */}
           </div>
 
-          <div className="w-1/3 h-full relative flex items-center justify-end">
+          {/* صورة الهدف: تظهر فقط في اللابتوب md:flex وتختفي في الجوال hidden لتقليل الإزعاج البصري */}
+          <div className="hidden md:flex w-1/3 h-full relative items-center justify-end">
             <img
               src="/Target Icon.png"
               alt="Hero Target"
@@ -539,42 +534,40 @@ const ChallengePage = () => {
           </div>
         </div>
 
+        {/* تأثيرات الإضاءة الخلفية */}
         <div className="absolute top-[-20%] left-[-10%] w-72 h-72 bg-cyan-600/10 blur-[120px] rounded-full opacity-60"></div>
-        <div className="absolute bottom-[-15%] right-[-5%] w-60 h-60 bg-cyan-500/10 blur-[100px] rounded-full opacity-40"></div>
       </div>
-
-      <div className="w-full border border-white/5 bg-[#0a0f1d]/40 rounded-[2.5rem] p-12 min-h-[85vh]  relative text-left">
-        {/* 1. Header الترحيبي الخاص بالتحديات */}
-
-        {/* 2. التابز ممتدة بعرض الصفحة (Full Width) */}
-        <div className="w-full mb-10">
-          <div className="flex w-full bg-[#121620]/40 p-1.5 rounded-2xl border gap-4 border-gray-800/30 backdrop-blur-sm">
+<div className="w-full border border-white/5 bg-[#0a0f1d]/40 rounded-[2.5rem] p-4 md:p-12 min-h-[85vh] relative text-left">
+        
+        {/* التابز: جعلناها متجاوبة بحيث تصبح بجانب بعضها في الجوال بشكل أنيق */}
+        <div className="w-full mb-8 md:mb-10">
+          <div className="flex flex-row w-full bg-[#121620]/40 p-1.5 rounded-2xl border gap-2 md:gap-4 border-gray-800/30 backdrop-blur-sm">
             <button
               onClick={() => setActiveTab("public")}
-              className={`flex-1 flex items-center justify-center gap-3 px-6 py-4rounded-2xl font-black italic uppercase text-xs tracking-widest transition-all duration-300 ${
+              className={`flex-1 flex items-center justify-center gap-2 md:gap-3 px-2 md:px-6 py-3 md:py-4 rounded-xl font-black italic uppercase text-[9px] md:text-xs tracking-widest transition-all duration-300 ${
                 activeTab === "public"
-                  ? "bg-emerald-600  text-white shadow-lg shadow-emerald-900/40 scale-[1.01]"
-                  : "text-gray-500  hover:text-gray-300 hover:bg-white/5"
-              }`}
-            >
-              <LayoutGrid size={18} /> Public Challenges
-            </button>
-            <button
-              onClick={() => setActiveTab("my")}
-              className={`flex-1 flex items-center justify-center gap-3 px-6 py-4 rounded-xl font-black italic uppercase text-xs tracking-widest transition-all duration-300 ${
-                activeTab === "my"
-                  ? "bg-emerald-600 text-white shadow-lg shadow-emerald-900/40 scale-[1.01]"
+                  ? "bg-emerald-600 text-white shadow-lg shadow-emerald-900/40"
                   : "text-gray-500 hover:text-gray-300 hover:bg-white/5"
               }`}
             >
-              <UserCircle size={18} /> My Challenges
+              <LayoutGrid size={16} className="hidden sm:block" /> Public
+            </button>
+            <button
+              onClick={() => setActiveTab("my")}
+              className={`flex-1 flex items-center justify-center gap-2 md:gap-3 px-2 md:px-6 py-3 md:py-4 rounded-xl font-black italic uppercase text-[9px] md:text-xs tracking-widest transition-all duration-300 ${
+                activeTab === "my"
+                  ? "bg-emerald-600 text-white shadow-lg shadow-emerald-900/40"
+                  : "text-gray-500 hover:text-gray-300 hover:bg-white/5"
+              }`}
+            >
+              <UserCircle size={16} className="hidden sm:block" /> My Challenges
             </button>
           </div>
         </div>
 
         {/* 3. شبكة التحديات (Cards Grid) */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 px-4 pb-10">
-          {activeTab === "public" &&
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-10 px-0 md:px-4 pb-10">
+            {activeTab === "public" &&
             (filteredChallenges.length > 0 ? (
               filteredChallenges.map((ch) => (
                 <ChallengeCard
@@ -679,11 +672,11 @@ const ChallengePage = () => {
       {showCommentsModal && (
         <div
           onClick={() => setShowCommentsModal(false)}
-          className="fixed inset-0 z-[2000] flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-in fade-in duration-300"
+          className="fixed inset-0 z-[5000] flex items-end md:items-center justify-center bg-black/80 backdrop-blur-md animate-in fade-in duration-300"
         >
           <div
             onClick={(e) => e.stopPropagation()}
-            className="relative w-full max-w-2xl bg-[#1e293b]/90 backdrop-blur-2xl rounded-[2.5rem] border border-white/10 p-8 shadow-2xl"
+            className="relative w-full max-w-2xl bg-[#1e293b] rounded-t-[2rem] md:rounded-[2.5rem] border-t md:border border-white/10 p-6 md:p-8 shadow-2xl max-h-[90vh] flex flex-col"
           >
             <button
               onClick={() => setShowCommentsModal(false)}
