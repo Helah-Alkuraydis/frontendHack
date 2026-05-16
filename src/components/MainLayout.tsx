@@ -88,25 +88,19 @@ const MainLayout = ({ children, activePage, headerActions, highlightedId ,forceH
     navigate('/');
   };
 
-  useEffect(() => {
-    if (user?._id) {
-      socket.connect(); // افتح الاتصال
-      socket.emit("register_user", user._id); // سجلني في القائمة النشطة بالسيرفر
+socket.on("receive_game_invite", (data) => {
+  setHasUnread(true);
+  console.log("New invite received from:", data.senderName);
 
-      // استماع لدعوات اللعب القادمة
-      socket.on("receive_game_invite", (data) => {
-        setHasUnread(true);
-        console.log("New invite received from:", data.senderName);
-        checkNotifications();
+  const localInvites = JSON.parse(sessionStorage.getItem("local_game_invites") || "[]");
+  
+  if (!localInvites.some((inv: any) => inv.sessionId === data.sessionId)) {
+    localInvites.push(data);
+    sessionStorage.setItem("local_game_invites", JSON.stringify(localInvites));
+  }
 
-      });
-    }
-
-    return () => {
-      socket.off("receive_game_invite");
-      socket.disconnect();
-    };
-  }, [user]);
+  checkNotifications();
+});
 
   return (
     <div className="flex min-h-screen bg-[#050810] text-white font-sans overflow-x-hidden relative w-full">

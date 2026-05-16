@@ -35,14 +35,35 @@ const NotificationsModal = ({ isOpen, onClose }: any) => {
     }
   };
 
+// دالة مساعدة لحذف الدعوة اللحظية بعد التفاعل معها
+  const removeLocalInvite = (sId: string) => {
+    const localInvites = JSON.parse(sessionStorage.getItem("local_game_invites") || "[]");
+    const filtered = localInvites.filter((inv: any) => inv.sessionId !== sId);
+    sessionStorage.setItem("local_game_invites", JSON.stringify(filtered));
+  };
+
   const fetchNotifications = async () => {
     try {
       setLoading(true);
       const res = await axios.get(`${BASE_URL}/social/notifications`, {
         headers: { Authorization: `Bearer ${token}` }
       });
-      setNotifications(res.data);
-      markAllAsRead(res.data);
+
+      const localInvitesData = JSON.parse(sessionStorage.getItem("local_game_invites") || "[]");
+      
+      const formattedLocalInvites = localInvitesData.map((inv: any) => ({
+        _id: inv.sessionId,
+        type: "GameInvite",
+        isRead: false,
+        messageContent: `Agent ${inv.senderName} has invited you to join: ${inv.gameName} [ID:${inv.sessionId}]`,
+        notificationId: { title: "GAME_INVITE" },
+        isLocalSocket: true 
+      }));
+
+      const combinedNotifications = [...formattedLocalInvites, ...res.data];
+
+      setNotifications(combinedNotifications);
+      markAllAsRead(res.data); 
     } catch (err) {
       console.error("Error fetching notifications", err);
     } finally {
@@ -142,6 +163,9 @@ const handleJoinGame = async (notif: any) => {
     const sId = sessionMatch ? sessionMatch[1].trim() : null;
 
     if (sId) {
+      // ✅ تنظيف الذاكرة المؤقتة للمتصفح فوراً
+      removeLocalInvite(sId);
+
       const token = localStorage.getItem('token');
       await axios.post(`${BASE_URL}/multiplayer/join/${sId}`, {}, {
         headers: { Authorization: `Bearer ${token}` }
@@ -149,10 +173,11 @@ const handleJoinGame = async (notif: any) => {
 
       socket.emit("join_room", sId);
       navigate(`/waiting-room/${sId}`);
-      await markAsRead(notif._id);
+      
+      if (!notif.isLocalSocket) {
+        await markAsRead(notif._id);
+      }
       onClose();
-    } else {
-      console.error("❌ Session ID missing in message:", notif.messageContent);
     }
   } catch (err) {
     console.error("❌ Join error:", err);
@@ -226,15 +251,19 @@ const handleJoinGame = async (notif: any) => {
                           >
                             <Check size={12} /> Join Mission
                           </button>
-                          <button
-                            onClick={async () => {
-                              await markAsRead(notif._id);
-                              setNotifications(prev => prev.filter(n => n._id !== notif._id));
-                            }}
-                            className="flex-1 bg-white/5 text-[10px] font-black uppercase py-2 rounded-lg hover:bg-white/10 text-gray-400 transition-all border border-white/5"
-                          >
-                            Ignore
-                          </button>
+                         <button
+                    onClick={async () => {
+                      if (notif.isLocalSocket) {
+                        removeLocalInvite(notif._id);
+                      } else {
+                        await markAsRead(notif._id);
+                      }
+                      setNotifications(prev => prev.filter(n => n._id !== notif._id));
+                    }}
+                    className="flex-1 bg-white/5 text-[10px] font-black uppercase py-2 rounded-lg hover:bg-white/10 text-gray-400 transition-all border border-white/5"
+                  >
+                    Ignore
+                  </button>
                         </>
                       )
                         /* حالة 2: طلب صداقة */
