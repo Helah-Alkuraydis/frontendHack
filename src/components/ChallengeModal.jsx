@@ -1,5 +1,6 @@
 import React, { useMemo, useState } from "react";
 import { X, Plus, Trash2, Zap } from "lucide-react";
+import EscapeRoomBuilder from '../components/EscapeRoomBuilder';
 
 const ChallengeModal = ({
   isOpen,
@@ -13,7 +14,7 @@ const ChallengeModal = ({
   userLevels = [],
   editingId,
 }) => {
-  const selectedGame = games.find((g) => g._id === formData.gameId);
+  const selectedGame = games.find((g) => g._id === formData.gameId );
   const selectedGameName = selectedGame ? selectedGame.gameName : "";
   const [activeRoomIdx, setActiveRoomIdx] = useState(0);
 
@@ -29,8 +30,7 @@ const ChallengeModal = ({
 
       if (editingId && game._id === formData.gameId) return true;
       if (userLevels.length === 0) return true;
-      
-      
+
       const userGameInfo = userLevels.find((ul) => {
         const ulGameId = ul.gameId?._id
           ? ul.gameId._id.toString()
@@ -40,6 +40,7 @@ const ChallengeModal = ({
       });
       const userLevel = userGameInfo ? userGameInfo.level : 1;
       return userLevel >= 3;
+      
     });
   }, [games, userLevels, editingId, formData.gameId]);
 
@@ -74,36 +75,22 @@ const ChallengeModal = ({
     }));
   };
 
-  const updateRoom = (roomIdx, field, value) => {
-    const currentRooms = [
-      ...(formData.scenarioData?.rooms || [
-        { puzzle_data: "", answer: "", hint: "", puzzleType: "Encryption" },
-        { puzzle_data: "", answer: "", hint: "", puzzleType: "Threats" },
-        { puzzle_data: "", answer: "", hint: "", puzzleType: "Logic" },
-        { puzzle_data: "", answer: "", hint: "", puzzleType: "Firewall" },
-      ]),
-    ];
-
-    currentRooms[roomIdx] = { ...currentRooms[roomIdx], [field]: value };
-    updateScenario("rooms", currentRooms);
-  };
-
-return (
+  return (
     <div
       onClick={handleOverlayClick}
       className="fixed inset-0 z-[5000] flex items-center justify-center bg-black/90 backdrop-blur-md overflow-y-auto"
     >
-      {/* Container: جعلناه يأخذ كامل العرض في الجوال مع حواف مستديرة */}
+      {/* Container */}
       <div className="bg-[#0f121a] border border-emerald-500/20 w-full max-w-2xl min-h-screen md:min-h-0 md:rounded-[2.5rem] p-5 md:p-10 shadow-2xl relative flex flex-col">
         
-        {/* زر الإغلاق: تم تكبير مساحة الضغط للجوال */}
+        {/* زر الإغلاق */}
         <div className="flex justify-end w-full mb-2">
           <button onClick={onClose} className="p-2 text-white/40 hover:text-white transition-colors">
             <X size={28} />
           </button>
         </div>
 
-        {/* شريط التقدم (Step Progress) */}
+        {/* شريط التقدم */}
         <div className="flex items-center gap-4 mb-8 mt-2 px-2">
           <div className={`h-1.5 flex-1 rounded-full transition-all duration-500 ${step >= 1 ? "bg-emerald-500 shadow-[0_0_10px_#10b981]" : "bg-gray-800"}`}></div>
           <div className={`h-1.5 flex-1 rounded-full transition-all duration-500 ${step >= 2 ? "bg-emerald-500 shadow-[0_0_10px_#10b981]" : "bg-gray-800"}`}></div>
@@ -149,20 +136,41 @@ return (
                 />
               </div>
 
+              {/* 🟢 تم إصلاح وعزل كلاسات الـ Grid هنا لتظهر متناسقة وموزونة في الجوال واللابتوب */}
               <div className="grid grid-cols-3 gap-2 md:gap-4">
-                {['maxAttempts', 'timeLimit', 'points_pool'].map((f, i) => (
-                  <div key={f} className="space-y-1">
-                    <label className="text-gray-500 text-[8px] md:text-[10px] uppercase font-bold tracking-tighter ml-1">
-                      {f === 'maxAttempts' ? 'Attempts' : f === 'timeLimit' ? 'Seconds' : 'Points'}
-                    </label>
-                    <input
-                      type="number"
-                      className="w-full bg-white/5 border border-gray-800 p-3 rounded-xl text-center text-sm text-white outline-none focus:border-emerald-500"
-                      value={formData[f]}
-                      onChange={(e) => setFormData({ ...formData, [f]: e.target.value })}
-                    />
-                  </div>
-                ))}
+                <div className="space-y-1">
+                  <label className="text-gray-500 text-[8px] md:text-[12px] uppercase font-bold tracking-tight md:tracking-wider ml-1">
+                    Attempts
+                  </label>
+                  <input
+                    type="number"
+                    className="w-full bg-white/5 border border-gray-800 p-3 rounded-xl text-center md:text-left text-sm text-white outline-none focus:border-emerald-500"
+                    value={formData.maxAttempts}
+                    onChange={(e) => setFormData({ ...formData, maxAttempts: e.target.value })}
+                  />
+                </div>
+                <div className="space-y-1">
+                  <label className="text-gray-500 text-[8px] md:text-[12px] uppercase font-bold tracking-tight md:tracking-wider ml-1">
+                    Seconds
+                  </label>
+                  <input
+                    type="number"
+                    className="w-full bg-white/5 border border-gray-800 p-3 rounded-xl text-center md:text-left text-sm text-white outline-none focus:border-emerald-500"
+                    value={formData.timeLimit}
+                    onChange={(e) => setFormData({ ...formData, timeLimit: e.target.value })}
+                  />
+                </div>
+                <div className="space-y-1">
+                  <label className="text-gray-500 text-[8px] md:text-[12px] uppercase font-bold tracking-tight md:tracking-wider ml-1">
+                    Points
+                  </label>
+                  <input
+                    type="number"
+                    className="w-full bg-white/5 border border-gray-800 p-3 rounded-xl text-center md:text-left text-sm text-white outline-none focus:border-emerald-500"
+                    value={formData.points_pool}
+                    onChange={(e) => setFormData({ ...formData, points_pool: e.target.value })}
+                  />
+                </div>
               </div>
             </div>
           )}
@@ -170,16 +178,12 @@ return (
           {step === 2 && (
             <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-500 pb-10">
 
-          {/* 1. إذا كانت اللعبة Phishing Hunter */}
+              {/* 1. إذا كانت اللعبة Phishing Hunter */}
               {selectedGameName === "Phishing Hunter" && (
                 <div className="space-y-4 animate-in fade-in duration-500 max-h-[60vh] md:max-h-none overflow-y-auto pr-2 custom-scrollbar">
-                  
-                  {/* المرسل والموضوع: عمودي في الجوال وأفقي في اللابتوب */}
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="space-y-2">
-                      <label className="text-gray-500 text-[10px] md:text-[12px] uppercase font-bold tracking-wider ml-1">
-                        Email Sender
-                      </label>
+                      <label className="text-gray-500 text-[10px] md:text-[12px] uppercase font-bold tracking-wider ml-1">Email Sender</label>
                       <input
                         placeholder="e.g. support@apple.com"
                         className="w-full bg-white/5 border border-gray-800 rounded-xl px-4 py-3 text-sm text-white focus:border-emerald-500 outline-none transition-all"
@@ -187,11 +191,8 @@ return (
                         onChange={(e) => updateScenario("sender", e.target.value)}
                       />
                     </div>
-
                     <div className="space-y-2">
-                      <label className="text-gray-500 text-[10px] md:text-[12px] uppercase font-bold tracking-wider ml-1">
-                        Email Subject
-                      </label>
+                      <label className="text-gray-500 text-[10px] md:text-[12px] uppercase font-bold tracking-wider ml-1">Email Subject</label>
                       <input
                         placeholder="Urgent: Security Alert"
                         className="w-full bg-white/5 border border-gray-800 rounded-xl px-4 py-3 text-sm text-white focus:border-emerald-500 outline-none transition-all"
@@ -202,9 +203,7 @@ return (
                   </div>
 
                   <div className="space-y-2">
-                    <label className="text-gray-500 text-[10px] md:text-[12px] uppercase font-bold tracking-wider ml-1">
-                      Email Body Content
-                    </label>
+                    <label className="text-gray-500 text-[10px] md:text-[12px] uppercase font-bold tracking-wider ml-1">Email Body Content</label>
                     <textarea
                       placeholder="Dear user, we detected a login attempt..."
                       className="w-full bg-white/5 border border-gray-800 rounded-xl px-4 py-3 text-sm text-white h-24 resize-none focus:border-emerald-500 outline-none transition-all"
@@ -214,9 +213,7 @@ return (
                   </div>
 
                   <div className="space-y-2">
-                    <label className="text-gray-500 text-[10px] md:text-[12px] uppercase font-bold tracking-wider ml-1">
-                      Phishing Link
-                    </label>
+                    <label className="text-gray-500 text-[10px] md:text-[12px] uppercase font-bold tracking-wider ml-1">Phishing Link</label>
                     <input
                       placeholder="e.g. http://login-secure-bank.com"
                       className="w-full bg-white/5 border border-gray-800 rounded-xl px-4 py-3 text-sm text-white focus:border-emerald-500 outline-none transition-all"
@@ -231,9 +228,7 @@ return (
 
                   <div className="p-4 bg-emerald-500/5 border border-emerald-500/10 rounded-2xl space-y-4">
                     <div className="space-y-2">
-                      <label className="text-emerald-500/70 text-[10px] md:text-[12px] uppercase font-bold tracking-wider ml-1">
-                        Correct Action (The Solution)
-                      </label>
+                      <label className="text-emerald-500/70 text-[10px] md:text-[12px] uppercase font-bold tracking-wider ml-1">Correct Action (The Solution)</label>
                       <input
                         placeholder="e.g. Report Phishing"
                         className="w-full bg-[#121620] border border-emerald-500/30 rounded-xl px-4 py-3 text-sm text-white focus:border-emerald-500 outline-none"
@@ -241,12 +236,8 @@ return (
                         onChange={(e) => updateScenario("correctAnswer", e.target.value)}
                       />
                     </div>
-
                     <div className="space-y-2">
-                      <label className="text-gray-500 text-[10px] md:text-[12px] uppercase font-bold tracking-wider ml-1">
-                        Wrong Options (Distractors)
-                      </label>
-                      {/* الخيارات الخاطئة: عمودية في الجوال لتكون واضحة */}
+                      <label className="text-gray-500 text-[10px] md:text-[12px] uppercase font-bold tracking-wider ml-1">Wrong Options (Distractors)</label>
                       <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                         {[0, 1, 2].map((i) => (
                           <input
@@ -266,9 +257,7 @@ return (
                   </div>
 
                   <div className="space-y-2 pb-6">
-                    <label className="text-gray-500 text-[10px] md:text-[12px] uppercase font-bold tracking-wider ml-1">
-                      Hint
-                    </label>
+                    <label className="text-gray-500 text-[10px] md:text-[12px] uppercase font-bold tracking-wider ml-1">Hint</label>
                     <input
                       placeholder="Give the player a clue..."
                       className="w-full bg-white/5 border border-gray-800 rounded-xl px-4 py-3 text-sm text-white focus:border-emerald-500 outline-none transition-all"
@@ -278,67 +267,50 @@ return (
                   </div>
                 </div>
               )}
-{/* 2. إذا كانت اللعبة Password Breaker */}
+
+              {/* 2. إذا كانت اللعبة Password Breaker */}
               {selectedGameName === "Password Maker/Breaker" && (
                 <div className="space-y-6 animate-in fade-in duration-500 max-h-[60vh] md:max-h-none overflow-y-auto pr-2 custom-scrollbar">
-                  
-                  {/* قسم بيانات الضحية (Target Info) */}
                   <div className="p-4 md:p-5 bg-blue-500/5 border border-blue-500/10 rounded-[1.5rem] md:rounded-[2rem] space-y-4">
-                    <label className="text-blue-400 text-[10px] md:text-[12px] uppercase font-bold tracking-wider ml-1">
-                      Target OSINT Data (Victim Profile)
-                    </label>
-                    
-                    {/* التعديل هنا: grid-cols-1 للجوال و md:grid-cols-2 للابتوب */}
+                    <label className="text-blue-400 text-[10px] md:text-[12px] uppercase font-bold tracking-wider ml-1">Target OSINT Data (Victim Profile)</label>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                      <div className="space-y-1">
-                        <input
-                          placeholder="Target Name (e.g. Elias)"
-                          className="w-full bg-black/40 border border-gray-800 rounded-xl px-4 py-3 text-sm text-white focus:border-blue-500 outline-none transition-all"
-                          value={formData.scenarioData?.name || ""}
-                          onChange={(e) => updateUserData("name", e.target.value)}
-                        />
-                      </div>
-                      <div className="space-y-1">
-                        <input
-                          placeholder="Birth Year (e.g. 1992)"
-                          type="number"
-                          className="w-full bg-black/40 border border-gray-800 rounded-xl px-4 py-3 text-sm text-white focus:border-blue-500 outline-none transition-all"
-                          value={formData.scenarioData?.birthYear || ""}
-                          onChange={(e) => updateUserData("birthYear", e.target.value)}
-                        />
-                      </div>
-                      <div className="space-y-1">
-                        <input
-                          placeholder="City (e.g. Austin)"
-                          className="w-full bg-black/40 border border-gray-800 rounded-xl px-4 py-3 text-sm text-white focus:border-blue-500 outline-none transition-all"
-                          value={formData.scenarioData?.city || ""}
-                          onChange={(e) => updateUserData("city", e.target.value)}
-                        />
-                      </div>
-                      <div className="space-y-1">
-                        <input
-                          placeholder="Pet Name (e.g. Sparky)"
-                          className="w-full bg-black/40 border border-gray-800 rounded-xl px-4 py-3 text-sm text-white focus:border-blue-500 outline-none transition-all"
-                          value={formData.scenarioData?.pet || ""}
-                          onChange={(e) => updateUserData("pet", e.target.value)}
-                        />
-                      </div>
+                      <input
+                        placeholder="Target Name (e.g. Elias)"
+                        className="w-full bg-black/40 border border-gray-800 rounded-xl px-4 py-3 text-sm text-white focus:border-blue-500 outline-none transition-all"
+                        value={formData.scenarioData?.userData?.name || ""}
+                        onChange={(e) => updateUserData("name", e.target.value)}
+                      />
+                      <input
+                        placeholder="Birth Year (e.g. 1992)"
+                        type="number"
+                        className="w-full bg-black/40 border border-gray-800 rounded-xl px-4 py-3 text-sm text-white focus:border-blue-500 outline-none transition-all"
+                        value={formData.scenarioData?.userData?.birthYear || ""}
+                        onChange={(e) => updateUserData("birthYear", e.target.value)}
+                      />
+                      <input
+                        placeholder="City (e.g. Austin)"
+                        className="w-full bg-black/40 border border-gray-800 rounded-xl px-4 py-3 text-sm text-white focus:border-blue-500 outline-none transition-all"
+                        value={formData.scenarioData?.userData?.city || ""}
+                        onChange={(e) => updateUserData("city", e.target.value)}
+                      />
+                      <input
+                        placeholder="Pet Name (e.g. Sparky)"
+                        className="w-full bg-black/40 border border-gray-800 rounded-xl px-4 py-3 text-sm text-white focus:border-blue-500 outline-none transition-all"
+                        value={formData.scenarioData?.userData?.pet || ""}
+                        onChange={(e) => updateUserData("pet", e.target.value)}
+                      />
                     </div>
-                    
                     <input
                       placeholder="Hobby (e.g. Baking)"
                       className="w-full bg-black/40 border border-gray-800 rounded-xl px-4 py-3 text-sm text-white focus:border-blue-500 outline-none transition-all"
-                      value={formData.scenarioData?.hobby || ""}
+                      value={formData.scenarioData?.userData?.hobby || ""}
                       onChange={(e) => updateUserData("hobby", e.target.value)}
                     />
                   </div>
 
-                  {/* الحل والتقرير الاستخباراتي */}
                   <div className="space-y-5 px-1">
                     <div className="space-y-2">
-                      <label className="text-gray-500 text-[10px] md:text-[12px] uppercase font-bold tracking-wider ml-1">
-                        Correct Password Sequence
-                      </label>
+                      <label className="text-gray-500 text-[10px] md:text-[12px] uppercase font-bold tracking-wider ml-1">Correct Password Sequence</label>
                       <input
                         placeholder="The actual password to be guessed"
                         className="w-full bg-white/5 border border-gray-800 rounded-xl px-4 py-3 text-sm text-white focus:border-emerald-500 outline-none transition-all"
@@ -346,11 +318,8 @@ return (
                         onChange={(e) => updateScenario("correctAnswer", e.target.value)}
                       />
                     </div>
-
                     <div className="space-y-2">
-                      <label className="text-gray-500 text-[10px] md:text-[12px] uppercase font-bold tracking-wider ml-1">
-                        Analysis Report (The logic behind the hack)
-                      </label>
+                      <label className="text-gray-500 text-[10px] md:text-[12px] uppercase font-bold tracking-wider ml-1">Analysis Report</label>
                       <textarea
                         placeholder="Explain the vulnerability pattern..."
                         className="w-full bg-white/5 border border-gray-800 rounded-xl px-4 py-3 text-sm text-white h-24 resize-none focus:border-emerald-500 outline-none transition-all"
@@ -358,11 +327,8 @@ return (
                         onChange={(e) => updateScenario("analysis_report", e.target.value)}
                       />
                     </div>
-
                     <div className="space-y-2 pb-6">
-                      <label className="text-gray-500 text-[10px] md:text-[12px] uppercase font-bold tracking-wider ml-1">
-                        Cracking Hint
-                      </label>
+                      <label className="text-gray-500 text-[10px] md:text-[12px] uppercase font-bold tracking-wider ml-1">Cracking Hint</label>
                       <input
                         placeholder="Subtle clue for the player..."
                         className="w-full bg-white/5 border border-gray-800 rounded-xl px-4 py-3 text-sm text-white focus:border-emerald-500 outline-none transition-all"
@@ -373,16 +339,13 @@ return (
                   </div>
                 </div>
               )}
-{/* 3. إذا كانت اللعبة Secure Coding */}
+
+              {/* 3. إذا كانت اللعبة Secure Coding */}
               {selectedGameName === "Secure Coding Challenge" && (
                 <div className="space-y-6 animate-in fade-in duration-500 max-h-[65vh] md:max-h-none overflow-y-auto pr-2 custom-scrollbar pb-8">
-                  
-                  {/* العناوين الأساسية: عمودية في الجوال (1) وأفقية في اللابتوب (3) */}
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <div className="space-y-2">
-                      <label className="text-gray-500 text-[10px] md:text-[12px] uppercase font-bold tracking-wider ml-1">
-                        Vulnerability Type
-                      </label>
+                      <label className="text-gray-500 text-[10px] md:text-[12px] uppercase font-bold tracking-wider ml-1">Vulnerability Type</label>
                       <input
                         placeholder="e.g. SQL Injection"
                         className="w-full bg-white/5 border border-gray-800 rounded-xl px-4 py-3 text-white text-xs focus:border-emerald-500 outline-none transition-all"
@@ -390,11 +353,8 @@ return (
                         onChange={(e) => updateScenario("vulnerability_type", e.target.value)}
                       />
                     </div>
-
                     <div className="space-y-2">
-                      <label className="text-gray-500 text-[10px] md:text-[12px] uppercase font-bold tracking-wider ml-1">
-                        Fix
-                      </label>
+                      <label className="text-gray-500 text-[10px] md:text-[12px] uppercase font-bold tracking-wider ml-1">Fix</label>
                       <input
                         placeholder="e.g. Parameterized Queries"
                         className="w-full bg-white/5 border border-gray-800 rounded-xl px-4 py-3 text-white text-xs focus:border-emerald-500 outline-none transition-all"
@@ -402,11 +362,8 @@ return (
                         onChange={(e) => updateScenario("fix", e.target.value)}
                       />
                     </div>
-
                     <div className="space-y-2">
-                      <label className="text-gray-500 text-[10px] md:text-[12px] uppercase font-bold tracking-wider ml-1">
-                        Language
-                      </label>
+                      <label className="text-gray-500 text-[10px] md:text-[12px] uppercase font-bold tracking-wider ml-1">Language</label>
                       <div className="relative group">
                         <select
                           value={formData.scenarioData?.language || ""}
@@ -428,11 +385,8 @@ return (
                     </div>
                   </div>
 
-                  {/* منطقة الكود المصاب */}
                   <div className="space-y-2">
-                    <label className="text-red-400/80 text-[10px] md:text-[12px] uppercase font-bold tracking-wider ml-1">
-                      Vulnerable Code Snippet
-                    </label>
+                    <label className="text-red-400/80 text-[10px] md:text-[12px] uppercase font-bold tracking-wider ml-1">Vulnerable Code Snippet</label>
                     <textarea
                       placeholder="Paste the vulnerable code here..."
                       className="w-full bg-[#050505] border border-red-900/20 rounded-xl px-4 py-3 text-red-400 font-mono text-[12px] h-32 resize-none focus:border-red-500 outline-none shadow-inner"
@@ -441,11 +395,8 @@ return (
                     />
                   </div>
 
-                  {/* السطر المستهدف */}
                   <div className="space-y-2">
-                    <label className="text-gray-500 text-[10px] md:text-[12px] uppercase font-bold tracking-wider ml-1">
-                      Target Vulnerable Line
-                    </label>
+                    <label className="text-gray-500 text-[10px] md:text-[12px] uppercase font-bold tracking-wider ml-1">Target Vulnerable Line</label>
                     <textarea
                       placeholder="Copy the exact line that needs fixing..."
                       className="w-full bg-white/5 border border-gray-800 rounded-xl px-4 py-3 text-white text-xs focus:border-emerald-500 outline-none h-16 md:h-auto resize-none transition-all"
@@ -454,11 +405,8 @@ return (
                     />
                   </div>
 
-                  {/* منطقة الكود الآمن */}
                   <div className="space-y-2">
-                    <label className="text-emerald-400/80 text-[10px] md:text-[12px] uppercase font-bold tracking-wider ml-1">
-                      Secure Code (The Solution)
-                    </label>
+                    <label className="text-emerald-400/80 text-[10px] md:text-[12px] uppercase font-bold tracking-wider ml-1">Secure Code (The Solution)</label>
                     <textarea
                       placeholder="How should the code look after the fix?"
                       className="w-full bg-[#050505] border border-emerald-900/20 rounded-xl px-4 py-3 text-emerald-400 font-mono text-[12px] h-32 resize-none focus:border-emerald-500 outline-none shadow-inner"
@@ -471,11 +419,8 @@ return (
                     />
                   </div>
 
-                  {/* الكلمات المفتاحية */}
                   <div className="space-y-2">
-                    <label className="text-gray-500 text-[10px] md:text-[12px] uppercase font-bold tracking-wider ml-1">
-                      Expected Fix Keywords (Comma Separated)
-                    </label>
+                    <label className="text-gray-500 text-[10px] md:text-[12px] uppercase font-bold tracking-wider ml-1">Expected Fix Keywords</label>
                     <input
                       placeholder="e.g. json, loads, prepare"
                       className="w-full bg-white/5 border border-gray-800 rounded-xl px-4 py-3 text-white text-xs focus:border-emerald-500 outline-none transition-all"
@@ -487,11 +432,8 @@ return (
                     />
                   </div>
 
-                  {/* شرح الثغرة */}
                   <div className="space-y-2">
-                    <label className="text-gray-500 text-[10px] md:text-[12px] uppercase font-bold tracking-wider ml-1">
-                      Educational Explanation
-                    </label>
+                    <label className="text-gray-500 text-[10px] md:text-[12px] uppercase font-bold tracking-wider ml-1">Educational Explanation</label>
                     <textarea
                       placeholder="Explain why the original code was insecure..."
                       className="w-full bg-white/5 border border-gray-800 rounded-xl px-4 py-3 text-white text-xs focus:border-emerald-500 outline-none h-24 resize-none transition-all"
@@ -501,14 +443,12 @@ return (
                   </div>
                 </div>
               )}
+
               {/* 4. إذا كانت اللعبة Privacy Awareness */}
               {selectedGameName === "Privacy Awareness" && (
                 <div className="space-y-6 animate-in fade-in duration-500 max-h-[65vh] md:max-h-none overflow-y-auto pr-2 custom-scrollbar text-left pb-10">
-                  {/* 1. القصة والسياق */}
                   <div className="p-4 md:p-5 bg-blue-500/5 border border-blue-500/10 rounded-[1.5rem] md:rounded-[2rem] space-y-4">
-                    <label className="text-blue-400 text-[10px] font-black uppercase tracking-widest ml-1">
-                      Challenge Intelligence
-                    </label>
+                    <label className="text-blue-400 text-[10px] font-black uppercase tracking-widest ml-1 flex items-center gap-2">Challenge Intelligence</label>
                     <input
                       placeholder="Challenge Context (e.g. Smart Hospital System)"
                       className="w-full bg-black/40 border border-gray-800 rounded-xl px-4 py-3 text-sm text-white focus:border-blue-500 outline-none transition-all"
@@ -523,21 +463,16 @@ return (
                     />
                   </div>
 
-                  {/* 1.1 إضافة المهام (Challenge Tasks) */}
                   <div className="p-4 md:p-5 bg-emerald-500/5 border border-emerald-500/10 rounded-[1.5rem] md:rounded-[2rem] space-y-2">
-                    <label className="text-emerald-400 text-[10px] font-black uppercase tracking-widest ml-1">
-                      Challenge Objectives (Tasks)
-                    </label>
+                    <label className="text-emerald-400 text-[10px] font-black uppercase tracking-widest ml-1">Challenge Objectives (Tasks)</label>
                     <textarea
                       placeholder="Enter challenge tasks (one per line)..."
                       className="w-full bg-black/40 border border-gray-800 rounded-xl px-4 py-3 text-[11px] text-white h-24 focus:border-emerald-500 outline-none transition-all"
                       value={Array.isArray(formData.scenarioData?.task) ? formData.scenarioData.task.join("\n") : formData.scenarioData?.task || ""}
                       onChange={(e) => updateScenario("task", e.target.value.split("\n"))}
                     />
-                    <p className="text-[9px] text-gray-500 px-1 italic">* Each line will appear as a bullet point.</p>
                   </div>
 
-                  {/* 2. إضافة بيانات النظام (Data Items) */}
                   <div className="space-y-4">
                     <div className="flex justify-between items-center px-1">
                       <label className="text-gray-500 text-[10px] font-black uppercase tracking-widest">System Data Points</label>
@@ -603,7 +538,6 @@ return (
                             </button>
                           </div>
 
-                          {/* إعدادات الخصوصية: 2 في الجوال و 4 في اللابتوب */}
                           <div className="grid grid-cols-2 md:grid-cols-4 gap-3 pt-3 border-t border-white/5">
                             <div className="flex flex-col gap-1">
                               <span className="text-[7px] text-gray-500 uppercase font-black tracking-tighter">Necessity</span>
@@ -686,10 +620,10 @@ return (
                   </div>
                 </div>
               )}
+
               {/* 5. إذا كانت اللعبة Hack Race */}
               {selectedGameName === "Hack Race" && (
                 <div className="space-y-6 animate-in fade-in duration-500 max-h-[65vh] md:max-h-none overflow-y-auto pr-2 custom-scrollbar text-left pb-10">
-                  {/* مقدمة السباق */}
                   <div className="p-4 md:p-5 bg-emerald-500/5 border border-emerald-500/10 rounded-[1.5rem] md:rounded-[2rem] space-y-2">
                     <label className="text-emerald-400 text-[10px] font-black uppercase tracking-widest ml-1 flex items-center gap-2">
                       <Zap size={14} /> Race Challenge Briefing
@@ -702,12 +636,9 @@ return (
                     />
                   </div>
 
-                  {/* مدير الأسئلة */}
                   <div className="space-y-4">
                     <div className="flex justify-between items-center px-1">
-                      <label className="text-gray-500 text-[10px] font-black uppercase tracking-widest">
-                        Race Questions (Limit: 5)
-                      </label>
+                      <label className="text-gray-500 text-[10px] font-black uppercase tracking-widest">Race Questions (Limit: 5)</label>
                       <button
                         type="button"
                         disabled={(formData.scenarioData?.questions || []).length >= 5}
@@ -725,12 +656,8 @@ return (
                     <div className="space-y-5">
                       {(formData.scenarioData?.questions || []).map((q, qIdx) => (
                         <div key={q.id} className="p-5 md:p-6 bg-white/5 border border-gray-800 rounded-[1.5rem] md:rounded-[2rem] space-y-4 relative transition-all hover:border-emerald-500/30">
-                          
-                          {/* رقم السؤال وزر الحذف */}
                           <div className="flex justify-between items-center border-b border-white/5 pb-3">
-                            <span className="text-emerald-500 font-black italic text-xs md:text-sm uppercase">
-                              # Question {qIdx + 1}
-                            </span>
+                            <span className="text-emerald-500 font-black italic text-xs md:text-sm uppercase"># Question {qIdx + 1}</span>
                             <button
                               type="button"
                               onClick={() => {
@@ -743,7 +670,6 @@ return (
                             </button>
                           </div>
 
-                          {/* نص السؤال */}
                           <div className="space-y-2">
                             <input
                               placeholder="Enter the question text..."
@@ -757,7 +683,6 @@ return (
                             />
                           </div>
 
-                          {/* الخيارات الـ 4: عمودية في الجوال (1) وأفقية في اللابتوب (2) لضمان الوضوح */}
                           <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                             {q.options.map((opt, optIdx) => (
                               <div key={optIdx} className="flex items-center gap-3 bg-black/40 rounded-xl px-3 border border-gray-800 focus-within:border-emerald-500/50 transition-all">
@@ -787,11 +712,8 @@ return (
                             ))}
                           </div>
 
-                          {/* شرح الإجابة */}
                           <div className="space-y-2 pt-2 border-t border-white/5">
-                            <label className="text-gray-600 text-[8px] md:text-[9px] uppercase font-black tracking-widest ml-1">
-                              Educational Explanation
-                            </label>
+                            <label className="text-gray-600 text-[8px] md:text-[9px] uppercase font-black tracking-widest ml-1">Educational Explanation</label>
                             <textarea
                               placeholder="Why is this answer correct?"
                               className="w-full bg-black/20 border border-gray-800 rounded-xl px-4 py-2 text-[11px] text-gray-400 h-16 resize-none focus:border-blue-500 outline-none transition-all"
@@ -805,102 +727,25 @@ return (
                           </div>
                         </div>
                       ))}
-
-                      {/* حالة عدم وجود أسئلة */}
-                      {(formData.scenarioData?.questions || []).length === 0 && (
-                        <div className="text-center py-12 border-2 border-dashed border-gray-800 rounded-[2rem] text-gray-600 italic text-xs bg-black/10">
-                          No questions added. Click "+ Add Question" to start.
-                        </div>
-                      )}
                     </div>
                   </div>
                 </div>
               )}
               
-{/* 6. إذا كانت اللعبة Cyber Escape Room */}
+              {/* 6. إذا كانت اللعبة Cyber Escape Room */}
+              {/* 🟢 تم إصلاح وعزل استدعاء المكون الأساسي لـ EscapeRoomBuilder وحمايته للعمل بكفاءة على الجوال واللابتوب */}
               {selectedGameName === "Cyber Escape Room" && (
-                <div className="space-y-6 animate-in fade-in duration-500 max-h-[60vh] md:max-h-none overflow-y-auto pr-2 custom-scrollbar text-left pb-10">
-                  <div className="p-4 md:p-5 bg-blue-500/5 border border-blue-500/10 rounded-[1.5rem] md:rounded-[2rem] space-y-2">
-                    <label className="text-blue-400 text-[10px] font-black uppercase tracking-widest ml-1 flex items-center gap-2">
-                      <Zap size={14} className="fill-blue-400" /> Escape Challenge Architecture
-                    </label>
-                    <p className="text-gray-500 text-[11px] px-1 italic font-medium">
-                      Design 4 security layers. Click the blue pulse to expand each layer.
-                    </p>
-                  </div>
-
-                  <div className="space-y-4">
-                    {[0, 1, 2, 3].map((roomIdx) => {
-                      const isExpanded = activeRoomIdx === roomIdx;
-                      return (
-                        <div
-                          key={roomIdx}
-                          className={`transition-all duration-500 rounded-[2rem] md:rounded-[2.5rem] border ${
-                            isExpanded ? "bg-white/5 border-blue-500/30 p-5 md:p-6" : "bg-black/40 border-gray-800 p-4 hover:border-blue-500/20"
-                          } relative overflow-hidden`}
-                        >
-                          <div
-                            className="flex justify-between items-center cursor-pointer"
-                            onClick={() => setActiveRoomIdx(isExpanded ? null : roomIdx)}
-                          >
-                            <div className="flex items-center gap-4">
-                              <span className={`font-black italic text-xs md:text-sm uppercase transition-colors ${isExpanded ? "text-blue-400" : "text-gray-600"}`}>
-                                # Layer 0{roomIdx + 1}
-                              </span>
-                              {!isExpanded && (
-                                <span className="text-[9px] text-gray-500 font-bold uppercase tracking-widest opacity-60">
-                                  — {formData.scenarioData?.rooms?.[roomIdx]?.puzzleType || "Ready"}
-                                </span>
-                              )}
-                            </div>
-
-                            <div className={`w-3 h-3 rounded-full transition-all duration-500 ${isExpanded ? "bg-blue-500 shadow-[0_0_15px_#3b82f6]" : "bg-gray-700"}`} />
-                          </div>
-
-                          <div className={`transition-all duration-500 ease-in-out overflow-hidden ${isExpanded ? "max-h-[500px] mt-6 opacity-100" : "max-h-0 opacity-0"}`}>
-                            <div className="space-y-5">
-                              <div className="space-y-2">
-                                <label className="text-gray-500 text-[10px] uppercase font-bold tracking-wider ml-1">Puzzle Content</label>
-                                <textarea
-                                  placeholder="Enter the security challenge..."
-                                  className="w-full bg-black/40 border border-gray-800 rounded-xl px-4 py-3 text-xs text-white h-24 resize-none focus:border-blue-500 outline-none transition-all"
-                                  value={formData.scenarioData?.rooms?.[roomIdx]?.puzzle_data || ""}
-                                  onChange={(e) => updateRoom(roomIdx, "puzzle_data", e.target.value)}
-                                />
-                              </div>
-
-                              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                <div className="space-y-2">
-                                  <label className="text-gray-500 text-[10px] uppercase font-bold tracking-wider ml-1">Breach Key</label>
-                                  <input
-                                    placeholder="Answer..."
-                                    className="w-full bg-black/20 border border-gray-800 rounded-xl px-4 py-3 text-sm text-white outline-none focus:border-blue-500"
-                                    value={formData.scenarioData?.rooms?.[roomIdx]?.answer || ""}
-                                    onChange={(e) => updateRoom(roomIdx, "answer", e.target.value)}
-                                  />
-                                </div>
-                                <div className="space-y-2">
-                                  <label className="text-gray-500 text-[10px] uppercase font-bold tracking-wider ml-1">Intel Hint</label>
-                                  <input
-                                    placeholder="Hint..."
-                                    className="w-full bg-black/20 border border-gray-800 rounded-xl px-4 py-3 text-sm text-white outline-none focus:border-blue-500"
-                                    value={formData.scenarioData?.rooms?.[roomIdx]?.hint || ""}
-                                    onChange={(e) => updateRoom(roomIdx, "hint", e.target.value)}
-                                  />
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      );
-                    })}
-                  </div>
-                </div>
+                <EscapeRoomBuilder
+                  formData={formData}
+                  setFormData={setFormData}
+                  onSubmit={onSubmit}
+                  onBack={() => setStep(1)} 
+                />
               )}
             </div>
           )}
 
-          {/* الأزرار السفلية: ضبط كامل للجوال عشان ما يضيع أي زر */}
+          {/* الأزرار السفلية */}
           <div className="flex flex-row gap-3 pt-6 border-t border-gray-800/50 bg-[#0f121a] mt-auto">
             {step === 1 ? (
               <>

@@ -42,7 +42,7 @@ const PhishingLayout: React.FC<PhishingLayoutProps> = ({
 
     return (
         <div className="flex flex-1 flex-col h-full p-6 z-10">
-            <div className="flex justify-center mb-6">
+            {/* <div className="flex justify-center mb-6">
                 <div className="flex items-center gap-8 bg-[#1c2438]/60 px-6 py-2 rounded-full border border-white/5 backdrop-blur-xl shadow-xl mx-auto">
                     <div className="flex items-center gap-2 text-yellow-500 font-bold border-r border-white/10 pr-5 text-sm"><Zap size={14} fill="currentColor" /> <span>Points: {points_pool} XP</span></div>
                     <div className="flex items-center gap-3"><Timer size={16} className="text-blue-400" /><span className="text-lg font-mono font-black text-white">{Math.floor(timeLeft / 60)}:{(timeLeft % 60).toString().padStart(2, '0')}</span></div>
@@ -69,7 +69,7 @@ const PhishingLayout: React.FC<PhishingLayoutProps> = ({
                         </div>               <div className="flex gap-1.5">{[...Array(3)].map((_, i) => <Heart key={i} size={18} fill={i < lives ? "#ef4444" : "none"} color="#ef4444" className={i < lives ? "animate-pulse" : "opacity-10"} />)}</div>
                     </div>
                 </div>
-            </div>
+            </div> */}
 
             <div className="w-full max-w-5xl mx-auto bg-white rounded-[1.25rem] overflow-hidden shadow-2xl flex flex-col h-full border border-gray-200 animate-in slide-in-from-bottom-12 duration-700 font-sans text-gray-900">
                 <div className="bg-[#f2f6fc] px-8 py-3 border-b border-gray-200 flex justify-between items-center text-gray-400">
@@ -118,14 +118,30 @@ const PhishingLayout: React.FC<PhishingLayoutProps> = ({
                                 {scenario.actions?.map((act: any, idx: number) => {
                                     let buttonClass = "border-[#dadce0] text-gray-700 hover:border-[#1a73e8] hover:text-[#1a73e8] hover:bg-blue-50 bg-white";
 
-                                    if (isAnswered) {
-                                        const isThisCorrect = act === scenario.correctAnswer;
-                                        const isThisSelected = act === selectedAction;
 
-                                        if (isThisCorrect) {
-                                            buttonClass = "border-green-500 text-green-700 bg-green-50 font-black border-2 scale-105";
-                                        } else if (isThisSelected) {
-                                            buttonClass = "border-red-500 text-red-700 bg-red-50 border-2";
+                                    // if (isAnswered) {
+                                    //     const isThisCorrect = act === scenario.correctAnswer;
+                                    //     const isThisSelected = act === selectedAction;
+
+                                    //     if (isThisCorrect) {
+                                    //         buttonClass = "border-green-500 text-green-700 bg-green-50 font-black border-2 scale-105";
+                                    //     } else if (isThisSelected) {
+                                    //         buttonClass = "border-red-500 text-red-700 bg-red-50 border-2";
+                                    //     } else {
+                                    //         buttonClass = "border-gray-200 text-gray-400 opacity-50 bg-gray-50";
+                                    //     }
+                                    // }
+
+                                    if (isAnswered) {
+                                        const isThisSelected = act === selectedAction;
+                                        const isSelectedCorrect = selectedAction === scenario.correctAnswer;
+
+                                        if (isThisSelected) {
+                                            if (isSelectedCorrect) {
+                                                buttonClass = "border-green-500 text-green-700 bg-green-50 font-black border-2 scale-105";
+                                            } else {
+                                                buttonClass = "border-red-500 text-red-700 bg-red-50 border-2";
+                                            }
                                         } else {
                                             buttonClass = "border-gray-200 text-gray-400 opacity-50 bg-gray-50";
                                         }

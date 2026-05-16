@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import axios from 'axios';
+import axios from 'axios'; // 🟢 تم إصلاح الاستيراد هنا ليكون صحيحاً ومنع انهيار التطبيق
 import MainLayout from '../components/MainLayout';
 import OnboardingTour from '../OnboardingTour'; 
 import { Zap, Lock, ShieldCheck, Clock, Play, Trophy , UserX , Users} from 'lucide-react';
@@ -101,8 +101,6 @@ const UserHome = () => {
       
       {/* Banner Section */}
       <div className="w-full relative bg-[#121620]/80 backdrop-blur-md rounded-[2.5rem] p-6 md:p-12 mb-10 flex flex-row justify-between items-center border border-gray-800/50 shadow-xl overflow-hidden min-h-[140px] md:min-h-[320px] gap-4">
-          
-          {/* الصورة الشخصية الكبيرة (الأفاتار) تظهر الحين في الجوال واللابتوب جنب بعض أفقياً بـ flex-row */}
           <div className="w-24 h-28 md:w-64 md:h-72 bg-contain bg-no-repeat bg-center drop-shadow-2xl transition-transform hover:scale-105 duration-500 shrink-0" 
                style={{backgroundImage: `url('${characterImg}')`}}>
           </div>
@@ -159,7 +157,7 @@ const UserHome = () => {
 
       <h3 className="text-2xl font-black mb-8 tracking-tighter italic uppercase text-white/90 px-1">Recent Activity</h3>
       
-      {/* 🚀 التعديل المطلوب هنا: جعل حاوي الكروت الـ 3 يصف أفقيًا بالجوال ويمرر، وبنفس حجم وعرض الألعاب */}
+      {/* 🚀 حاوي كروت الأنشطة الثلاثة بالتمرير الأفقي للجوال والشبكة للابتوب */}
       <div className="flex flex-nowrap overflow-x-auto md:grid md:grid-cols-3 gap-6 md:gap-8 pb-12 scrollbar-none md:scrollbar-thin scrollbar-thumb-gray-800 scrollbar-track-transparent px-1 snap-x">
         
         {/* الكرت الأول: نشاط الأعضاء */}
@@ -274,7 +272,7 @@ const UserHome = () => {
 };
 
 const GameCard = ({ title, desc, gradient, borderColor, btnColor, icon, bgImage }: any) => (
-  <div className={`relative overflow-hidden rounded-[2.5rem] md:rounded-[3rem] ${gradient} backdrop-blur-md border ${borderColor} p-6 md:p-10 flex flex-col justify-between min-h-[260px] md:min-h-[300px] group transition-all duration-500 hover:scale-[1.02] shadow-2xl`}> 
+  <div className={`relative overflow-hidden rounded-[2.5rem] md:rounded-[3rem] ${gradient} backdrop-blur-md border ${borderColor} p-6 md:p-10 flex flex-col justify-between min-h-[260px] md:min-h-[300px] h-full group transition-all duration-500 hover:scale-[1.02] shadow-2xl w-full`}> 
      <div className="z-20 relative">
         {icon}
         <h3 className="text-2xl font-black mt-4 uppercase italic leading-none">{title}</h3>

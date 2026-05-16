@@ -193,39 +193,40 @@ const WaitingRoomPage = () => {
   };
 
   useEffect(() => {
-    if (!sessionId || !socket) return;
+  if (!sessionId || !socket) return;
 
-    const setupRoom = () => {
-  const userData = JSON.parse(localStorage.getItem("user") || "{}");
-  
-  if (userData?._id) {
-    socket.emit("register_user", {
-      userId: userData._id,
-      onlineStatus: userData.onlineStatus || 'Public'
-    });
-    console.log("📡 Agent Registered in Waiting Room:", userData._id);
+  const onConnect = () => {
+    console.log("🟢 CONNECTED");
+
+    const userData = JSON.parse(localStorage.getItem("user"));
+
+    if (userData?._id) {
+      console.log("🚀 SENDING REGISTER");
+
+      socket.emit("register_user", {
+        userId: userData._id,
+        onlineStatus: userData.onlineStatus || "Public"
+      });
+    }
+
+    socket.emit("join_room", sessionId);
+
+    fetchLobbyData();
+  };
+
+  // إذا متصل بالفعل
+  if (socket.connected) {
+    onConnect();
+  } else {
+    socket.connect();
   }
-  
-  socket.emit("join_room", sessionId);
-  fetchLobbyData();
-};
 
-  socket.on("connect", setupRoom);
+  socket.on("connect", onConnect);
 
-  socket.on("reconnect", () => {
-    console.log("♻️ Connection restored! Re-registering...");
-    setupRoom();
+  socket.on("player_joined", () => {
+    console.log("🔔 Room Update: Refreshing players list...");
+    fetchLobbyData();
   });
-
-
-   if (socket.connected) setupRoom();
-
-
-    socket.on("player_joined", () => {
-      console.log("🔔 Room Update: Refreshing players list...");
-      fetchLobbyData();
-    });
-
     socket.on("invite_accepted_feedback", () => {
       console.log("✅ Invite accepted feedback received");
       Swal.fire({
@@ -285,22 +286,12 @@ const WaitingRoomPage = () => {
         },
     });
     console.log("🎯 Navigating to:", gameSlug);
-
-    navigate(`/play/${sessionId}/${gameSlug}`, {
-        state: {
-            sessionId: sessionId,
-            mode: "multiplayer",
-            gameId: data?.gameId || lobbyInfo?.gameId,
-            gameName: rawName,
-            historyId: myDataInLobby?.dbSessionId,
-            isHost: myDataInLobby?.isHost
-        },
-    });
 });
 
-    socket.on("update_online_users_list", (ids) => {
-        setOnlineUserIds(ids);
-    });
+     socket.on("update_online_users_list", (ids) => {
+    console.log("📡 ONLINE IDS:", ids);
+    setOnlineUserIds(ids);
+  });
     socket.on("lobby_updated", () => {
       fetchLobbyData(); // نستدعي دالة جلب البيانات عشان تتحدث الشاشة عند الطرفين
     });
@@ -320,14 +311,14 @@ const WaitingRoomPage = () => {
     });
 
     return () => {
-      socket.off("connect", setupRoom);
-      socket.off("reconnect");
+   socket.off("connect", onConnect);
       socket.off("player_joined");
       socket.off("invite_accepted_feedback");
       socket.off("player_ready_update");
       socket.off("game_starts");
       socket.off("lobby_updated");
       socket.off("host_disconnected");
+      socket.off("update_online_users_list");
     };
   }, [sessionId, socket]);
 
@@ -688,7 +679,6 @@ const handleSearchUsers = async (query) => {
         const res = await axios.get(`${BASE_URL}/auth/me`, {
           headers: { Authorization: `Bearer ${token}` },
         });
-        
         setPlayers([
           {
             id: res.data._id,
@@ -722,52 +712,55 @@ const handleSearchUsers = async (query) => {
     if (isInviteModalOpen) fetchFriends();
   }, [isInviteModalOpen]);
 
-  const sendInvite = async (friendId) => {
-    try {
-      // 1. يتحول الزر فوراً إلى Pending
-      setInvitedIds((prev) => [...prev, friendId]);
+ const sendInvite = async (friendId) => {
+  try {
+    setInvitedIds((prev) => [...prev, friendId]);
 
-      const token = localStorage.getItem("token");
-      const response = await axios.post(
-        `${BASE_URL}/multiplayer/invite`,
-        {
-          friendId,
-          sessionId,
-          gameName: location.state?.gameName || "Cyber Mission",
-        },
-        { headers: { Authorization: `Bearer ${token}` } },
-      );
+    const token = localStorage.getItem("token");
 
-      if (response.status === 200) {
-        // 2. إشعار صغير بالإرسال
-        Swal.fire({
-          title: "INVITATION SENT",
-          text: "Agent notified. Waiting for join...",
-          icon: "success",
-          toast: true,
-          position: "top-end",
-          timer: 2000,
-          showConfirmButton: false,
-        });
+    await axios.post(
+      `${BASE_URL}/multiplayer/invite`,
+      {
+        friendId,
+        sessionId,
+        gameName: location.state?.gameName || "Cyber Mission",
+      },
+      { headers: { Authorization: `Bearer ${token}` } }
+    );
 
-        // 3. نقفل المودال بعد تأخير بسيط عشان يلمح المستخدم إن الزر صار رمادي
-        setTimeout(() => {
-          setIsInviteModalOpen(false);
-        }, 800);
-      }
-    } catch (err) {
-      setInvitedIds((prev) => prev.filter((id) => id !== friendId));
-      const errMsg = err.response?.data?.message || "Agent Offline";
-      Swal.fire({
-        title: "Mission Failed",
-        text: errMsg,
-        icon: "warning",
-        background: "#0f172a",
-        color: "#fff",
-      });
-    }
-  };
+    const storedUser = JSON.parse(localStorage.getItem("user") || "{}");
+    socket.emit("send_game_invite", {
+      targetUserId: friendId,
+      senderName: storedUser.username || "Agent",
+      gameName: location.state?.gameName || "Cyber Escape Room",
+      sessionId: sessionId
+    });
 
+    Swal.fire({
+      title: "INVITATION DEPLOYED",
+      text: "Mission sent to agent's radar and bell notification hub.",
+      icon: "success",
+      toast: true,
+      position: "top-end",
+      timer: 3000,
+      showConfirmButton: false,
+    });
+
+    setTimeout(() => {
+      setIsInviteModalOpen(false);
+    }, 800);
+
+  } catch (err) {
+    setInvitedIds((prev) => prev.filter((id) => id !== friendId));
+    Swal.fire({
+      title: "Mission Failed",
+      text: "Could not sync notification hub.",
+      icon: "warning",
+      background: "#0f172a",
+      color: "#fff",
+    });
+  }
+};
   const getStandingAvatar = (style) => {
     const avatars = {
       "Avatar.png": "/Avatar-standing.png",

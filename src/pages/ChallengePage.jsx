@@ -279,13 +279,63 @@ const ChallengePage = () => {
           return alert("Critical Error: 4 defined rooms are required!");
         }
 
-        // التعديل المهم: التأكد من أن الغرفة الرابعة (index 3) منظمة كطبقات
-        const room4 = rooms[3];
-        if (!room4.puzzle_data || !room4.answer || !room4.hint) {
-          return alert(
-            "Room 04 must have Base64 data, a Vigenère Key (Hint), and the Master Answer.",
-          );
+        let missingFields = [];
+        let errorRoom = -1;
+
+        if (!rooms[0].puzzle_data) missingFields.push("Cipher Text (The code)");
+        if (!rooms[0].answer) missingFields.push("Clean Answer (Decrypted text)");
+        if (!rooms[0].hint) missingFields.push("Cipher Hint (Shift value)");
+        
+        if (missingFields.length > 0) errorRoom = 1;
+
+        if (errorRoom === -1) {
+          if (!rooms[1].logs?.length) missingFields.push("Network Logs (At least 1)");
+          if (rooms[1].options?.length !== 5) missingFields.push(`Exactly 5 Devices (Current: ${rooms[1].options?.length || 0})`);
+          if (!rooms[1].answer) missingFields.push("Infected Target (Click a device)");
+          if (missingFields.length > 0) errorRoom = 2;
         }
+
+        if (errorRoom === -1) {
+          if (!rooms[2].puzzle_data) missingFields.push("Boolean Equation");
+          if (!rooms[2].answer) missingFields.push("Logic Result (TRUE/FALSE)");
+          if (missingFields.length > 0) errorRoom = 3;
+        }
+
+        if (errorRoom === -1) {
+          const r4 = rooms[3].room4 || {};
+          if (!r4.layer1) missingFields.push("Base64 Layer Data");
+          if (!r4.vKey) missingFields.push("Vigenère Secret Key");
+          if (!r4.masterKey) missingFields.push("Final Master Answer");
+          if (missingFields.length > 0) errorRoom = 4;
+        }
+
+        if (missingFields.length > 0) {
+          console.log("🛑 Protocol Blocked. Missing:", missingFields);
+          Swal.fire({
+            title: "PROTOCOL_INCOMPLETE",
+            html: `
+              <div style="text-align: left; font-family: monospace; font-size: 13px;">
+                <p style="color: #666; margin-bottom: 10px;">Security parameters missing in ROOM_0${errorRoom}:</p>
+                <ul style="color: #ff3b6b; list-style-type: square; padding-left: 20px;">
+                  ${missingFields.map((f) => `<li style="margin-bottom: 5px;">${f}</li>`).join("")}
+                </ul>
+              </div>
+            `,
+            icon: "warning",
+            background: "#080c14",
+            color: "#fff",
+            confirmButtonColor: "#10b981",
+            confirmButtonText: "RE-EVALUATE",
+            didOpen: () => {
+              const container = Swal.getContainer();
+              if (container) container.style.zIndex = "3000";
+            },
+          });
+          return; // ⛔️ نوقف الـ Deploy هنا عشان ما يرسل للداتابيز بيانات ناقصة
+        }
+        
+
+
       }
 
       // 3. إرسال البيانات للسيرفر (للجميع)
@@ -790,24 +840,7 @@ const ChallengePage = () => {
         </div>
       )}
 
-      {/* --- مودال إنشاء التحدي --- */}
-      {/* --- مودال إنشاء التحدي الذكي --- */}
-      {formData.gameId &&
-      games.find((g) => g._id === formData.gameId)?.gameName ===
-        "Cyber Escape Room" ? (
-        <EscapeChallengeModal
-          isOpen={showModal}
-          onClose={() => {
-            setShowModal(false);
-            resetForm();
-          }}
-          formData={formData}
-          setFormData={setFormData}
-          onSubmit={handleCreate}
-          step={step}
-          setStep={setStep}
-        />
-      ) : (
+      {/* --- مودال إنشاء التحدي --- */} 
         <ChallengeModal
           isOpen={showModal}
           onClose={() => {
@@ -823,7 +856,7 @@ const ChallengePage = () => {
           userLevels={userLevels}
           editingId={editingId}
         />
-      )}
+      
     </MainLayout>
   );
 };

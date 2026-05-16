@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import PhishingLayout from "../components/challengesUI/PhishingLayout";
@@ -9,13 +9,27 @@ import HackRaceLayout from "../components/challengesUI/HackRaceLayout";
 import EscapeRoomLayout from "../components/challengesUI/EscapeRoomLayout";
 import MainLayout from "../components/MainLayout";
 import Swal from "sweetalert2";
-import { ArrowLeft, Loader2 } from "lucide-react";
+import {
+  ArrowLeft,
+  Loader2,
+  Heart,
+  Clock,
+  ShieldAlert,
+  ShieldCheck,
+  DoorOpen,
+  Timer,
+  Fingerprint,
+  Key,
+  FileCode,
+} from "lucide-react";
 import confetti from "canvas-confetti";
 import { BASE_URL } from "../api/auth.js";
 
 const ChallengeSolvePage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const timerRef = useRef(null);
+
 
   const [challengeData, setChallengeData] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -57,15 +71,13 @@ const ChallengeSolvePage = () => {
       if (!id) return;
       try {
         const token = localStorage.getItem("token");
-        const res = await axios.get(
-          `${BASE_URL}/challenges/public/${id}`,
-          {
-            headers: { Authorization: `Bearer ${token}` },
-          },
-        );
+        const res = await axios.get(`${BASE_URL}/challenges/public/${id}`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
 
         const rawData = res.data.challenge;
-        setTimeLeft(rawData.timeLimit || 60);
+        // setTimeLeft(rawData.timeLimit || 60);
+        setTimeLeft(parseInt(rawData.timeLimit) || 60);
         setLives(rawData.maxAttempts || 3);
 
         if (rawData && rawData.scenarioData) {
@@ -80,10 +92,7 @@ const ChallengeSolvePage = () => {
           // إذا كانت بريكر، نشغل تأثير الكتابة للتقرير
           else if (rawData.gameId.gameName === "Password Maker/Breaker") {
             runTypeEffect(rawData.scenarioData.analysis_report || "");
-          }
-
-          // ابحثي عن الجزء اللي يشيك على نوع اللعبة داخل الـ fetchChallenge وزيدي هذا:
-          else if (rawData.gameId.gameName === "Secure Coding Challenge") {
+          } else if (rawData.gameId.gameName === "Secure Coding Challenge") {
             setUserCode(rawData.scenarioData.vulnerable_code || "");
           } else if (rawData.gameId.gameName === "Cyber Escape Room") {
             if (rawData.scenarioData.rooms) {
@@ -94,6 +103,7 @@ const ChallengeSolvePage = () => {
           setChallengeData(rawData);
         }
       } catch (err) {
+
         navigate("/challenges");
       } finally {
         setLoading(false);
@@ -102,31 +112,51 @@ const ChallengeSolvePage = () => {
     fetchChallenge();
   }, [id]);
 
+  
   useEffect(() => {
-    let timer;
-    if (!loading && challengeData && !isAnswered && timeLeft > 0 && lives > 0) {
-      timer = setInterval(() => {
-        setTimeLeft((prev) => prev - 1);
-        if (challengeData.gameId.gameName === "Hack Race") {
-          setAiProgress((prev) => {
-            const raceTime = challengeData.timeLimit || 60;
-            const aiSpeedPerSecond = 93 / (raceTime * 1.1);
+    if (timerRef.current) clearInterval(timerRef.current);
 
-            const nextPos = prev + aiSpeedPerSecond;
-
-            // إذا وصل الهكر للنهاية قبل اليوزر
-            if (nextPos >= 93 && !isAnswered) {
-              finishRace(playerProgress, 100); // 👈 التعديل هنا: مررنا القيم عشان يخسر صح
-            }
-            return nextPos;
-          });
-        }
-      }, 1000);
-    } else if (timeLeft === 0 && challengeData && !isAnswered) {
-      handleChallengeSubmit("TIMEOUT_AUTO_FAILURE");
+    // 💡 التعديل هنا: شلنا timeLeft <= 0 من الشرط، عشان ما ينخدع بالصفر المبدئي!
+    if (loading || !challengeData || isAnswered || showResult || lives <= 0) {
+      console.log("🛑 Timer Blocked");
+      return;
     }
-    return () => clearInterval(timer);
-  }, [loading, timeLeft, lives, isAnswered, challengeData, playerProgress]); // 👈 أضفنا playerProgress هنا
+
+    console.log("✅ Timer is starting now...");
+
+    timerRef.current = setInterval(() => {
+      setTimeLeft((prev) => {
+        const nextTime = prev - 1;
+        if (nextTime <= 0) {
+          clearInterval(timerRef.current);
+          return 0;
+        }
+        return nextTime;
+      });
+
+      if (challengeData?.gameId?.gameName === "Hack Race") {
+        setAiProgress((prev) => {
+          const raceTime = challengeData.timeLimit || 60;
+          return prev + 93 / (raceTime * 1.1);
+        });
+      }
+    }, 1000);
+
+    return () => {
+      if (timerRef.current) clearInterval(timerRef.current);
+    };
+  }, [loading, challengeData, isAnswered, showResult, lives]);
+
+  useEffect(() => {
+    if (timeLeft === 0 && challengeData && !isAnswered && !showResult) {
+      console.log("⏰ Time is Up! Executing final action...");
+      if (challengeData.gameId.gameName === "Privacy Awareness") {
+        handlePrivacySubmit();
+      } else {
+        handleChallengeSubmit("TIMEOUT_AUTO_FAILURE");
+      }
+    }
+  }, [timeLeft, challengeData, isAnswered, showResult]);
 
   const runTypeEffect = (text) => {
     setDisplayedAnalysis("");
@@ -280,16 +310,47 @@ const ChallengeSolvePage = () => {
         { headers: { Authorization: `Bearer ${token}` } },
       );
 
+      // if (res.data.success) {
+      //   setPrivacyResult({
+      //     score:
+      //       res.data.score !== undefined
+      //         ? res.data.score
+      //         : res.data.isCorrect
+      //           ? 100
+      //           : 0,
+      //     details: res.data.feedback, // تأكدي أن الباك أند يرجع feedback
+      //   });
+
       if (res.data.success) {
+        const finalScore =
+          res.data.score !== undefined
+            ? res.data.score
+            : res.data.isCorrect
+              ? 100
+              : 0;
+
         setPrivacyResult({
-          score:
-            res.data.score !== undefined
-              ? res.data.score
-              : res.data.isCorrect
-                ? 100
-                : 0,
-          details: res.data.feedback, // تأكدي أن الباك أند يرجع feedback
+          score: finalScore,
+          details: res.data.feedback,
         });
+
+        if (finalScore < 70) {
+          // نفترض أن 70% هو درجة النجاح
+          const updatedLives = lives - 1;
+          setLives(updatedLives);
+
+          if (updatedLives <= 0) {
+            Swal.fire({
+              title: "SYSTEM BREACHED",
+              text: "You have exhausted all your attempts. Mission Failed!",
+              icon: "error",
+              background: "#080c14",
+              color: "#fff",
+            }).then(() => navigate("/challenges"));
+            return; // ⛔️ نوقف الكود هنا عشان ما يعرض شاشة النتيجة ويرجع يعطيه فرصة!
+          }
+        }
+
         setShowResult(true);
       }
     } catch (err) {
@@ -299,72 +360,84 @@ const ChallengeSolvePage = () => {
     }
   };
 
-  
   const handleHackRaceAnswer = async (index) => {
     if (isAnswered) return;
+
+    // 💡 هذا السطر يجمد التايمر والهاكر تلقائياً (بسبب شرط الـ useEffect عندك)
     setIsAnswered(true);
     setSelectedOptionIndex(index);
+
+    // [NEW] 1. جلب عدد الأسئلة الكلي وحساب الخطوة الديناميكية
+    const totalQuestions = challengeData.scenarioData.questions.length;
+    const stepSize = 100 / totalQuestions;
 
     const scenario = challengeData.scenarioData.questions[currentQuestionIndex];
     const rawOption = scenario.options[index];
 
     // استخراج النص عشان الباك أند يفهمه
-    const userAnswer = typeof rawOption === "object" ? rawOption.text : rawOption;
+    const userAnswer =
+      typeof rawOption === "object" ? rawOption.text : rawOption;
 
     try {
       const token = localStorage.getItem("token");
       const res = await axios.post(
         `${BASE_URL}/challenges/public/solve/${id}`,
         { userGuess: userAnswer, currentQuestionIndex: currentQuestionIndex },
-        { headers: { Authorization: `Bearer ${token}` } }
+        { headers: { Authorization: `Bearer ${token}` } },
       );
 
       let updatedPlayerProgress = playerProgress;
       let updatedAiProgress = aiProgress;
-      
+
       // 💡 التعديل السحري: هنا المتغير النظيف اللي ما ينخدع!
-      let updatedLives = lives; 
+      let updatedLives = lives;
 
       if (res.data.isCorrect === true) {
         // ✅ الإجابة صحيحة
-        updatedPlayerProgress = Math.min(playerProgress + 20, 100);
+        // [NEW] 2. نزيد التقدم بالخطوة الديناميكية اللي حسبناها بدل 20
+        updatedPlayerProgress = Math.min(playerProgress + stepSize, 100);
         setPlayerProgress(updatedPlayerProgress);
         setShowExplanation(false);
+
+        // [NEW] 3. نقلنا التحقق من آخر سؤال هنا عشان نحسم الفوز فوراً
+        const isLastQuestion = currentQuestionIndex === totalQuestions - 1;
+
+        if (isLastQuestion) {
+          // [NEW] السيرفر قال "صح" وهذا آخر سؤال؟ نمرر 100 بالقوة لدالة النهاية لضمان الفوز
+          finishRace(100, updatedAiProgress);
+          return; // [NEW] نوقف الفنكشن هنا تماماً عشان ما تدخل في الـ setTimeout وتلخبط الواجهة
+        }
+
+        // [NEW] 4. قللنا وقت الانتظار للإجابة الصحيحة إلى 1.5 ثانية عشان اللعب يكون سريع وحماسي أكثر
+        setTimeout(() => {
+          setCurrentQuestionIndex((prev) => prev + 1);
+          setIsAnswered(false); // هذا السطر بيرجع يشغل الهاكر للسؤال الجديد
+          setSelectedOptionIndex(null);
+        }, 1500);
       } else {
         // ❌ الإجابة خاطئة: نخصم قلب يدوياً في الفرونت أند فقط!
         updatedLives = Math.max(0, lives - 1);
         setLives(updatedLives); // تحديث القلوب في الشاشة فوراً
-        
+
+        // قفزة عقاب الهاكر خليناها ثابتة 20 زي ما هي عشان يكون الخطأ مخيف
         updatedAiProgress = Math.min(aiProgress + 20, 100);
         setAiProgress(updatedAiProgress);
         setShowExplanation(true); // تطلع الشاشة الحمراء حقت الشرح
-      }
 
-      // 2. الانتظار لرؤية النتيجة وبعدها نحدد الخطوة الجاية
-      setTimeout(() => {
-        setShowExplanation(false);
+        // 2. الانتظار لرؤية النتيجة بعد الخطأ (2.5 ثانية كافية عشان اللاعب يقرا الشرح والهاكر مجمد)
+        setTimeout(() => {
+          setShowExplanation(false);
 
-        if (res.data.isCorrect === true) {
-          const isLastQuestion = currentQuestionIndex === challengeData.scenarioData.questions.length - 1;
-
-          if (isLastQuestion) {
-            finishRace(updatedPlayerProgress, updatedAiProgress);
-          } else {
-            setCurrentQuestionIndex((prev) => prev + 1);
-            setIsAnswered(false);
-            setSelectedOptionIndex(null);
-          }
-        } else {
           // 💡 اللحين مستحيل يطردك إلا إذا صارت القلوب صفر فعلياً
           if (updatedLives <= 0 || updatedAiProgress >= 93) {
             finishRace(updatedPlayerProgress, updatedAiProgress);
           } else {
             // باقي لك قلوب؟ نرجع نفتح لك الأزرار تحاولين من جديد
-            setIsAnswered(false);
+            setIsAnswered(false); // هنا الهاكر يرجع يركض
             setSelectedOptionIndex(null);
           }
-        }
-      }, 2500);
+        }, 2500);
+      }
     } catch (err) {
       console.error(err);
 
@@ -379,7 +452,6 @@ const ChallengeSolvePage = () => {
       }
     }
   };
-
 
   const finishRace = (finalPlayerPos, finalAiPos) => {
     // نستخدم المعايير التي وصلت للدالة الآن
@@ -485,6 +557,7 @@ const ChallengeSolvePage = () => {
       });
     }
   };
+
   if (loading) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[60vh] w-full gap-5 animate-in fade-in duration-700">
@@ -517,6 +590,81 @@ const ChallengeSolvePage = () => {
       <div
         className={`flex-1 relative rounded-[3rem] overflow-hidden border border-white/5 bg-[#0a0f1d]/40 backdrop-blur-3xl shadow-2xl flex flex-col mb-4 min-h-[640px]`}
       >
+        <div className="bg-gray-900/80 backdrop-blur-md border-b border-white/10 p-4 px-8 flex justify-between items-center z-20">
+          {/* الجزء الأيمن: اسم اللعبة والنقاط */}
+          <div className="flex items-center gap-4">
+            {(() => {
+              const gameName = challengeData?.gameId?.gameName;
+              const icons = {
+                "Phishing Hunter": (
+                  <ShieldAlert className="text-emerald-400" size={28} />
+                ),
+                "Firewall Defender": (
+                  <ShieldCheck className="text-blue-400" size={28} />
+                ),
+                "Cyber Escape Room": (
+                  <DoorOpen className="text-purple-400" size={28} />
+                ),
+                "Hack Race": <Timer className="text-red-400" size={28} />,
+                "Privacy Awareness": (
+                  <Fingerprint className="text-cyan-400" size={28} />
+                ),
+                "Password Maker/Breaker": (
+                  <Key className="text-yellow-400" size={28} />
+                ),
+                "Secure Coding Challenge": (
+                  <FileCode className="text-orange-400" size={28} />
+                ),
+              };
+              return (
+                icons[gameName] || (
+                  <ShieldCheck className="text-gray-400" size={28} />
+                )
+              );
+            })()}
+
+            <div>
+              <h1 className="text-xl font-black text-white italic uppercase tracking-tighter leading-none">
+                {challengeData?.title || "SYSTEM BREACH"}
+              </h1>
+              <p className="text-emerald-400 text-[10px] font-black uppercase tracking-widest mt-1">
+                Points: {challengeData?.points_pool} XP
+              </p>
+            </div>
+          </div>
+
+          {/* الجزء الأيسر: القلوب والوقت */}
+          <div className="flex items-center gap-6">
+            {/* القلوب */}
+            <div className="flex gap-1">
+              {[...Array(3)].map((_, i) => (
+                <Heart
+                  key={i}
+                  size={20}
+                  className={
+                    i < lives
+                      ? "text-red-500 fill-red-500 animate-pulse"
+                      : "text-gray-600"
+                  }
+                />
+              ))}
+            </div>
+
+            {/* الوقت */}
+            <div
+              className={`flex items-center gap-2 px-4 py-2 rounded-xl border ${timeLeft <= 10 ? "border-red-500 bg-red-500/20 text-red-500 animate-pulse" : "border-white/10 bg-black/40 text-white"}`}
+            >
+              <Clock size={16} />
+              <span className="font-mono font-bold text-lg">
+                {Math.floor(timeLeft / 60)
+                  .toString()
+                  .padStart(2, "0")}
+                :{(timeLeft % 60).toString().padStart(2, "0")}
+              </span>
+            </div>
+          </div>
+        </div>
+
         {/* 2. عرض واجهة Phishing Hunter */}
         {challengeData &&
           challengeData.gameId.gameName === "Phishing Hunter" && (
@@ -585,7 +733,7 @@ const ChallengeSolvePage = () => {
               points_pool={challengeData.points_pool}
               showResult={showResult}
               result={privacyResult}
-              retryCount={0} // يمكنك ربطها بـ State المحاولات لو أردتِ
+              retryCount={3 - lives}
               onAddData={handleAddData}
               onRemoveData={handleRemoveData}
               onUpdateDecision={handleUpdateDecision}
