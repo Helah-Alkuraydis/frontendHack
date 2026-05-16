@@ -88,19 +88,44 @@ const MainLayout = ({ children, activePage, headerActions, highlightedId ,forceH
     navigate('/');
   };
 
-socket.on("receive_game_invite", (data) => {
-  setHasUnread(true);
-  console.log("New invite received from:", data.senderName);
 
-  const localInvites = JSON.parse(sessionStorage.getItem("local_game_invites") || "[]");
-  
-  if (!localInvites.some((inv: any) => inv.sessionId === data.sessionId)) {
-    localInvites.push(data);
-    sessionStorage.setItem("local_game_invites", JSON.stringify(localInvites));
+useEffect(() => {
+  if (user?._id) {
+    socket.connect();
+    socket.emit("register_user", user._id);
+
+    socket.on("receive_game_invite", (data) => {
+      setHasUnread(true);
+      checkNotifications();
+      console.log("New invite received from:", data.senderName);
+
+      Swal.fire({
+        title: "🎮 MISSION INVITATION!",
+        text: `Agent [ ${data.senderName} ] has invited you to join: ${data.gameName}`,
+        icon: "info",
+        showCancelButton: true,
+        confirmButtonText: "ACCEPT MISSION 🛡️",
+        cancelButtonText: "DECLINE",
+        confirmButtonColor: "#ff3b6b", 
+        cancelButtonColor: "#1e293b",
+        background: "#0f172a",
+        color: "#fff",
+        customClass: {
+          popup: 'rounded-[2rem] border border-white/10 shadow-2xl font-sans'
+        }
+      }).then((result) => {
+        if (result.isConfirmed) {
+          navigate(`/waiting-room/${data.sessionId}`);
+        }
+      });
+    });
   }
 
-  checkNotifications();
-});
+  return () => {
+    socket.off("receive_game_invite");
+    socket.disconnect();
+  };
+}, [user, navigate]);
 
   return (
     <div className="flex min-h-screen bg-[#050810] text-white font-sans overflow-x-hidden relative w-full">
