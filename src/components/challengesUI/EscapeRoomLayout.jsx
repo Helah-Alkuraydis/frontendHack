@@ -77,17 +77,55 @@ const EscapeRoomLayout = ({
 
   // دالة فحص الطبقة الأولى (Base64) محلياً قبل فتح الطبقة الثانية
   const checkLayer1 = () => {
+    if (!layer1Input.trim()) return;
+
     try {
-      const decoded = window.atob(currentRoom?.puzzle_data || "");
+      const safeBase64 = (currentRoom?.puzzle_data || "").replace(/[^A-Za-z0-9+/=]/g, "");
+      const decoded = window.atob(safeBase64);
+
       if (layer1Input.trim().toUpperCase() === decoded.toUpperCase()) {
         setLayer1Done(true);
-        setAnswerInput(""); // تصفير الحقل للخطوة النهائية
-        Swal.fire({ title: 'LAYER_01_DECRYPTED', icon: 'success', toast: true, position: 'top-end', timer: 2000, showConfirmButton: false });
+        setAnswerInput(""); 
+        Swal.fire({ 
+          title: 'LAYER_01_DECRYPTED', 
+          icon: 'success', 
+          toast: true, 
+          position: 'top-end', 
+          timer: 2000, 
+          showConfirmButton: false 
+        });
       } else {
+        // إجابة خاطئة
         if (typeof setTimeLeft === 'function') setTimeLeft(prev => Math.max(0, prev - 10));
         triggerPenalty("-10s");
       }
+
+      // const decoded = window.atob(currentRoom?.puzzle_data || "");
+      // if (layer1Input.trim().toUpperCase() === decoded.toUpperCase()) {
+      //   setLayer1Done(true);
+      //   setAnswerInput(""); // تصفير الحقل للخطوة النهائية
+      //   Swal.fire({ title: 'LAYER_01_DECRYPTED', icon: 'success', toast: true, position: 'top-end', timer: 2000, showConfirmButton: false });
+      // } else {
+      //   if (typeof setTimeLeft === 'function') setTimeLeft(prev => Math.max(0, prev - 10));
+      //   triggerPenalty("-10s");
+      // }
+
+
     } catch (e) {
+      // triggerPenalty("-10s");
+
+      console.error("Base64 Decode Error:", e);
+      // 3. منع التهنيق: إظهار رسالة واضحة للمشكلة
+      Swal.fire({
+        title: "DECRYPTION FAILED",
+        text: "The data packet is corrupted or invalid.",
+        icon: "error",
+        background: "#080c14",
+        color: "#ff0055",
+        showConfirmButton: false,
+        timer: 1500
+      });
+      if (typeof setTimeLeft === 'function') setTimeLeft(prev => Math.max(0, prev - 10));
       triggerPenalty("-10s");
     }
   };

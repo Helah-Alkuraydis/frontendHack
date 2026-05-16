@@ -150,10 +150,25 @@ const ChallengeSolvePage = () => {
   useEffect(() => {
     if (timeLeft === 0 && challengeData && !isAnswered && !showResult) {
       console.log("⏰ Time is Up! Executing final action...");
+      
+      setIsAnswered(true);
+
       if (challengeData.gameId.gameName === "Privacy Awareness") {
         handlePrivacySubmit();
       } else {
         handleChallengeSubmit("TIMEOUT_AUTO_FAILURE");
+
+        Swal.fire({
+          title: "TIME'S UP! ⏳",
+          text: "You failed to secure the node in time. Access Denied.",
+          icon: "error",
+          background: "#080c14",
+          color: "#fff",
+          allowOutsideClick: false // نمنعه يضغط برا الرسالة
+        }).then(() => {
+           navigate("/challenges"); // طرد للقائمة
+        });
+        
       }
     }
   }, [timeLeft, challengeData, isAnswered, showResult]);
