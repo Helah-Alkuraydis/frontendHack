@@ -679,14 +679,14 @@ const Games = () => {
         </div>
 
 {isModalOpen && selectedGame && createPortal(
-          <div className="fixed inset-0 z-[999999] flex items-center justify-center p-4">
-            <div
-              className="absolute inset-0 bg-black/80 backdrop-blur-sm"
-              onClick={() => {
-                setIsModalOpen(false);
-                setModalStep("mode");
-              }}
-            ></div>
+  <div className="fixed top-0 left-0 w-full h-full min-h-screen z-[999999] flex items-center justify-center p-4">
+    <div
+      className="fixed inset-0 w-full h-full bg-black/85 backdrop-blur-md"
+      onClick={() => {
+        setIsModalOpen(false);
+        setModalStep("mode");
+      }}
+    ></div>
 
             <div className="relative w-full max-w-3xl bg-gradient-to-b from-[#1e293b]/95 to-[#0f172a]/95 backdrop-blur-xl border border-white/10 rounded-[2rem] md:rounded-[2.5rem] p-6 md:p-10 shadow-2xl animate-in zoom-in duration-300 max-h-[90vh] overflow-y-auto">
               <button
