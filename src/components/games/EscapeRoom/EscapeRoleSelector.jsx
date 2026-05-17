@@ -58,17 +58,16 @@ const EscapeRoleSelector = ({ players, onSelect, currentUserId }) => {
   const ROLES = getDynamicRoles();
 
   return (
-    <div className="fixed inset-0 z-[500] bg-[#050810]/95 backdrop-blur-xl flex flex-col items-center justify-center p-10 font-mono text-white">
-      <div className="text-center mb-12">
-        <h2 className="text-cyan-400 text-3xl font-black italic tracking-[0.3em] mb-2 animate-pulse">
+    <div className="fixed inset-0 z-[500] bg-[#050810]/95 backdrop-blur-xl flex flex-col items-center justify-start md:justify-center p-4 sm:p-10 font-mono text-white overflow-y-auto custom-scrollbar">
+      <div className="text-center mb-8 md:mb-12 mt-6 md:mt-0">
+        <h2 className="text-cyan-400 text-xl sm:text-3xl font-black italic tracking-[0.15em] sm:tracking-[0.3em] mb-2 animate-pulse">
           — SELECT ROLE —
         </h2>
-       
       </div>
 
-      <div className={`grid gap-6 w-full max-w-6xl 
-        ${ROLES.length === 2 ? 'grid-cols-2 max-w-4xl' : 
-          ROLES.length === 3 ? 'grid-cols-3' : 'grid-cols-2 md:grid-cols-4'}`}>
+      <div className={`grid gap-4 sm:gap-6 w-full max-w-6xl 
+        ${ROLES.length === 2 ? 'grid-cols-1 sm:grid-cols-2 max-w-4xl' : 
+          ROLES.length === 3 ? 'grid-cols-1 sm:grid-cols-3' : 'grid-cols-1 sm:grid-cols-2 md:grid-cols-4'}`}>
         
         {ROLES.map((role) => {
           const occupant = players.find(p => p.role === role.name);
@@ -78,24 +77,24 @@ const EscapeRoleSelector = ({ players, onSelect, currentUserId }) => {
             <div 
               key={role.id}
               onClick={() => !occupant && onSelect(role.name)}
-              className={`relative p-8 rounded-[2.5rem] border-2 transition-all duration-500 group
+              className={`relative p-5 sm:p-8 rounded-[1.5rem] sm:rounded-[2.5rem] border-2 transition-all duration-500 group min-h-fit
                 ${occupant 
                   ? (isMe ? 'border-emerald-500 bg-emerald-500/10 shadow-[0_0_30px_rgba(16,185,129,0.1)]' : 'border-red-500/20 opacity-40 grayscale') 
                   : 'border-white/10 bg-white/5 hover:border-blue-500/50 hover:bg-blue-500/5 hover:scale-105 cursor-pointer'}`}
             >
               <div className="flex flex-col items-center text-center h-full">
-                <div className="text-5xl mb-6 transform group-hover:scale-110 transition-transform duration-500 drop-shadow-[0_0_15px_rgba(255,255,255,0.3)]">
+                <div className="text-3xl sm:text-5xl mb-4 sm:mb-6 transform group-hover:scale-110 transition-transform duration-500 drop-shadow-[0_0_15px_rgba(255,255,255,0.3)]">
                   {role.icon}
                 </div>
-                <h3 className="text-lg font-black uppercase italic tracking-tighter mb-2">{role.name}</h3>
+                <h3 className="text-base sm:text-lg font-black uppercase italic tracking-tighter mb-2">{role.name}</h3>
                 
-                <p className="text-[10px] text-gray-400 leading-relaxed mb-4 min-h-[30px]">
+                <p className="text-[10px] text-gray-400 leading-relaxed mb-4 min-h-[auto] sm:min-h-[30px]">
                   {role.desc}
                 </p>
 
-                <div className="flex gap-2 mt-auto">
+                <div className="flex flex-wrap justify-center gap-1.5 mt-auto">
                   {role.rooms.map(room => (
-                    <span key={room} className="text-[8px] bg-white/10 px-2 py-1 rounded-md text-cyan-400/70 font-bold border border-white/5">
+                    <span key={room} className="text-[8px] bg-white/10 px-2 py-0.5 sm:py-1 rounded-md text-cyan-400/70 font-bold border border-white/5">
                       {room}
                     </span>
                   ))}
@@ -103,8 +102,8 @@ const EscapeRoleSelector = ({ players, onSelect, currentUserId }) => {
               </div>
               
               {occupant && (
-                <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/60 rounded-[2.3rem] backdrop-blur-[2px] animate-in fade-in duration-300">
-                  <span className={`text-[10px] font-black px-4 py-1.5 rounded-full tracking-widest shadow-xl
+                <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/70 rounded-[1.3rem] sm:rounded-[2.3rem] backdrop-blur-[2px] p-2 animate-in fade-in duration-300">
+                  <span className={`text-[9px] sm:text-[10px] font-black px-3 sm:px-4 py-1.5 rounded-full tracking-wider sm:tracking-widest shadow-xl text-center break-all w-11/12
                     ${isMe ? 'bg-emerald-500 text-black' : 'bg-red-500 text-white'}`}>
                     {isMe ? "YOU SELECTED" : occupant.username.toUpperCase()}
                   </span>

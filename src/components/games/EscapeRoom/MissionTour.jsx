@@ -40,45 +40,37 @@ const MissionTour = ({ onComplete }) => {
     };
 
     return (
-      
-        <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-[#050810]/80 backdrop-blur-sm font-mono p-4">
-            
-            
-            <div className="relative w-full max-w-md bg-[#0a1020] border border-[#00ff96]/30 rounded-[2rem] p-8 shadow-[0_0_50px_rgba(0,255,150,0.1)] flex flex-col items-center text-center animate-in zoom-in duration-300">
+        <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-[#050810]/80 backdrop-blur-sm font-mono p-3 sm:p-4">
+            <div className="relative w-full max-w-sm sm:max-w-md bg-[#0a1020] border border-[#00ff96]/30 rounded-[1.5rem] sm:rounded-[2rem] p-5 sm:p-8 shadow-[0_0_50px_rgba(0,255,150,0.1)] flex flex-col items-center text-center animate-in zoom-in duration-300 h-fit">
                 
-               
-                <div className="w-16 h-16 bg-[#00ff96]/10 border border-[#00ff96]/30 rounded-2xl flex items-center justify-center text-3xl mb-6 shadow-inner">
+                <div className="w-12 h-12 sm:w-16 sm:h-16 bg-[#00ff96]/10 border border-[#00ff96]/30 rounded-xl flex items-center justify-center text-2xl sm:text-3xl mb-4 sm:mb-6 shadow-inner flex-shrink-0">
                     {steps[currentStep].icon}
                 </div>
 
-                
-                <h2 className="text-xl font-black text-white italic uppercase tracking-widest mb-4">
+                <h2 className="text-lg sm:text-xl font-black text-white italic uppercase tracking-widest mb-3 sm:mb-4">
                     {steps[currentStep].title}
                 </h2>
 
-               
-                <div className="min-h-[90px] mb-8 flex items-center justify-center">
-                    <p className="text-[#8a9ab0] text-sm leading-relaxed">
+                <div className="min-h-[80px] sm:min-h-[90px] mb-6 sm:mb-8 flex items-center justify-center">
+                    <p className="text-[#8a9ab0] text-xs sm:text-sm leading-relaxed">
                         {steps[currentStep].content}
                     </p>
                 </div>
 
-                
-                <div className="flex gap-2 mb-8">
+                <div className="flex gap-1.5 mb-6 sm:mb-8">
                     {steps.map((_, idx) => (
                         <div 
                             key={idx} 
                             className={`h-1.5 rounded-full transition-all duration-500 ${
-                                idx === currentStep ? 'w-8 bg-[#00ff96] shadow-[0_0_10px_#00ff96]' : 'w-2 bg-white/10'
+                                idx === currentStep ? 'w-6 sm:w-8 bg-[#00ff96] shadow-[0_0_10px_#00ff96]' : 'w-1.5 sm:w-2 bg-white/10'
                             }`}
                         />
                     ))}
                 </div>
 
-              
                 <button 
                     onClick={handleNext}
-                    className="w-full py-4 bg-gradient-to-r from-[#00ff96] to-[#00cc77] hover:from-white hover:to-white text-black font-black uppercase tracking-[0.2em] rounded-xl transition-all duration-300 shadow-[0_0_20px_rgba(0,255,150,0.2)] active:scale-95"
+                    className="w-full py-3 sm:py-4 bg-gradient-to-r from-[#00ff96] to-[#00cc77] hover:from-white hover:to-white text-black font-black uppercase tracking-[0.15em] sm:tracking-[0.2em] rounded-xl transition-all duration-300 shadow-[0_0_20px_rgba(0,255,150,0.2)] active:scale-95 text-xs sm:text-sm"
                 >
                     {currentStep === steps.length - 1 ? 'Enter Lobby' : 'Next Step'}
                 </button>
