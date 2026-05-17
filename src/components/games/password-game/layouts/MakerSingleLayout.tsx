@@ -17,17 +17,19 @@ interface MakerSingleLayoutProps {
     initialLevel: number;
     handleMakerSubmit: () => void;
     handleReset: () => void;
+    showProceedBtn: boolean;
+    onMainAcknowledge: () => void;
+    gameStatus: 'Win' | 'Loss' | null;
 }
 
 const MakerSingleLayout: React.FC<MakerSingleLayoutProps> = ({
     password, setPassword, strength, isVulnerable, isAlertActive,
     isAiAnalyzing, displayedText, aiRecommendation, loading,
     timeLeft, lives, initialLevel, handleMakerSubmit, handleReset,
-    handleKeyPress
-
+    handleKeyPress ,showProceedBtn,onMainAcknowledge,gameStatus
 }) => {
     
-    // شروط الباسوورد
+    // قواعد الأمان الأساسية المعروضة على الشاشة
     const rules = [
         { label: "MIN_LENGTH_10", met: password.length >= 10 },
         { label: "UPPERCASE_CHAR", met: /[A-Z]/.test(password) },
@@ -36,12 +38,10 @@ const MakerSingleLayout: React.FC<MakerSingleLayoutProps> = ({
         { label: "SPECIAL_SYMBOL", met: /[^A-Za-z0-9]/.test(password) },
     ];
 
-    
-
     return (
-        <div className={`flex flex-1 flex-col h-full p-6 z-10 text-white transition-all duration-300 ${isAlertActive ? 'animate-glitch bg-red-900/10' : ''}`}>
+        <div className={`flex flex-1 flex-col h-full p-6 z-10 text-white transition-all duration-300 ${isAlertActive ? 'bg-red-950/10' : ''}`}>
             
-            {/* الهيدر العلوي (العداد والقلوب) */}
+            {/* 1. الكبسولة العلوية للبيانات */}
             <div className="flex justify-center mb-8">
                 <div className="flex items-center gap-8 bg-[#1c2438]/60 px-6 py-2 rounded-full border border-white/5 backdrop-blur-xl shadow-xl">
                     <div className="flex items-center gap-2 text-amber-500 font-bold border-r border-white/10 pr-5 text-sm">
@@ -54,36 +54,45 @@ const MakerSingleLayout: React.FC<MakerSingleLayoutProps> = ({
                         </span>
                     </div>
                     <div className="flex gap-1.5 border-l border-white/10 pl-6">
-                        {[...Array(3)].map((_, i) => <Heart key={i} size={18} fill={i < lives ? "#ef4444" : "none"} color="#ef4444" className={i < lives ? "animate-pulse" : "opacity-10"} />)}
+                        {[...Array(3)].map((_, i) => (
+                            <Heart 
+                                key={i} 
+                                size={18} 
+                                fill={i < lives ? "#ef4444" : "none"} 
+                                color="#ef4444" 
+                                className={i < lives ? "animate-pulse" : "opacity-10"} 
+                            />
+                        ))}
                     </div>
                 </div>
             </div>
 
-            {/* الحاوية الرئيسية للميكر */}
-            <div className="max-w-5xl mx-auto w-full flex flex-col gap-6 animate-in fade-in duration-700 bg-black/40 backdrop-blur-md border border-emerald-500/20 rounded-[2rem] p-6 shadow-xl font-mono">
+            {/* 2. شاشة الكونسول الرئيسية */}
+            <div className="max-w-5xl mx-auto w-full flex flex-col gap-6 bg-black/40 backdrop-blur-md border border-emerald-500/20 rounded-[2rem] p-6 shadow-xl font-mono">
                 <div className="flex justify-between p-2 border-b border-emerald-500/10 text-[9px] font-mono">
                     <div className="flex gap-4">
                         <span className="flex items-center gap-1">
-                            <span className={`w-1.5 h-1.5 rounded-full ${isVulnerable || isAlertActive ? 'bg-red-500 animate-ping ' : 'bg-emerald-500'}`}></span>
+                            <span className={`w-1.5 h-1.5 rounded-full ${isAlertActive ? 'bg-red-500 animate-ping' : isVulnerable ? 'bg-amber-500 animate-pulse' : 'bg-emerald-500'}`}></span>
                             SYSTEM: {isAlertActive ? 'BREACHED' : isVulnerable ? 'VULNERABLE' : 'OPTIMAL'}
                         </span>
                         <span className="opacity-30">|</span>
-                        <span className={isVulnerable ? 'text-red-500' : 'text-emerald-500'}>
+                        <span className={isVulnerable ? 'text-amber-500' : 'text-emerald-500'}>
                             THREAT_LEVEL: {isVulnerable ? 'HIGH' : 'LOW'}
                         </span>
                     </div>
-                    <div className="text-emerald-500/40 italic">HACKHERO_SIMULATOR_v1.0</div>
+                    <div className="text-emerald-500/40 italic">HACKHERO_SECURITY_CORE_v2.0</div>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-start">
-                    {/* قائمة الشروط */}
-                    <div className="Security Protocols md:col-span-1">
+                    
+                    {/* قائمة بروتوكولات الفحص */}
+                    <div className="md:col-span-1">
                         <h3 className="text-emerald-500 text-[10px] font-black mb-6 uppercase tracking-[0.2em] flex items-center gap-2">
                             <Shield size={14} className="animate-pulse" /> Security_Protocols
                         </h3>
                         <ul className="space-y-3">
                             {rules.map((rule, idx) => (
-                                <li key={idx} className={`flex items-center justify-between px-4 py-3 rounded-xl transition-all duration-500 ${rule.met ? 'border-emerald-500/40 bg-emerald-500/5 text-emerald-400' : 'border-white/5 text-gray-600'}`}>
+                                <li key={idx} className={`flex items-center justify-between px-4 py-3 rounded-xl border transition-all duration-300 ${rule.met ? 'border-emerald-500/40 bg-emerald-500/5 text-emerald-400' : 'border-white/5 bg-white/[0.01] text-gray-600'}`}>
                                     <span className="text-[10px] font-bold">{rule.label}</span>
                                     {rule.met ? <ShieldCheck size={14} /> : <ShieldAlert size={14} />}
                                 </li>
@@ -91,9 +100,9 @@ const MakerSingleLayout: React.FC<MakerSingleLayoutProps> = ({
                         </ul>
                     </div>
 
-                    {/* حقل الإدخال */}
-                    <div className="password-input-field md:col-span-2">
-                        <div className="bg-[#080808] rounded-[2rem] p-10 relative overflow-hidden group shadow-inner">
+                    {/* حاوية الإدخال وشريط التقدم التفاعلي */}
+                    <div className="md:col-span-2">
+                        <div className="bg-[#080808] rounded-[2rem] p-10 relative overflow-hidden group shadow-inner border border-white/5">
                             <div className="absolute inset-0 opacity-10 pointer-events-none bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')]"></div>
                             <label className="block text-emerald-500/40 text-[9px] mb-6 uppercase tracking-[0.5em] font-mono">_Initialize_Security_Sequence_</label>
 
@@ -101,6 +110,7 @@ const MakerSingleLayout: React.FC<MakerSingleLayoutProps> = ({
                                 <span className="absolute left-0 top-1/2 -translate-y-1/2 text-emerald-500 text-2xl font-bold opacity-30">$</span>
                                 <input
                                     type="text"
+                                    disabled={loading}
                                     onKeyDown={(e) => {
                                         handleKeyPress();
                                         if (e.key === 'Enter') {
@@ -112,38 +122,60 @@ const MakerSingleLayout: React.FC<MakerSingleLayoutProps> = ({
                                     }}
                                     value={password}
                                     onChange={(e) => setPassword(e.target.value)}
-                                    className="w-full bg-transparent border-none pl-6 pr-12 text-2xl text-emerald-400 placeholder:text-emerald-900/30 focus:ring-0 font-mono tracking-widest outline-none focus:outline-none"
+                                    className="w-full bg-transparent border-none pl-6 pr-12 text-2xl text-emerald-400 placeholder:text-emerald-900/30 focus:ring-0 font-mono tracking-widest outline-none disabled:opacity-50"
                                     placeholder="ENTER_PASS_SEQUENCE_"
                                     autoFocus
                                 />
                                 <button
                                     disabled={loading || password.length < 6}
                                     onClick={handleMakerSubmit}
-                                    className="ml-4 p-3 rounded-xl bg-emerald-500/10 text-emerald-500 hover:bg-emerald-500 hover:text-black transition-all disabled:cursor-not-allowed"
+                                    className="ml-4 p-3 rounded-xl bg-emerald-500/10 text-emerald-500 hover:bg-emerald-500 hover:text-black transition-all disabled:cursor-not-allowed border border-emerald-500/20 shadow-[0_0_15px_rgba(16,185,129,0.1)]"
                                 >
                                     {loading ? <Loader2 size={20} className="animate-spin" /> : <ChevronRight size={20} />}
                                 </button>
                             </div>
 
-                            {/* شريط القوة */}
-                            <div className="flex gap-2 h-1.5 px-1">
+                            {/* شريط القوة ثلاثي الألوان المتفاعل تفاعلياً */}
+                            <div className="flex gap-2 h-1.5 px-1 mb-6">
                                 {[...Array(5)].map((_, i) => (
-                                    <div key={i} className={`flex-1 rounded-full transition-all duration-1000 ${i < strength ? (strength <= 2 ? 'bg-red-600 shadow-[0_0_15px_#ef4444]' : strength <= 4 ? 'bg-amber-500 shadow-[0_0_15px_#f59e0b]' : 'bg-emerald-500 shadow-[0_0_15px_#10b981]') : 'bg-white/5'}`} />
+                                    <div 
+                                        key={i} 
+                                        className={`flex-1 rounded-full transition-all duration-700 ${i < strength ? (strength <= 2 ? 'bg-red-500 shadow-[0_0_10px_#ef4444]' : strength <= 4 ? 'bg-amber-500 shadow-[0_0_10px_#f59e0b]' : 'bg-emerald-500 shadow-[0_0_10px_#10b981]') : 'bg-white/5'}`} 
+                                    />
                                 ))}
                             </div>
 
-                            {/* مربع الـ AI */}
-                            <div className="mt-4 p-4 bg-emerald-500/5 border border-emerald-500/20 rounded-xl relative overflow-hidden min-h-[80px]">
-                                <div className="flex items-center gap-2 mb-2 relative z-10">
-                                    {isAiAnalyzing ? <Loader2 size={14} className="text-emerald-400 animate-spin" /> : <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />}
-                                    <span className="text-[10px] font-black text-emerald-400 uppercase tracking-widest">
-                                        {isAiAnalyzing ? "AI_DECRYPTING_PATTERNS..." : "AI_CO_PILOT_ADVISORY"}
-                                    </span>
+                            {/* شاشة كوابيلوت استشاري الأمن السيبراني المحاكي */}
+                            <div className="p-4 bg-emerald-500/5 border border-emerald-500/20 rounded-xl relative overflow-hidden min-h-[100px] flex flex-col justify-between">
+                                <div className="flex justify-between items-center mb-2 relative z-10">
+                                    <div className="flex items-center gap-2">
+                                        {isAiAnalyzing ? <Loader2 size={14} className="text-emerald-400 animate-spin" /> : <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />}
+                                        <span className="text-[10px] font-black text-emerald-400 uppercase tracking-widest">
+                                            {isAiAnalyzing ? "SIMULATING_BRUTE_FORCE_ATTACK..." : "MAIN_ADVISORY_CORE"}
+                                        </span>
+                                    </div>
+                                    
+                                    {/* 🚨 الزر المستقبلي اللي بوسط الكونسول يظهر هنا فوراً بجانب العنوان والنص بعد انتهاء الفحص */}
+                                    {showProceedBtn && (
+                                        <button 
+                                            onClick={onMainAcknowledge}
+                                            className={`animate-in zoom-in duration-300 px-3 py-1 text-[10px] font-mono font-black rounded-md border tracking-widest uppercase cursor-pointer transition-all active:scale-95
+                                                ${gameStatus === "Win" 
+                                                    ? 'bg-emerald-500/10 border-emerald-500 text-emerald-400 hover:bg-emerald-500 hover:text-black shadow-[0_0_15px_rgba(16,185,129,0.2)]' 
+                                                    : 'bg-red-500/10 border-red-500 text-red-400 hover:bg-red-500 hover:text-black shadow-[0_0_15px_rgba(239,68,68,0.2)]'
+                                                }`}
+                                        >
+                                            [ Acknowledge_Report ] 
+                                        </button>
+                                    )}
                                 </div>
-                                <div className="relative z-10">
+                                
+                                <div className="relative z-10 flex-1">
                                     <p className="text-xs text-gray-300 font-mono leading-relaxed">
                                         {isAiAnalyzing ? (
-                                            <span className="opacity-50 italic">Analyzing entropy and keyboard sequence correlations...</span>
+                                            <span className="opacity-60 italic text-amber-400 animate-pulse">
+                                                🚨 Hacker Payload Injected. Calculating dictionary correlation matrices and key entropy resistance...
+                                            </span>
                                         ) : (
                                             <>
                                                 <span className="text-emerald-500 mr-2 font-bold">{">"}</span>
@@ -154,8 +186,10 @@ const MakerSingleLayout: React.FC<MakerSingleLayoutProps> = ({
                                     </p>
                                 </div>
                             </div>
+
                         </div>
                     </div>
+
                 </div>
             </div>
         </div>
