@@ -93,15 +93,15 @@ const ChallengeCard = ({
           <div className="flex items-center gap-2 md:gap-3">
             {isMyChallenge ? (
               <div className="px-3 md:px-5 py-2 md:py-2.5 rounded-full font-black text-[8px] md:text-[10px] uppercase tracking-widest flex items-center gap-1.5 bg-gray-800 text-gray-500 border border-gray-700 opacity-60">
-                <ShieldCheck size={12} className="md:w-3.5 md:h-3.5" /> <span className="hidden xs:inline">Your Mission</span>
+                <ShieldCheck size={12} className="md:w-3.5 md:h-3.5" /> <span className="hidden sm:inline">Your Mission</span>
               </div>
             ) : userPlayStatus === "Completed" || status === "Completed" ? (
               <div className="px-3 md:px-5 py-2 md:py-2.5 rounded-full font-black text-[8px] md:text-[10px] uppercase tracking-widest flex items-center gap-1.5 bg-emerald-500/5 border border-emerald-500/20 text-emerald-500 shadow-[inset_0_0_12px_rgba(16,185,129,0.05)]">
-                <ShieldCheck size={12} className="md:w-3.5 md:h-3.5" /> <span className="hidden xs:inline">Mission Secured</span>
+                <ShieldCheck size={12} className="md:w-3.5 md:h-3.5" /> <span className="hidden sm:inline">Mission Secured</span>
               </div>
             ) : userPlayStatus === "Locked" ? (
               <div className="px-3 md:px-5 py-2 md:py-2.5 rounded-full font-black text-[8px] md:text-[10px] uppercase tracking-widest flex items-center gap-1.5 bg-red-500/5 border border-red-500/20 text-red-500 shadow-[inset_0_0_12px_rgba(239,68,68,0.05)]">
-                <Lock size={12} className="md:w-3.5 md:h-3.5" /> <span className="hidden xs:inline">Locked</span>
+                <Lock size={12} className="md:w-3.5 md:h-3.5" /> <span className="hidden sm:inline">Locked</span>
               </div>
             ) : (
               <div className="flex items-center gap-2 md:gap-3">

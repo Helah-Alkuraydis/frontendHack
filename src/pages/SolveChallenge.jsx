@@ -391,7 +391,7 @@ const ChallengeSolvePage = () => {
           details: res.data.feedback,
         });
 
-        if (finalScore < 70) {
+        if (finalScore < 100) {
           // نفترض أن 70% هو درجة النجاح
           const updatedLives = lives - 1;
           setLives(updatedLives);
@@ -529,13 +529,22 @@ const ChallengeSolvePage = () => {
     }
   };
 
-  // --- داخل ملف ChallengeSolvePage.jsx في الريأكت ---
   const handleEscapeBreach = async (directValue = null) => {
     const finalInput =
       (typeof directValue === "string" ? directValue : answerInput) || "";
     const cleanInput = finalInput.trim();
 
-    if (!cleanInput) return;
+    if (!cleanInput) {
+      Swal.fire({
+        title: "ALERT",
+        text: "Please enter an answer first!",
+        icon: "warning",
+        background: "#080c14",
+        color: "#f87171",
+        confirmButtonColor: "#3b82f6"
+      });
+      return;
+    }
 
     try {
       const token = localStorage.getItem("token");
@@ -596,14 +605,33 @@ const ChallengeSolvePage = () => {
         }
       } else {
         // إجابة خاطئة
-        setTimeLeft((prev) => Math.max(0, prev - 10));
-        setIsWrong(true);
-        setTimeout(() => setIsWrong(false), 1000);
-      }
-    } catch (err) {
-      console.error("Breach Error:", err);
-      // لإظهار سبب الـ 403 (إن التحدي محلول مسبقاً)
-      Swal.fire({
+        // setTimeLeft((prev) => Math.max(0, prev - 10));
+        // setIsWrong(true);
+        // setTimeout(() => setIsWrong(false), 1000);
+
+        if (typeof setLives === "function") {
+          setLives((prevLives) => {
+            const updatedLives = prevLives - 1;
+            if (updatedLives <= 0) {
+              Swal.fire({
+                title: "LOCKDOWN TRIGGERED 🚨",
+                text: "Too many failed attempts! The security system locked you out.",
+                icon: "error",
+                background: "#080c14",
+                color: "#f87171",
+                confirmButtonColor: "#ef4444",
+                confirmButtonText: "EXIT GAME"
+              }).then(() => {
+                onFinish({ score: 0, status: 'Loss' });
+                window.location.href = "/challenges";
+                
+              });
+            }
+            return updatedLives;
+          });
+        }
+        
+        Swal.fire({
         title: "ACCESS_DENIED",
         text: err.response?.data?.message || "Communication Lost",
         icon: "error",
@@ -612,6 +640,18 @@ const ChallengeSolvePage = () => {
         timer: 2000,
         showConfirmButton: false,
       });
+
+      }
+    } catch (err) {
+      console.error("Breach Error:", err);    
+      Swal.fire({
+        title: "Wrong Answer ❌",
+        text: err.response?.data?.message ,
+        icon: "error",
+        background: "#080c14",
+        color: "#fff",
+        confirmButtonColor: "#ff0055"
+      });  
     }
   };
 
@@ -908,6 +948,7 @@ const ChallengeSolvePage = () => {
               setTimeLeft={setTimeLeft}
               points_pool={challengeData.points_pool}
               lives={lives}
+              setLives={setLives}
               currentLevel={challengeData.points_pool}
               answerInput={answerInput}
               setAnswerInput={setAnswerInput}
