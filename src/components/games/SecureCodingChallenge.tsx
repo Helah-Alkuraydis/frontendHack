@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { ArrowLeft, CheckCircle, AlertTriangle, ShieldCheck, Zap } from 'lucide-react';
+import { ArrowLeft, CheckCircle, AlertTriangle, ShieldCheck, Zap, Loader2 } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { getSocket } from '../../socket';
 import { useLocation } from 'react-router-dom';
@@ -27,6 +27,7 @@ const SecureCodingChallenge = ({ level = 1, gameId, sessionId, onFinish, mode }:
     const [localLevel, setLocalLevel] = useState<number>(level);
     const [scenario, setScenario] = useState<SecureCodingScenario | null>(null);
     const [loading, setLoading] = useState<boolean>(true);
+    const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
     const [phase, setPhase] = useState<1 | 2>(1);
     const [userCode, setUserCode] = useState<string>('');
     const [selectedLineIdx, setSelectedLineIdx] = useState<number | null>(null);
@@ -35,7 +36,7 @@ const SecureCodingChallenge = ({ level = 1, gameId, sessionId, onFinish, mode }:
     const [score, setScore] = useState<number>(0);
     const [mistakes, setMistakes] = useState<number>(0);
     const [startTime, setStartTime] = useState<number>(Date.now());
-    const [timeLeft, setTimeLeft] = useState<number>(180);
+    const [timeLeft, setTimeLeft] = useState<number>(120); 
     const [isTimeUp, setIsTimeUp] = useState<boolean>(false);
     const hasFetched = useRef(false);
 
@@ -165,7 +166,10 @@ const SecureCodingChallenge = ({ level = 1, gameId, sessionId, onFinish, mode }:
 
     const handleCodeSubmit = async (e?: any) => {
         if (e && e.preventDefault) e.preventDefault();
-        if (!scenario || winner) return;
+        if (!scenario || winner || isSubmitting) return;
+
+        setIsSubmitting(true);
+        setFeedback(null); // تنظيف الخطأ القديم وقت التحميل عشان يتحدث الـ UI
 
         try {
             const token = localStorage.getItem('token');
@@ -201,6 +205,8 @@ const SecureCodingChallenge = ({ level = 1, gameId, sessionId, onFinish, mode }:
             }
         } catch (error) {
             setFeedback({ message: "Backend connection error.", isError: true });
+        } finally {
+            setIsSubmitting(false);
         }
     };
 
@@ -282,9 +288,12 @@ const SecureCodingChallenge = ({ level = 1, gameId, sessionId, onFinish, mode }:
                             <textarea 
                                 className="flex-1 w-full min-h-[150px] md:min-h-[250px] bg-[#0d1117] text-cyan-400 font-mono text-xs md:text-sm resize-none focus:outline-none p-3 md:p-4 rounded-xl border border-white/10 custom-scrollbar"
                                 value={userCode}
-                                onChange={(e) => setUserCode(e.target.value)}
+                                onChange={(e) => {
+                                    setUserCode(e.target.value);
+                                    if (feedback) setFeedback(null); // إخفاء رسالة الخطأ فوراً عند التعديل!
+                                }}
                                 spellCheck="false"
-                                disabled={!!winner}
+                                disabled={!!winner || isSubmitting}
                             />
                             
                             {feedback && (
@@ -310,10 +319,14 @@ const SecureCodingChallenge = ({ level = 1, gameId, sessionId, onFinish, mode }:
 
                             <button 
                                 onClick={handleCodeSubmit}
-                                disabled={!!winner}
-                                className="mt-3 md:mt-4 w-full py-3 md:py-4 bg-[#00ff9d] hover:bg-[#00e68e] text-black font-black uppercase italic rounded-xl transition-all shadow-lg disabled:opacity-50 text-sm md:text-base"
+                                disabled={!!winner || isSubmitting}
+                                className="mt-3 md:mt-4 w-full py-3 md:py-4 bg-[#00ff9d] hover:bg-[#00e68e] text-black font-black uppercase italic rounded-xl transition-all shadow-lg disabled:opacity-50 text-sm md:text-base flex items-center justify-center"
                             >
-                                <ShieldCheck className="w-4 h-4 md:w-5 md:h-5 inline-block mr-2" /> SUBMIT SECURE PATCH
+                                {isSubmitting ? (
+                                    <><Loader2 className="w-4 h-4 md:w-5 md:h-5 inline-block mr-2 animate-spin" /> VERIFYING PATCH...</>
+                                ) : (
+                                    <><ShieldCheck className="w-4 h-4 md:w-5 md:h-5 inline-block mr-2" /> SUBMIT SECURE PATCH</>
+                                )}
                             </button>
                         </div>
                     )}
