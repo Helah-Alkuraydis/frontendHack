@@ -117,23 +117,22 @@ const SingleLayout: React.FC<SingleLayoutProps> = ({
             </div>
 
             <div className="w-full flex flex-col items-center hr-right-panel max-w-5xl">
-                {/* QUESTION CARD - شلنا كلاس التمطيط من هنا عشان اللابتوب */}
-                <div className="w-full bg-[#1c2438]/70 p-5 md:p-10 rounded-3xl md:rounded-[2rem] border border-emerald-500/10 shadow-2xl hr-card">
-                    <div className="flex justify-between items-center mb-3 md:mb-6 text-[11px] md:text-sm text-emerald-300 font-bold hr-card-header">
+                {/* QUESTION CARD */}
+                <div className="w-full bg-[#1c2438]/70 p-5 md:p-10 rounded-3xl md:rounded-[2rem] border border-emerald-500/10 shadow-2xl hr-card flex flex-col">
+                    <div className="flex justify-between items-center mb-3 md:mb-6 text-[11px] md:text-sm text-emerald-300 font-bold hr-card-header shrink-0">
                         <span>Questions {currentScenarioIndex + 1} / {TOTAL_STEPS}</span>
                     </div>
-                    <h2 className="text-[15px] md:text-2xl font-semibold mb-4 md:mb-10 leading-snug">{scenario.question}</h2>
-                    {/* OPTIONS GRID - شلنا كلاس التمطيط من هنا عشان اللابتوب */}
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-6 hr-options-grid">
+                    <h2 className="text-[15px] md:text-2xl font-semibold mb-4 md:mb-10 leading-snug hr-question-text shrink-0">{scenario.question}</h2>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-6 hr-options-grid">
                         {scenario.options?.map((opt: any, idx: number) => {
                             const optionText = typeof opt === 'object' ? opt.text : opt;
-                            let style = "hr-option-btn p-3 md:p-6 rounded-xl md:rounded-2xl border border-emerald-500/20 bg-[#0f172a] hover:bg-emerald-950/40 transition text-left text-xs md:text-lg";
+                            let style = "hr-option-btn p-4 md:p-6 rounded-xl md:rounded-2xl border border-emerald-500/20 bg-[#0f172a] hover:bg-emerald-950/40 transition text-left text-sm md:text-lg flex items-center min-h-[60px] md:min-h-[100px]";
 
                             if (isAnswered) {
                                 const isCorrectOption = typeof opt === "object" ? (opt.isCorrect ?? opt.text === scenario.correctAnswer) : opt === scenario.correctAnswer;
-                                if (isCorrectOption) style = "hr-option-btn p-3 md:p-6 rounded-xl md:rounded-2xl border-2 border-emerald-400 bg-emerald-900 animate-pulse w-full text-left text-xs md:text-lg";
-                                else if (idx === selectedOptionIndex) style = "hr-option-btn p-3 md:p-6 rounded-xl md:rounded-2xl border-2 border-red-400 bg-red-900 w-full text-left text-xs md:text-lg";
-                                else style = "hr-option-btn p-3 md:p-6 rounded-xl md:rounded-2xl border border-gray-700 bg-gray-800 text-gray-400 w-full text-left text-xs md:text-lg";
+                                if (isCorrectOption) style = "hr-option-btn p-4 md:p-6 rounded-xl md:rounded-2xl border-2 border-emerald-400 bg-emerald-900 animate-pulse w-full text-left text-sm md:text-lg flex items-center min-h-[60px] md:min-h-[100px]";
+                                else if (idx === selectedOptionIndex) style = "hr-option-btn p-4 md:p-6 rounded-xl md:rounded-2xl border-2 border-red-400 bg-red-900 w-full text-left text-sm md:text-lg flex items-center min-h-[60px] md:min-h-[100px]";
+                                else style = "hr-option-btn p-4 md:p-6 rounded-xl md:rounded-2xl border border-gray-700 bg-gray-800 text-gray-400 w-full text-left text-sm md:text-lg flex items-center min-h-[60px] md:min-h-[100px]";
                             }
 
                             return (
@@ -203,12 +202,12 @@ const SingleLayout: React.FC<SingleLayoutProps> = ({
                 </div>
             )}
 
-            {/* سحر ببجي المخصص لشاشات الجوال المقلوبة فقط 🎮 */}
+            {/* 🔥 تصحيح شرط الجوال: (max-height: 600px) يمنع اللابتوب من الانهيار 🔥 */}
             <style>{`
                 .custom-scrollbar::-webkit-scrollbar { width: 3px; }
-                .custom-scrollbar::-webkit-scrollbar-thumb { background: #ef4444; border-radius: 10px; }
+                .custom-scrollbar::-webkit-scrollbar-thumb { background: #10b981; border-radius: 10px; }
                 
-                @media (max-width: 930px) and (orientation: landscape) {
+                @media (max-width: 930px) and (max-height: 600px) and (orientation: landscape) {
                     .hr-wrapper { 
                         padding: 4px !important; 
                         height: 100dvh !important; 
@@ -231,6 +230,7 @@ const SingleLayout: React.FC<SingleLayoutProps> = ({
                         margin-bottom: 0 !important; 
                         padding: 2px 10px !important; 
                         width: 100% !important;
+                        min-height: 28px !important;
                     }
                     .hr-header > div { padding-right: 5px !important; padding-left: 5px !important; gap: 4px !important;}
                     .hr-header svg { width: 12px !important; height: 12px !important; }
@@ -238,8 +238,8 @@ const SingleLayout: React.FC<SingleLayoutProps> = ({
                     
                     .hr-track { 
                         flex: none !important; 
-                        height: 70px !important; 
-                        min-height: 70px !important; 
+                        height: 95px !important; 
+                        min-height: 95px !important; 
                         margin-bottom: 0 !important; 
                         padding: 4px 10px !important; 
                         border-radius: 1rem !important; 
@@ -250,34 +250,35 @@ const SingleLayout: React.FC<SingleLayoutProps> = ({
                     .hr-finish-line { width: 15px !important; border-left-width: 2px !important; }
                     
                     .hr-card { 
-                        padding: 8px 12px !important; 
+                        padding: 10px 14px !important; 
                         margin-bottom: 0 !important; 
                         border-radius: 1rem !important; 
-                        height: 100% !important; 
                         flex: 1 !important;
                         display: flex !important; 
                         flex-direction: column !important; 
-                        justify-content: space-evenly !important;
+                        justify-content: flex-start !important;
                         min-height: 0 !important;
+                        overflow-y: auto !important;
                     }
-                    .hr-card-header { margin-bottom: 2px !important; font-size: 9px !important; }
-                    .hr-card h2 { font-size: 11px !important; margin-bottom: 4px !important; line-height: 1.2 !important; }
+                    .hr-card-header { margin-bottom: 6px !important; font-size: 10px !important; }
+                    .hr-question-text { font-size: 12px !important; margin-bottom: 8px !important; line-height: 1.3 !important; }
                     
                     .hr-options-grid { 
-                        gap: 4px !important; 
+                        gap: 6px !important; 
                         display: grid !important; 
                         grid-template-columns: 1fr 1fr !important; 
-                        flex: 1 !important; 
-                        align-content: stretch !important; 
+                        flex: none !important; 
+                        align-content: start !important; 
                     }
                     .hr-option-btn { 
-                        padding: 4px 8px !important; 
-                        font-size: 9px !important; 
+                        padding: 6px 10px !important; 
+                        font-size: 10px !important; 
                         border-radius: 0.5rem !important; 
-                        line-height: 1.1 !important; 
+                        line-height: 1.2 !important; 
                         display: flex !important; 
                         align-items: center !important; 
-                        height: 100% !important;
+                        height: auto !important;
+                        min-height: 35px !important;
                     }
                 }
             `}</style>
