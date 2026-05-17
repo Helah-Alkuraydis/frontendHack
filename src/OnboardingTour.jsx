@@ -140,20 +140,16 @@ const OnboardingTour = ({ onComplete, onStepChange }) => {
           isMobile: true
         });
       } else {
-        // 💻 [بيئة اللابتوب]: حساب التمركز العمودي مع التثبيت الديناميكي لمنع الخروج عن الشاشة
         let topPos = rect.top + rect.height / 2;
         const leftPos = rect.right + 25;
-        
-        // الارتفاع التقريبي لكرت التور باللابتوب حوالي 220px (نصفه 110px)
         const cardHalfHeight = 110; 
         const margin = 25;
         let clampedOffset = 0;
 
-        // إذا كان الكرت سيتجاوز أسفل شاشة اللابتوب (مثل خطوة البروفايل)، يتم كبحه وتثبيته فوراً
         if (topPos + cardHalfHeight > window.innerHeight - margin) {
           const originalTop = topPos;
           topPos = window.innerHeight - cardHalfHeight - margin;
-          clampedOffset = topPos - originalTop; // فرق الإزاحة لموازنة السهم
+          clampedOffset = topPos - originalTop;
         }
 
         setCoords({
@@ -189,15 +185,23 @@ const OnboardingTour = ({ onComplete, onStepChange }) => {
     return (
       <div className="fixed inset-0 z-[10000] flex items-center justify-center p-4">
         <div className="absolute inset-0 bg-[#050810]/85 backdrop-blur-sm transition-opacity duration-500"></div>
-        <div key={step} className="relative w-[75%] sm:w-[85%] max-w-[280px] sm:max-w-[340px] bg-gradient-to-b from-[#2a324b]/90 to-[#161b2e]/95 backdrop-blur-xl border border-blue-500/20 rounded-[1.8rem] sm:rounded-[2.5rem] p-4 sm:p-5 shadow-2xl text-white pt-20">
-          <div className="absolute -top-[90px] sm:-top-[110px] left-1/2 -translate-x-1/2 w-[160px] sm:w-[200px] z-20 pointer-events-none">
+        <div key={step} className="relative w-[75%] sm:w-[85%] max-w-[280px] sm:max-w-[340px] bg-gradient-to-b from-[#2a324b]/90 to-[#161b2e]/95 backdrop-blur-xl border border-blue-500/20 rounded-[1.8rem] sm:rounded-[2.5rem] p-4 sm:p-5 shadow-2xl text-white pt-20 animate-in fade-in duration-500">
+          
+          {/* 🟢 [تنزيل صورة آسترا]: تم عزل div الصورة في الجوال ليكون `-top-[70px]` بدل `-top-[90px]` عشان تنزل الصورة وتقرب من الكرت، وحافظت على اللابتوب الفخم `sm:-top-[110px]` كما هو */}
+          <div className="absolute -top-[70px] sm:-top-[110px] left-1/2 -translate-x-1/2 w-[150px] sm:w-[200px] z-20 pointer-events-none">
             <img src="/Astra.png" alt="Astra Guide" className="w-full h-full object-contain drop-shadow-2xl" />
           </div>
+          
           <div className="flex flex-col items-center text-center mt-[70px] sm:mt-[85px] relative z-10">
             <h2 className="text-xl sm:text-2xl font-extrabold mb-2 sm:mb-3 bg-clip-text text-transparent bg-gradient-to-r from-white to-blue-200">{currentStep.title}</h2>
             <p className="text-blue-100/80 text-xs sm:text-sm leading-relaxed mb-5 sm:mb-6 font-medium">{currentStep.content}</p>
-            <button onClick={handleNext} className="w-full py-2.5 sm:py-3 rounded-xl font-semibold bg-gradient-to-r from-blue-600 to-indigo-600 shadow-lg shadow-blue-500/25 transition-all flex items-center justify-center gap-1 sm:gap-2 text-xs sm:text-base">
-              {currentStep.btnIcon} {currentStep.btnNext}
+            
+            <button onClick={handleNext} className="w-full py-2.5 sm:py-3 rounded-xl font-semibold bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 shadow-lg shadow-blue-500/25 transition-all flex items-center justify-center gap-1.5 sm:gap-2 text-xs sm:text-base">
+              {/* 🟢 [توهج الرمز المشار إليه]: أضفت عزلة نيون سيبرانية خاصة للأيقونة المشار إليها داخل الزر في الجوال فقط ليتوهج بالأزرق مثل ما طلبتِ */}
+              <span className={`inline-flex items-center justify-center transition-all ${isMobile ? 'animate-mobile-icon-glow text-cyan-300' : ''}`}>
+                {currentStep.btnIcon}
+              </span>
+              <span>{currentStep.btnNext}</span>
             </button>
           </div>
         </div>
@@ -207,6 +211,28 @@ const OnboardingTour = ({ onComplete, onStepChange }) => {
 
   return (
     <div className="fixed inset-0 z-[10000]">
+      <style>{`
+        .active-tour-glow {
+          position: relative;
+          z-index: 100005;
+          background: rgba(59, 130, 246, 0.2) !important;
+          box-shadow: 0 0 15px 5px rgba(59, 130, 246, 0.5) !important;
+          border-radius: 30% !important;
+          transition: all 0.3s ease-in-out;
+        }
+        
+        @keyframes mobile-icon-glow {
+          0% { box-shadow: 0 0 4px rgba(34, 211, 238, 0.3); text-shadow: 0 0 1px rgba(34, 211, 238, 0.4); transform: scale(1); }
+          50% { box-shadow: 0 0 10px rgba(34, 211, 238, 0.7); text-shadow: 0 0 5px rgba(34, 211, 238, 0.8); transform: scale(1.03); }
+          100% { box-shadow: 0 0 4px rgba(34, 211, 238, 0.3); text-shadow: 0 0 1px rgba(34, 211, 238, 0.4); transform: scale(1); }
+        }
+        
+        .animate-mobile-icon-glow {
+          animation: mobile-icon-glow 2.5s ease-in-out infinite;
+          padding: 2px;
+          border-radius: 50%;
+        }
+      `}</style>
       <div className="absolute inset-0 bg-black/80 backdrop-blur-sm transition-opacity duration-500"></div>
 
       <div
@@ -233,7 +259,6 @@ const OnboardingTour = ({ onComplete, onStepChange }) => {
             ${isMobile ? 'w-full p-4' : 'w-[380px] p-6'}`}
         >
           
-          {/* سهم اللابتوب الذكي: موازن ميكانيكياً ليتبع إزاحة الكرت ويشير للبروفايل بدقة */}
           {!isMobile && currentStep.hasArrow && coords && (
             <div 
               className="absolute w-4 h-4 bg-[#1e2330] border-l border-b border-gray-600/30 rotate-45 transition-all duration-300"
@@ -245,7 +270,6 @@ const OnboardingTour = ({ onComplete, onStepChange }) => {
             ></div>
           )}
 
-          {/* سهم الجوال المتنقل */}
           {isMobile && currentStep.hasArrow && coords && (
             <div 
               style={{ left: `${coords.left - 16}px` }}
@@ -266,7 +290,7 @@ const OnboardingTour = ({ onComplete, onStepChange }) => {
           <div className="flex flex-col items-start relative z-10 w-full">
             {currentStep.showAvatar ? (
               <div className="flex items-center gap-3 mb-4">
-                <div className="w-10 h-10 rounded-full border border-blue-500 p-[2px] bg-[#121620] flex items-center justify-center overflow-hidden">
+                <div className="w-10 h-10 rounded-full border border-blue-500 p-[2px] bg-[#121620] flex items-center justify-center overflow-hidden shrunk-0">
                   { (currentStep.position === 'profile' || currentStep.position === 'achievements') ? (
                     <img src={currentStep.avatar} className="w-full h-full object-cover rounded-full" alt="Avatar" />
                   ) : (
