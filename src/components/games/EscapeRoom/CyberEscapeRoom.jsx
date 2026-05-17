@@ -26,59 +26,54 @@ const CyberEscapeRoom = ({ onFinish, gameId, sessionId, initialLevel, mode }) =>
   const [currentScenarioId, setCurrentScenarioId] = useState(null); 
   const [usedHints, setUsedHints] = useState([]); 
 
-
-
-const finalizeScenario = async () => {
-  if (!currentScenarioId) return;
-  try {
-    const token = localStorage.getItem('token');
-    await axios.put(`${BASE_URL}/games/escape/use/${currentScenarioId}`, {}, {
-      headers: { Authorization: `Bearer ${token}` }
-    });
-    console.log("✅ Scenario marked as consumed.");
-  } catch (err) {
-    console.error("❌ Failed to finalize scenario:", err);
-  }
-};
-
- useEffect(() => {
-  const fetchGameData = async () => {
+  const finalizeScenario = async () => {
+    if (!currentScenarioId) return;
     try {
-      setLoading(true);
       const token = localStorage.getItem('token');
-      const res = await axios.get(`${BASE_URL}/games/escape/start?level=${initialLevel}`, {
+      await axios.put(`${BASE_URL}/games/escape/use/${currentScenarioId}`, {}, {
         headers: { Authorization: `Bearer ${token}` }
       });
-      if (res.data.success) {
-        setScenario(res.data.data);
-        setCurrentScenarioId(res.data.scenarioId); 
-
-      }
+      console.log("Scenario marked as consumed.");
     } catch (err) {
-      console.error("Connection Error:", err);
-      setScenario(null); 
-    } finally {
-      setLoading(false);
+      console.error("Failed to finalize scenario:", err);
     }
   };
-  fetchGameData();
-}, [initialLevel]);
 
+  useEffect(() => {
+    const fetchGameData = async () => {
+      try {
+        setLoading(true);
+        const token = localStorage.getItem('token');
+        const res = await axios.get(`${BASE_URL}/games/escape/start?level=${initialLevel}`, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        if (res.data.success) {
+          setScenario(res.data.data);
+          setCurrentScenarioId(res.data.scenarioId); 
+        }
+      } catch (err) {
+        console.error("Connection Error:", err);
+        setScenario(null); 
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchGameData();
+  }, [initialLevel]);
 
+  const deviceList = React.useMemo(() => {
+    if (!scenario) return [];
+    const uniqueIps = [...new Set(scenario.room2.logs.map(l => l.ip))];
+    const icons = ['💻', '🖥', '🖧', '📡', '🖨', '📱'];
+    const names = ['STATION-PX', 'CORE-SRV', 'GATEWAY-HUB', 'NODE-SEC', 'IOT-UNIT', 'ACCESS-PT'];
 
-const deviceList = React.useMemo(() => {
-  if (!scenario) return [];
-  const uniqueIps = [...new Set(scenario.room2.logs.map(l => l.ip))];
-  const icons = ['💻', '🖥', '🖧', '📡', '🖨', '📱'];
-  const names = ['STATION-PX', 'CORE-SRV', 'GATEWAY-HUB', 'NODE-SEC', 'IOT-UNIT', 'ACCESS-PT'];
-
-  return uniqueIps.map((ip, i) => ({
-    id: i,
-    ip: ip,
-    icon: icons[i % icons.length],
-    name: names[i % names.length]
-  }));
-}, [scenario]);
+    return uniqueIps.map((ip, i) => ({
+      id: i,
+      ip: ip,
+      icon: icons[i % icons.length],
+      name: names[i % names.length]
+    }));
+  }, [scenario]);
 
   useEffect(() => {
     if (screen !== 'room' || timeLeft <= 0) return;
@@ -90,17 +85,16 @@ const deviceList = React.useMemo(() => {
     if (timeLeft <= 0 && screen === 'room') {
         setScreen('gameover');
         finalizeScenario();
-    if (onFinish) {
-      onFinish({
-        status: 'Loss',
-        score: 0,
-        duration: 600,
-        mistakesCount: mistakes
-      });
-  }
-}
+        if (onFinish) {
+          onFinish({
+            status: 'Loss',
+            score: 0,
+            duration: 600,
+            mistakesCount: mistakes
+          });
+        }
+    }
   }, [timeLeft, screen, onFinish, mistakes]);
-
 
   useEffect(() => {
     if (screen === 'success') {
@@ -109,44 +103,35 @@ const deviceList = React.useMemo(() => {
     }
   }, [screen, navigate]);
 
-
   const restartMission = () => {
     setScreen('start'); setRoomIdx(0); setScore(150); setTimeLeft(600);
     setAnsInput(""); setFinalInput(""); setLayer1Done(false);
     setFeedback({ show: false, msg: "", type: "" }); setActiveHint(false); setSelectedPath([]); setBriefingStep(0);
     setUsedHints([]);       
-  setRevealedHints([]);   
-  
-  if (typeof setRoom3HintCount === 'function') {
-    setRoom3HintCount(0);
-  }
+    setRevealedHints([]);   
   };
 
-
   const triggerHint = (hintId, cost) => {
-  if (!usedHints.includes(hintId)) {
-    setScore(prev => Math.max(0, prev - (cost)));
-    setUsedHints(prev => [...prev, hintId]);
-    
-    setFeedback({ show: true, msg: "HINT_ACTIVATED", type: 'hint-err' });
-    setTimeout(() => setFeedback({ show: false }), 2000);
-    return true; 
-  }
-  return false; 
-};
+    if (!usedHints.includes(hintId)) {
+      setScore(prev => Math.max(0, prev - (cost)));
+      setUsedHints(prev => [...prev, hintId]);
+      setFeedback({ show: true, msg: "HINT_ACTIVATED", type: 'hint-err' });
+      setTimeout(() => setFeedback({ show: false }), 2000);
+      return true; 
+    }
+    return false; 
+  };
 
-const handleToolClick = (toolId) => {
-  if (activeTool !== toolId) {
-    triggerHint(toolId, 10);
-  }
+  const handleToolClick = (toolId) => {
+    if (activeTool !== toolId) {
+      triggerHint(toolId, 10);
+    }
+    setActiveTool(activeTool === toolId ? null : toolId);
+  };
   
-  setActiveTool(activeTool === toolId ? null : toolId);
-};
-  
- 
   const checkRoom1 = () => {
     if (ansInput.trim().toUpperCase() === scenario.room1.answer) {
-      setFeedback({ show: true, msg: "✅ ACCESS GRANTED!", type: "ok" });
+      setFeedback({ show: true, msg: "ACCESS GRANTED!", type: "ok" });
       setTimeout(() => { setRoomIdx(1); setFeedback({ show: false }); setAnsInput(""); setActiveTool(null); }, 2000);
     } else {
       setFeedback({ show: true, msg: "INVALID KEY!", type: "err" });
@@ -159,7 +144,7 @@ const handleToolClick = (toolId) => {
 
   const selectDevice = (device) => {
     if (device.ip === scenario.room2.infectedIp) {
-      setFeedback({ show: true, msg: "✅ NODE ISOLATED!", type: "ok" });
+      setFeedback({ show: true, msg: "NODE ISOLATED!", type: "ok" });
       setTimeout(() => { setRoomIdx(2); setFeedback({ show: false }); }, 2000);
     } else {
       setFeedback({ show: true, msg: "WRONG NODE!", type: "err" });
@@ -177,7 +162,7 @@ const handleToolClick = (toolId) => {
       const newPath = [...selectedPath, idx];
       setSelectedPath(newPath);
       if (scenario.room3.correctIndices.every(tile => newPath.includes(tile))) {
-        setFeedback({ show: true, msg: "✅ LOGIC BYPASS COMPLETE!", type: "ok" });
+        setFeedback({ show: true, msg: "LOGIC BYPASS COMPLETE!", type: "ok" });
         setTimeout(() => { setRoomIdx(3); setFeedback({ show: false }); }, 2500);
       }
     } else {
@@ -189,60 +174,151 @@ const handleToolClick = (toolId) => {
     }
   };
 
- const checkLayer1 = () => {
-  try {
-    const decodedFromBase64 = atob(scenario.room4.layer1); 
-    if (ansInput.trim().toUpperCase() === decodedFromBase64.toUpperCase()) {
-      setLayer1Done(true);
-      setAnsInput(""); 
-      setFeedback({ show: true, msg: "✅ BASE64 DECODED! NOW BREAK VIGENÈRE", type: "ok" });
-      setTimeout(() => setFeedback({ show: false }), 2000);
+  const checkLayer1 = () => {
+    try {
+      const decodedFromBase64 = atob(scenario.room4.layer1); 
+      if (ansInput.trim().toUpperCase() === decodedFromBase64.toUpperCase()) {
+        setLayer1Done(true);
+        setAnsInput(""); 
+        setFeedback({ show: true, msg: "BASE64 DECODED! NOW BREAK VIGENÈRE", type: "ok" });
+        setTimeout(() => setFeedback({ show: false }), 2000);
+      } else {
+        setScore(prev => Math.max(0, prev - 10));
+        setMistakes(prev => prev + 1);
+        setFeedback({ show: true, msg: "INVALID DECODING!", type: "err" });
+        setTimeLeft(prev => Math.max(0, prev - 15));
+        setTimeout(() => setFeedback({ show: false }), 2000);
+      }
+    } catch (e) {
+      console.error("Base64 format error");
+    }
+  };
+
+  const checkFinalBreach = async () => {
+    if (!layer1Done) return; 
+    if (finalInput.trim().toUpperCase() === scenario.room4.masterKey.toUpperCase()) {
+      await finalizeScenario();
+      setScreen('success');
+      if (onFinish) {
+        onFinish({
+          status: 'Win',
+          score: score, 
+          duration: timeUsed, 
+          mistakesCount: mistakes
+        });
+      }
     } else {
+      setFeedback({ show: true, msg: "MASTER KEY DENIED!", type: "err" });
+      setTimeLeft(prev => Math.max(0, prev - 15));
       setScore(prev => Math.max(0, prev - 10));
       setMistakes(prev => prev + 1);
-      setFeedback({ show: true, msg: "INVALID DECODING!", type: "err" });
-      setTimeLeft(prev => Math.max(0, prev - 15));
       setTimeout(() => setFeedback({ show: false }), 2000);
     }
-  } catch (e) {
-    console.error("Base64 format error");
-  }
-};
+  };
 
-const checkFinalBreach = async () => {
-  if (!layer1Done) return; 
-  if (finalInput.trim().toUpperCase() === scenario.room4.masterKey.toUpperCase()) {
-    await finalizeScenario();
-    setScreen('success');
-    if (onFinish) {
-      onFinish({
-        status: 'Win',
-        score: score, 
-        duration: timeUsed, 
-        mistakesCount: mistakes
-      });
-    }
-  } else {
-    setFeedback({ show: true, msg: "MASTER KEY DENIED!", type: "err" });
-    setTimeLeft(prev => Math.max(0, prev - 15));
-    setScore(prev => Math.max(0, prev - 10));
-    setMistakes(prev => prev + 1);
-    setTimeout(() => setFeedback({ show: false }), 2000);
-  }
-};
+  const PUBG_STYLE = `
+      .custom-scrollbar::-webkit-scrollbar { width: 3px; }
+      .custom-scrollbar::-webkit-scrollbar-thumb { background: #00ff96; border-radius: 10px; }
 
- if (screen === 'start') {
+      @media (max-width: 930px) and (max-height: 600px) and (orientation: landscape) {
+          .cer-start-wrapper { padding: 4px !important; gap: 4px !important; height: 100dvh !important; justify-content: center !important;}
+          .cer-start-title { font-size: 24px !important; margin-bottom: 2px !important; }
+          .cer-start-sub { font-size: 8px !important; }
+          .cer-start-box { padding: 8px 12px !important; min-height: 0 !important; border-radius: 1rem !important; max-width: 95% !important;}
+          .cer-start-box h3 { font-size: 14px !important; margin-bottom: 4px !important; }
+          .cer-start-box p { font-size: 10px !important; margin-bottom: 4px !important; line-height: 1.2 !important; }
+          .cer-start-box ul { font-size: 9px !important; margin-bottom: 4px !important; }
+          .cer-start-btn { padding: 6px 16px !important; font-size: 10px !important; }
 
+          .cer-success-wrapper { padding: 4px !important; height: 100dvh !important; justify-content: center !important;}
+          .cer-success-icon-box { margin-bottom: 4px !important; }
+          .cer-success-icon { width: 40px !important; height: 40px !important; }
+          .cer-success-title { font-size: 20px !important; margin-bottom: 2px !important;}
+          .cer-success-sub { font-size: 6px !important; margin-top: 0 !important;}
+          .cer-success-grid { gap: 8px !important; margin-bottom: 8px !important; flex-direction: row !important; display: flex !important; }
+          .cer-success-box { padding: 8px !important; border-radius: 1rem !important; flex: 1 !important; justify-content: center !important; }
+          .cer-success-box p:first-child { font-size: 8px !important; margin-bottom: 2px !important;}
+          .cer-success-box p:last-child { font-size: 20px !important; }
+
+          .cer-fail-wrapper { padding: 4px !important; height: 100dvh !important; justify-content: center !important;}
+          .cer-fail-icon { padding: 10px !important; margin-bottom: 4px !important;}
+          .cer-fail-icon svg { width: 30px !important; height: 30px !important; }
+          .cer-fail-title { font-size: 20px !important; margin-bottom: 4px !important; }
+          .cer-fail-text { font-size: 9px !important; margin-bottom: 8px !important; line-height: 1.2 !important;}
+          .cer-fail-btn { padding: 6px 12px !important; font-size: 9px !important; }
+
+          .cer-wrapper { 
+              position: fixed !important; top: 0 !important; left: 0 !important; right: 0 !important; bottom: 0 !important;
+              height: 100dvh !important; max-height: 100dvh !important;
+              width: 100vw !important; max-width: 100vw !important;
+              padding: 0 !important; gap: 0 !important;
+              overflow: hidden !important;
+              background: #030303 !important;
+              z-index: 9999 !important;
+          }
+          .cer-header { padding: 2px 10px !important; min-height: 30px !important; border-bottom: 1px solid #00ff9610 !important; }
+          .cer-header span { font-size: 10px !important; }
+          .cer-main { padding: 6px 10px !important; overflow-y: auto !important; max-width: 100% !important; display: flex !important; flex-direction: column !important; justify-content: flex-start !important; }
+          
+          .r1-wrapper { space-y: 6px !important; padding-bottom: 20px !important; width: 100% !important;}
+          .r1-header { padding: 8px 12px !important; margin-bottom: 6px !important; border-radius: 0.5rem !important;}
+          .r1-header p { font-size: 9px !important; line-height: 1.2 !important; margin-top: 4px !important;}
+          .r1-box { padding: 12px !important; border-radius: 1rem !important; margin-bottom: 6px !important;}
+          .r1-box .text-4xl { font-size: 16px !important; }
+          .r1-tools { gap: 6px !important; margin-bottom: 6px !important; }
+          .r1-tools button { padding: 6px !important; border-radius: 0.5rem !important;}
+          .r1-tools span { font-size: 8px !important; }
+          .r1-tools svg { width: 12px !important; height: 12px !important; }
+          .r1-input-area { padding: 2px !important; border-radius: 0.5rem !important; }
+          .r1-input { padding: 6px 10px !important; font-size: 12px !important; }
+          .r1-btn { padding: 6px 14px !important; font-size: 10px !important; border-radius: 0.5rem !important;}
+
+          .r2-wrapper { space-y: 6px !important; padding-bottom: 20px !important; width: 100% !important;}
+          .r2-header { padding: 8px 12px !important; border-radius: 0.5rem !important;}
+          .r2-header p { font-size: 9px !important; line-height: 1.2 !important; margin-top: 4px !important;}
+          .r2-grid { grid-template-columns: repeat(5, 1fr) !important; gap: 6px !important; }
+          .r2-grid > div { padding: 6px !important; border-radius: 0.5rem !important; }
+          .r2-grid .text-5xl { font-size: 20px !important; margin-bottom: 4px !important; }
+          .r2-grid h3 { font-size: 8px !important; }
+          .r2-grid p { font-size: 9px !important; }
+          .r2-status { padding: 8px !important; border-radius: 0.75rem !important; }
+          .r2-status-list { max-height: 100px !important; space-y: 2px !important; }
+          .r2-status-list > div { padding: 4px 6px !important; gap: 6px !important; }
+          .r2-status-list span { font-size: 9px !important; }
+
+          .r3-wrapper { space-y: 6px !important; padding-bottom: 20px !important; min-height: auto !important; width: 100% !important;}
+          .r3-header { padding: 8px 12px !important; border-radius: 0.5rem !important; }
+          .r3-header p { font-size: 9px !important; line-height: 1.2 !important; margin-top: 4px !important;}
+          .r3-grid { grid-template-columns: repeat(3, 1fr) !important; gap: 6px !important; }
+          .r3-grid > div { height: 70px !important; border-radius: 0.75rem !important; }
+          .r3-grid .text-2xl { font-size: 16px !important; }
+          .r3-grid .absolute { top: 4px !important; left: 6px !important; font-size: 7px !important; }
+          .r3-status { padding: 8px !important; border-radius: 0.75rem !important; }
+          
+          .r4-wrapper { space-y: 6px !important; padding-bottom: 20px !important; width: 100% !important;}
+          .r4-header { padding: 8px 12px !important; border-radius: 0.5rem !important; }
+          .r4-header p { font-size: 9px !important; line-height: 1.2 !important; margin-top: 4px !important;}
+          .r4-box { padding: 12px !important; border-radius: 1rem !important; }
+          .r4-box .text-3xl { font-size: 16px !important; }
+          .r4-box .mt-8 { margin-top: 6px !important; }
+          .r4-grid { gap: 6px !important; }
+          .r4-status { padding: 8px !important; border-radius: 0.75rem !important; }
+          .r4-status h3 { font-size: 9px !important; }
+          .r4-status .w-8 { width: 16px !important; height: 16px !important; font-size: 10px !important;}
+          .r4-status input { padding: 6px 10px !important; font-size: 12px !important; border-radius: 0.5rem !important; }
+          .r4-status button { padding: 6px 14px !important; font-size: 9px !important; border-radius: 0.5rem !important; }
+      }
+    `;
+
+  if (screen === 'start') {
     return (
-
-      <div className="h-screen cyber-bg flex flex-col items-center justify-center p-6 text-center gap-8 font-mono">
-        <div className="space-y-2 animate-in fade-in duration-1000">
-          <h1 className="text-7xl font-black text-[#00ff96] tracking-tighter glitch-text uppercase">Cyber Fortress</h1>
-          <p className="text-[#00ff96] font-black not-italic tracking-[0.6em] text-sm uppercase italic opacity-50">Cyber Escape Room •
-                                  Level {initialLevel?.toString().padStart(2, '0') || "01"}
-         </p>
+      <div className="h-screen cyber-bg flex flex-col items-center justify-center p-6 text-center gap-8 font-mono cer-start-wrapper">
+        <style>{PUBG_STYLE}</style>
+        <div className="space-y-2 animate-in fade-in duration-1000 shrink-0">
+          <h1 className="text-7xl font-black text-[#00ff96] tracking-tighter glitch-text uppercase cer-start-title">Cyber Fortress</h1>
+          <p className="text-[#00ff96] font-black not-italic tracking-[0.6em] text-sm uppercase italic opacity-50 cer-start-sub">Cyber Escape Room • Level {initialLevel?.toString().padStart(2, '0') || "01"}</p>
         </div>
-        <div className="w-full max-w-2xl bg-[#0a1020]/80 border-2 border-[#00ff9620] p-12 rounded-[2.5rem] shadow-2xl relative overflow-hidden min-h-[320px] flex flex-col justify-center transition-all duration-500">
+        <div className="w-full max-w-2xl bg-[#0a1020]/80 border-2 border-[#00ff9620] p-12 rounded-[2.5rem] shadow-2xl relative overflow-hidden min-h-[320px] flex flex-col justify-center transition-all duration-500 cer-start-box flex-1">
           <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-[#00ff9650] to-transparent animate-pulse"></div>
           {briefingStep === 0 && (
             <div className="space-y-6 animate-in slide-in-from-right-10 duration-500">
@@ -254,20 +330,20 @@ const checkFinalBreach = async () => {
               </p>
             </div>
           )}
-      {briefingStep === 1 && (
-                  <div className="space-y-6 animate-in slide-in-from-right-10 duration-500">
-                    <p className="text-[#00ff96] font-black uppercase tracking-[0.4em] text-s">-- Mission Parameters --</p>
-                    <h3 className="text-3xl font-black text-white italic">[ OBJECTIVE ]</h3>
-                    <div className="text-left max-w-md mx-auto space-y-3">
-                      <p className="text-gray-400 text-base font-sans">You must navigate through 4 Room:</p>
-                      <ul className="text-sm space-y-2 text-[#00ff96] font-black uppercase tracking-widest italic">
-                          <li className="flex items-center gap-3"><ChevronRight size={14}/> 01. Encoding Room</li>
-                          <li className="flex items-center gap-3"><ChevronRight size={14}/> 02. Infected Device Control Room</li>
-                          <li className="flex items-center gap-3"><ChevronRight size={14}/> 03. Logic Trap Gate Room</li>
-                          <li className="flex items-center gap-3"><ChevronRight size={14}/> 04. The Final Decode Chamber</li>
-                      </ul>
-                    </div>
-                  </div>
+          {briefingStep === 1 && (
+            <div className="space-y-6 animate-in slide-in-from-right-10 duration-500">
+              <p className="text-[#00ff96] font-black uppercase tracking-[0.4em] text-s">-- Mission Parameters --</p>
+              <h3 className="text-3xl font-black text-white italic">[ OBJECTIVE ]</h3>
+              <div className="text-left max-w-md mx-auto space-y-3">
+                <p className="text-gray-400 text-base font-sans">You must navigate through 4 Room:</p>
+                <ul className="text-sm space-y-2 text-[#00ff96] font-black uppercase tracking-widest italic">
+                    <li className="flex items-center gap-3"><ChevronRight size={14}/> 01. Encoding Room</li>
+                    <li className="flex items-center gap-3"><ChevronRight size={14}/> 02. Infected Device Control Room</li>
+                    <li className="flex items-center gap-3"><ChevronRight size={14}/> 03. Logic Trap Gate Room</li>
+                    <li className="flex items-center gap-3"><ChevronRight size={14}/> 04. The Final Decode Chamber</li>
+                </ul>
+              </div>
+            </div>
           )}
           {briefingStep === 2 && (
             <div className="space-y-6 animate-in zoom-in duration-500">
@@ -282,123 +358,122 @@ const checkFinalBreach = async () => {
             </div>
           )}
         </div>
-        <div className="flex gap-4 items-center">
+        <div className="flex gap-4 items-center shrink-0">
           {briefingStep < 2 ? (
             <button
               onClick={() => setBriefingStep(prev => prev + 1)}
-              className="px-20 py-5 bg-[#00ff96] text-black font-black tracking-[0.3em] uppercase hover:bg-white transition-all shadow-[0_0_30px_rgba(0,255,150,0.3)] active:scale-95"
+              className="px-20 py-5 bg-[#00ff96] text-black font-black tracking-[0.3em] uppercase hover:bg-white transition-all shadow-[0_0_30px_rgba(0,255,150,0.3)] active:scale-95 cer-start-btn"
             >
               Next
             </button>
           ) : (
             <button
               onClick={() => setScreen('room')}
-              className="px-20 py-6 bg-gradient-to-r from-red-600 to-orange-600 text-white font-black tracking-[0.4em] uppercase hover:scale-105 transition-all shadow-[0_0_50px_rgba(255,0,0,0.4)] animate-pulse"
+              className="px-20 py-6 bg-gradient-to-r from-red-600 to-orange-600 text-white font-black tracking-[0.4em] uppercase hover:scale-105 transition-all shadow-[0_0_50px_rgba(255,0,0,0.4)] animate-pulse cer-start-btn"
             >
               Start Mission
             </button>
           )}
         </div>
-        <div className="flex gap-2">
+        <div className="flex gap-2 shrink-0">
             {[0, 1, 2].map(i => (
                 <div key={i} className={`w-1.5 h-1.5 rounded-full transition-all duration-500 ${briefingStep === i ? 'bg-[#00ff96] w-6' : 'bg-white/10'}`} />
             ))}
         </div>
       </div>
     );
-}
+  }
 
-      if (screen === 'success') {
-        return (
-          <div className="h-screen cyber-bg flex flex-col items-center justify-center p-6 text-center animate-in zoom-in duration-1000">
-            
-            <div className="relative mb-6">
-              <div className="absolute inset-0 bg-[#00ff96] blur-[50px] opacity-20 animate-pulse"></div>
-              <Trophy size={100} className="text-[#00ff96] relative z-10 drop-shadow-[0_0_15px_#00ff96]" />
-            </div>
+  if (screen === 'success') {
+    return (
+      <div className="h-screen cyber-bg flex flex-col items-center justify-center p-6 text-center animate-in zoom-in duration-1000 cer-success-wrapper">
+        <style>{PUBG_STYLE}</style>
+        <div className="relative mb-6 cer-success-icon-box shrink-0">
+          <div className="absolute inset-0 bg-[#00ff96] blur-[50px] opacity-20 animate-pulse"></div>
+          <Trophy size={100} className="text-[#00ff96] relative z-10 drop-shadow-[0_0_15px_#00ff96] cer-success-icon" />
+        </div>
 
-            <div className="mb-10">
-              <h1 className="text-6xl font-black text-[#00ff96] glitch-text uppercase tracking-tighter">Mission Complete</h1>
-              <p className="text-[#506070] tracking-[0.4em] text-[10px] font-black uppercase mt-2">Data Integrity Secured • Command Center Sync</p>
-            </div>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full max-w-xl mb-12">
-              
-              <div className="bg-[#0a1020] border-2 border-[#00ff96]/20 p-8 rounded-[2.5rem] shadow-2xl transition-all hover:border-[#00ff96]/40 group">
-                <p className="text-[10px] text-[#506070] uppercase mb-2 font-black tracking-widest group-hover:text-[#00ff96] transition-colors">Total XP Gained</p>
-                <p className="text-5xl font-black text-[#00ff96] drop-shadow-[0_0_10px_#00ff96]">{score}</p>
-              </div>
-
-              <div className="bg-[#0a1020] border-2 border-white/5 p-8 rounded-[2.5rem] shadow-2xl transition-all hover:border-red-500/20 group">
-                <p className="text-[10px] text-[#506070] uppercase mb-2 font-black tracking-widest group-hover:text-red-500 transition-colors">Security Alerts</p>
-                <p className={`text-5xl font-black ${mistakes > 0 ? 'text-red-500 drop-shadow-[0_0_10px_rgba(239,68,68,0.3)]' : 'text-white'}`}>
-                  {mistakes}
-                </p>
-              </div>
-            </div>
-
-            <div className="flex flex-col items-center gap-4">
-              <div className="w-64 h-1.5 bg-white/5 rounded-full overflow-hidden border border-white/5">
-                <div className="h-full bg-[#00ff96] animate-progress-load shadow-[0_0_15px_#00ff96]"></div>
-              </div>
-              <p className="text-[9px] text-[#00ff96] font-black uppercase tracking-[0.3em] animate-pulse italic">
-                Redirecting to HackHero Core...
-              </p>
-            </div>
-
+        <div className="mb-10 shrink-0">
+          <h1 className="text-6xl font-black text-[#00ff96] glitch-text uppercase tracking-tighter cer-success-title">Mission Complete</h1>
+          <p className="text-[#506070] tracking-[0.4em] text-[10px] font-black uppercase mt-2 cer-success-sub">Data Integrity Secured • Command Center Sync</p>
+        </div>
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full max-w-xl mb-12 cer-success-grid flex-1">
+          
+          <div className="bg-[#0a1020] border-2 border-[#00ff96]/20 p-8 rounded-[2.5rem] shadow-2xl transition-all hover:border-[#00ff96]/40 group cer-success-box flex flex-col justify-center">
+            <p className="text-[10px] text-[#506070] uppercase mb-2 font-black tracking-widest group-hover:text-[#00ff96] transition-colors">Total XP Gained</p>
+            <p className="text-5xl font-black text-[#00ff96] drop-shadow-[0_0_10px_#00ff96]">{score}</p>
           </div>
-        );
-      }
 
+          <div className="bg-[#0a1020] border-2 border-white/5 p-8 rounded-[2.5rem] shadow-2xl transition-all hover:border-red-500/20 group cer-success-box flex flex-col justify-center">
+            <p className="text-[10px] text-[#506070] uppercase mb-2 font-black tracking-widest group-hover:text-red-500 transition-colors">Security Alerts</p>
+            <p className={`text-5xl font-black ${mistakes > 0 ? 'text-red-500 drop-shadow-[0_0_10px_rgba(239,68,68,0.3)]' : 'text-white'}`}>
+              {mistakes}
+            </p>
+          </div>
+        </div>
+
+        <div className="flex flex-col items-center gap-4 shrink-0">
+          <div className="w-64 h-1.5 bg-white/5 rounded-full overflow-hidden border border-white/5">
+            <div className="h-full bg-[#00ff96] animate-progress-load shadow-[0_0_15px_#00ff96]"></div>
+          </div>
+          <p className="text-[9px] text-[#00ff96] font-black uppercase tracking-[0.3em] animate-pulse italic">
+            Redirecting to HackHero Core...
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   if (screen === 'gameover') {
-
-  return (
-    <div className="h-screen cyber-bg flex flex-col items-center justify-center p-6 text-center animate-in fade-in duration-700">
-      <div className="mb-8 p-10 bg-red-500/10 rounded-full border border-red-500/20 shadow-[0_0_50px_rgba(220,38,38,0.1)]">
-          <ShieldAlert size={80} className="text-red-500 animate-bounce" />
+    return (
+      <div className="h-screen cyber-bg flex flex-col items-center justify-center p-6 text-center animate-in fade-in duration-700 cer-fail-wrapper">
+        <style>{PUBG_STYLE}</style>
+        <div className="mb-8 p-10 bg-red-500/10 rounded-full border border-red-500/20 shadow-[0_0_50px_rgba(220,38,38,0.1)] cer-fail-icon">
+            <ShieldAlert size={80} className="text-red-500 animate-bounce" />
+        </div>
+        <h1 className="text-6xl font-black text-red-500 uppercase tracking-tighter mb-4 glitch-text cer-fail-title">System Breach</h1>
+        <p className="text-gray-500 text-sm max-w-md leading-relaxed mb-12 uppercase tracking-widest cer-fail-text">
+          Mission Failed. The encryption sequence reached zero. All data packets have been purged from the system.
+        </p>
+        <div className="flex flex-col md:flex-row gap-4 w-full max-w-md">
+          <button
+            onClick={restartMission}
+            className="flex-1 px-8 py-5 bg-red-600 text-white font-black uppercase tracking-widest hover:bg-red-500 transition-all shadow-[0_0_30px_rgba(220,38,38,0.3)] active:scale-95 flex items-center justify-center gap-3 cer-fail-btn"
+          >
+            <Zap size={18} fill="currentColor" /> Retry Mission
+          </button>
+          <button
+            onClick={() => navigate('/games')}
+            className="flex-1 px-8 py-5 bg-white/5 border border-white/10 text-gray-400 font-black uppercase tracking-widest hover:bg-white hover:text-black transition-all active:scale-95 cer-fail-btn"
+          >
+            Abort Mission
+          </button>
+        </div>
       </div>
-      <h1 className="text-6xl font-black text-red-500 uppercase tracking-tighter mb-4 glitch-text">System Breach</h1>
-      <p className="text-gray-500 text-sm max-w-md leading-relaxed mb-12 uppercase tracking-widest">
-        Mission Failed. The encryption sequence reached zero. All data packets have been purged from the system.
-      </p>
-      <div className="flex flex-col md:flex-row gap-4 w-full max-w-md">
-        <button
-          onClick={restartMission}
-          className="flex-1 px-8 py-5 bg-red-600 text-white font-black uppercase tracking-widest hover:bg-red-500 transition-all shadow-[0_0_30px_rgba(220,38,38,0.3)] active:scale-95 flex items-center justify-center gap-3"
-        >
-          <Zap size={18} fill="currentColor" /> Retry Mission
-        </button>
-        <button
-          onClick={() => navigate('/games')}
-          className="flex-1 px-8 py-5 bg-white/5 border border-white/10 text-gray-400 font-black uppercase tracking-widest hover:bg-white hover:text-black transition-all active:scale-95"
-        >
-          Abort Mission
+    );
+  }
+
+  if (loading) {
+    return <div className="h-screen cyber-bg flex items-center justify-center text-[#00ff96]">Loading Intelligence...</div>;
+  }
+
+  if (!scenario) {
+    return (
+      <div className="h-screen cyber-bg flex flex-col items-center justify-center gap-6 text-red-500">
+        <h1 className="text-4xl font-black italic">CONNECTION LOST</h1>
+        <p className="font-mono text-sm opacity-70">Could not sync with Command Center.</p>
+        <button onClick={() => window.location.reload()} className="px-8 py-3 bg-red-600 text-white font-black uppercase">
+          Retry Linkup
         </button>
       </div>
-    </div>
-  );
+    );
+  }
 
-}
-
-if (loading) {
-  return <div className="h-screen cyber-bg flex items-center justify-center text-[#00ff96]">Loading Intelligence...</div>;
-}
-
-if (!scenario) {
   return (
-    <div className="h-screen cyber-bg flex flex-col items-center justify-center gap-6 text-red-500">
-      <h1 className="text-4xl font-black italic">CONNECTION LOST</h1>
-      <p className="font-mono text-sm opacity-70">Could not sync with Command Center.</p>
-      <button onClick={() => window.location.reload()} className="px-8 py-3 bg-red-600 text-white font-black uppercase">
-        Retry Linkup
-      </button>
-    </div>
-  );
-}
-  return (
-    <div className="h-screen cyber-bg flex flex-col overflow-hidden">
-      <header className="flex items-center justify-between px-8 py-4 bg-[#080c16] border-b border-[#00ff9610]">
+    <div className="h-screen cyber-bg flex flex-col overflow-hidden cer-wrapper">
+      <style>{PUBG_STYLE}</style>
+      <header className="flex items-center justify-between px-8 py-4 bg-[#080c16] border-b border-[#00ff9610] cer-header shrink-0">
         <div className="text-xs font-black text-[#00ff96] tracking-[0.3em] uppercase">⬡ Cyber Escape</div>
         <div className="flex items-center gap-8">
           <div className="flex items-center gap-3 bg-[#0d1a0d] border border-[#00ff9630] px-5 py-1.5 rounded-sm">
@@ -410,17 +485,17 @@ if (!scenario) {
         </div>
       </header>
 
-      <div className="flex h-1 bg-[#1a1a2e]">
+      <div className="flex h-1 bg-[#1a1a2e] shrink-0">
         {[0, 1, 2, 3].map((idx) => (
           <div key={idx} className={`flex-1 mx-[1px] transition-all duration-700 ${idx < roomIdx ? 'bg-[#00ff96]' : idx === roomIdx ? 'bg-[#00cc77] animate-pulse' : 'bg-[#1a1a2e]'}`} />
         ))}
       </div>
 
-      <main className="flex-1 p-8 max-w-4xl mx-auto w-full overflow-y-auto">
+      <main className="flex-1 p-8 max-w-4xl mx-auto w-full overflow-y-auto cer-main custom-scrollbar">
      
       {/* ROOM 1: Cipher Breach */}
               {roomIdx === 0 && (
-                <div className="space-y-6 animate-in slide-in-from-bottom-4 duration-700 relative">
+                <div className="space-y-6 animate-in slide-in-from-bottom-4 duration-700 relative r1-wrapper">
                   
                   {feedback.show && feedback.type === 'err' && (
                     <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 pointer-events-none animate-in fade-in zoom-in duration-300">
@@ -452,7 +527,7 @@ if (!scenario) {
                     </div>
                   )}
 
-                  <div className="bg-[#0d131f] border-l-4 border-[#00ff96] p-4 rounded-r-xl shadow-lg relative overflow-hidden text-left">
+                  <div className="bg-[#0d131f] border-l-4 border-[#00ff96] p-4 rounded-r-xl shadow-lg relative overflow-hidden text-left r1-header">
                       <div className="absolute top-0 right-0 p-2 opacity-10"><Shield size={40} /></div>
                       <div className="flex items-center gap-3 mb-2">
                           <Zap size={16} className="text-[#00ff96] animate-pulse" />
@@ -466,13 +541,13 @@ if (!scenario) {
                           </p>
                   </div>
 
-                  <div className="bg-[#060e08] border border-[#00ff9620] rounded-xl p-10 font-mono text-center shadow-2xl relative">
+                  <div className="bg-[#060e08] border border-[#00ff9620] rounded-xl p-10 font-mono text-center shadow-2xl relative r1-box">
                       <div className="text-4xl text-[#ff88cc] font-black tracking-[0.4em] drop-shadow-[0_0_15px_rgba(255,136,204,0.3)] glitch-text">
                         {scenario?.room1?.encoded}
                       </div>
                   </div>
 
-                  <div className="grid grid-cols-3 gap-3">
+                  <div className="grid grid-cols-3 gap-3 r1-tools">
                         {[
                           { id: 'scan', label: 'DEEP SCAN', icon: <Search size={14}/> },
                           { id: 'map', label: 'SHIFT MAP', icon: <Globe size={14}/> },
@@ -542,18 +617,18 @@ if (!scenario) {
                   )}
 
                   <div className="relative">
-                    <div className="flex gap-3 p-2 bg-black/40 border border-[#304050] rounded-2xl focus-within:border-[#00ff9660] transition-all shadow-inner">
+                    <div className="flex gap-3 p-2 bg-black/40 border border-[#304050] rounded-2xl focus-within:border-[#00ff9660] transition-all shadow-inner r1-input-area">
                       <div className="pl-4 flex items-center text-[#304050] font-black text-sm">$</div>
                       <input 
                         value={ansInput} 
                         onChange={e => setAnsInput(e.target.value)} 
                         onKeyDown={e => e.key === 'Enter' && checkRoom1()} 
                         placeholder="ENTER DECRYPTED KEY..." 
-                        className="flex-1 bg-transparent p-4 text-[#00ff96] font-bold tracking-[0.3em] uppercase outline-none placeholder:text-[#1a2331]" 
+                        className="flex-1 bg-transparent p-4 text-[#00ff96] font-bold tracking-[0.3em] uppercase outline-none placeholder:text-[#1a2331] r1-input" 
                       />
                       <button 
                         onClick={checkRoom1} 
-                        className="bg-[#00ff96] text-black px-12 py-4 rounded-xl font-black uppercase italic tracking-widest hover:shadow-[0_0_30px_#00ff96] transition-all"
+                        className="bg-[#00ff96] text-black px-12 py-4 rounded-xl font-black uppercase italic tracking-widest hover:shadow-[0_0_30px_#00ff96] transition-all r1-btn"
                       >
                         BREACH
                       </button>
@@ -571,7 +646,7 @@ if (!scenario) {
 
         {/* ROOM 2*/}
             {roomIdx === 1 && (
-              <div className="space-y-8 animate-in slide-in-from-right-4 duration-700 font-mono relative">
+              <div className="space-y-8 animate-in slide-in-from-right-4 duration-700 font-mono relative r2-wrapper">
                 
                 {feedback.show && feedback.type === 'err' && (
                   <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 pointer-events-none animate-in fade-in zoom-in duration-300">
@@ -603,7 +678,7 @@ if (!scenario) {
                     </div>
                   )}
 
-                <div className="bg-[#0a1020] border-2 border-blue-500/20 p-6 rounded-[2rem] shadow-2xl relative overflow-hidden text-left">
+                <div className="bg-[#0a1020] border-2 border-blue-500/20 p-6 rounded-[2rem] shadow-2xl relative overflow-hidden text-left r2-header">
                   <div className="absolute top-0 right-0 p-4 opacity-5"><Search size={80} /></div>
                   <div className="flex items-center gap-3 mb-3">
                     <div className="p-2 bg-blue-500/20 rounded-lg text-blue-400"><Search size={20} /></div>
@@ -615,7 +690,7 @@ if (!scenario) {
                   </p>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-5 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-5 gap-6 r2-grid">
                   {deviceList.map((dev) => (
                     <div 
                       key={dev.id} 
@@ -636,7 +711,7 @@ if (!scenario) {
 
                 <div className="relative group text-left">
                   <div className="absolute -inset-1 bg-blue-500/10 rounded-3xl blur opacity-20 group-hover:opacity-40 transition duration-1000"></div>
-                  <div className="relative bg-[#050810] border-2 border-white/5 rounded-3xl p-8 shadow-inner">
+                  <div className="relative bg-[#050810] border-2 border-white/5 rounded-3xl p-8 shadow-inner r2-status">
                     
                     <div className="flex justify-between items-center mb-6 border-b border-white/5 pb-4">
                         <div className="flex items-center gap-2">
@@ -659,7 +734,7 @@ if (!scenario) {
                         )}
                     </div>
 
-                    <div className="space-y-3 max-h-[250px] overflow-y-auto pr-4 custom-scrollbar">
+                    <div className="space-y-3 max-h-[250px] overflow-y-auto pr-4 custom-scrollbar r2-status-list">
                       {scenario.room2.logs.map((log, i) => {
                         const isRevealed = log.status === 'malicious' && usedHints.includes('unmask');
                         
@@ -704,7 +779,7 @@ if (!scenario) {
 
             {/* ROOM 3 */}
                   {roomIdx === 2 && (
-                    <div className="space-y-8 animate-in zoom-in duration-700 font-mono relative min-h-[600px]">
+                    <div className="space-y-8 animate-in zoom-in duration-700 font-mono relative min-h-[600px] lg:min-h-0 r3-wrapper">
                       
                       {feedback.show && (feedback.type === 'err' || feedback.type === 'hint-err') && (
                         <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 pointer-events-none animate-in fade-in zoom-in duration-300">
@@ -729,7 +804,7 @@ if (!scenario) {
                         </div>
                       )}
 
-                      <div className="bg-[#0a1020] border-2 border-[#00ff96]/20 p-6 rounded-[2rem] shadow-2xl relative overflow-hidden text-left">
+                      <div className="bg-[#0a1020] border-2 border-[#00ff96]/20 p-6 rounded-[2rem] shadow-2xl relative overflow-hidden text-left r3-header">
                         <div className="absolute top-0 right-0 p-4 opacity-5"><Cpu size={80} /></div>
                         <div className="flex items-center gap-3 mb-3">
                           <div className="p-2 bg-[#00ff96]/20 rounded-lg text-[#00ff96]"><Cpu size={20} /></div>
@@ -773,7 +848,7 @@ if (!scenario) {
                         )}
                       </div>
 
-                      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 r3-grid">
                         {scenario.room3.tiles.map((tile, i) => {
                           const isSelected = selectedPath.includes(i);
                           
@@ -824,7 +899,7 @@ if (!scenario) {
                         })}
                       </div>
 
-                      <div className="bg-black/40 border border-white/5 p-5 rounded-[1.5rem] flex items-center justify-between shadow-inner">
+                      <div className="bg-black/40 border border-white/5 p-5 rounded-[1.5rem] flex items-center justify-between shadow-inner r3-status">
                         <div className="flex items-center gap-4">
                           <span className="text-[13px] font-black text-[#506070] uppercase tracking-[0.4em]">Validation Status:</span>
                           <div className="flex gap-2">
@@ -857,7 +932,7 @@ if (!scenario) {
 
         {/* ROOM 4 */}
             {roomIdx === 3 && (
-              <div className="space-y-8 animate-in slide-in-from-top-4 duration-1000 font-mono relative">
+              <div className="space-y-8 animate-in slide-in-from-top-4 duration-1000 font-mono relative r4-wrapper">
                 
                 {feedback.show && (feedback.type === 'err' || feedback.type === 'hint-err') && (
                   <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 pointer-events-none animate-in fade-in zoom-in duration-300">
@@ -879,7 +954,7 @@ if (!scenario) {
                   </div>
                 )}
 
-                <div className="bg-[#0a1020] border-2 border-[#ff0055]/30 p-6 rounded-[2rem] shadow-2xl relative overflow-hidden text-left">
+                <div className="bg-[#0a1020] border-2 border-[#ff0055]/30 p-6 rounded-[2rem] shadow-2xl relative overflow-hidden text-left r4-header">
                   <div className="absolute top-0 right-0 p-4 opacity-5 text-[#ff0055]"><Lock size={80} /></div>
                   <div className="flex items-center gap-3 mb-3">
                     <div className="p-2 bg-[#ff0055]/20 rounded-lg text-[#ff0055]"><Lock size={20} /></div>
@@ -893,7 +968,7 @@ if (!scenario) {
 
                 <div className="relative group">
                   <div className="absolute -inset-1 bg-[#ff88cc]/20 rounded-3xl blur opacity-20 group-hover:opacity-40 transition duration-1000"></div>
-                  <div className="relative bg-[#060e08] border-2 border-[#ff88cc]/30 rounded-[2.5rem] p-12 text-center shadow-2xl overflow-hidden">
+                  <div className="relative bg-[#060e08] border-2 border-[#ff88cc]/30 rounded-[2.5rem] p-12 text-center shadow-2xl overflow-hidden r4-box">
                     <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-[#ff88cc] to-transparent opacity-30"></div>
                     
                     <div className="text-3xl md:text-4xl font-black text-[#ff88cc] tracking-[0.3em] drop-shadow-[0_0_20px_rgba(255,136,204,0.4)] break-all px-4">
@@ -907,9 +982,9 @@ if (!scenario) {
                   </div>
                 </div>
 
-                <div className="grid grid-cols-1 gap-6">
+                <div className="grid grid-cols-1 gap-6 r4-grid">
                   
-                  <div className={`p-8 rounded-[2rem] border-2 transition-all duration-700 ${layer1Done ? 'bg-[#001a0a]/40 border-[#00ff96]/40 opacity-60 scale-[0.98]' : 'bg-[#0a1020] border-white/10 shadow-xl'}`}>
+                  <div className={`p-8 rounded-[2rem] border-2 transition-all duration-700 r4-status ${layer1Done ? 'bg-[#001a0a]/40 border-[#00ff96]/40 opacity-60 scale-[0.98]' : 'bg-[#0a1020] border-white/10 shadow-xl'}`}>
                     <div className="flex items-center justify-between mb-6">
                       <div className="flex items-center gap-4">
                         <div className={`w-8 h-8 rounded-full flex items-center justify-center font-black ${layer1Done ? 'bg-[#00ff96] text-black' : 'bg-white/10 text-white'}`}>
@@ -932,8 +1007,8 @@ if (!scenario) {
                     {!layer1Done && (
                       <div className="space-y-4 text-left">
                         <div className="flex gap-4">
-                          <input value={ansInput} onChange={e => setAnsInput(e.target.value)} onKeyDown={e => e.key === 'Enter' && checkLayer1()} placeholder="DECODE_LAYER_01..." className="flex-1 bg-black border border-white/10 p-5 rounded-2xl text-xl font-bold text-[#00ff96] tracking-[0.2em] outline-none focus:border-[#00ff9660] transition-all uppercase" />
-                          <button onClick={checkLayer1} className="bg-[#00ff96] text-black px-10 rounded-2xl font-black uppercase tracking-widest hover:bg-white transition-all active:scale-95">Verify</button>
+                          <input value={ansInput} onChange={e => setAnsInput(e.target.value)} onKeyDown={e => e.key === 'Enter' && checkLayer1()} placeholder="DECODE_LAYER_01..." className="flex-1 bg-black border border-white/10 p-5 rounded-2xl text-xl font-bold text-[#00ff96] tracking-[0.2em] outline-none focus:border-[#00ff9660] transition-all uppercase cer-room-input" />
+                          <button onClick={checkLayer1} className="bg-[#00ff96] text-black px-10 rounded-2xl font-black uppercase tracking-widest hover:bg-white transition-all active:scale-95 cer-room-btn">Verify</button>
                         </div>
                   {usedHints.includes('r4-b64') && (
                     <div className="mt-4 p-4 bg-[#00ff96]/5 border-l-2 border-[#00ff96] rounded-r-xl animate-in fade-in slide-in-from-left-2">
@@ -952,7 +1027,7 @@ if (!scenario) {
                       </div>
                     )}
                   </div>
-                    <div className={`p-8 rounded-[2rem] border-2 transition-all duration-700 ${layer1Done ? 'bg-[#0a1020] border-[#6040ff]/50 shadow-[0_0_40px_rgba(96,64,255,0.15)]' : 'bg-black/20 border-white/5 opacity-20 pointer-events-none'}`}>
+                    <div className={`p-8 rounded-[2rem] border-2 transition-all duration-700 r4-status ${layer1Done ? 'bg-[#0a1020] border-[#6040ff]/50 shadow-[0_0_40px_rgba(96,64,255,0.15)]' : 'bg-black/20 border-white/5 opacity-20 pointer-events-none'}`}>
                       
                       <div className="flex items-center justify-between mb-6">
                         <div className="flex items-center gap-4">
@@ -996,11 +1071,11 @@ if (!scenario) {
                             onChange={e => setFinalInput(e.target.value)} 
                             onKeyDown={e => e.key === 'Enter' && checkFinalBreach()} 
                             placeholder="INPUT_MASTER_KEY..." 
-                            className="flex-1 bg-black border border-white/10 p-5 rounded-2xl text-xl font-bold text-[#ff88cc] tracking-[0.2em] outline-none focus:border-[#6040ff60] transition-all uppercase shadow-inner" 
+                            className="flex-1 bg-black border border-white/10 p-5 rounded-2xl text-xl font-bold text-[#ff88cc] tracking-[0.2em] outline-none focus:border-[#6040ff60] transition-all uppercase shadow-inner cer-room-input" 
                           />
                           <button 
                             onClick={checkFinalBreach} 
-                            className="bg-[#6040ff] text-white px-10 rounded-2xl font-black uppercase tracking-widest hover:bg-[#8060ff] transition-all shadow-[0_0_25px_rgba(96,64,255,0.4)] active:scale-95"
+                            className="bg-[#6040ff] text-white px-10 rounded-2xl font-black uppercase tracking-widest hover:bg-[#8060ff] transition-all shadow-[0_0_25px_rgba(96,64,255,0.4)] active:scale-95 cer-room-btn"
                           >
                             Unlock Door
                           </button>
