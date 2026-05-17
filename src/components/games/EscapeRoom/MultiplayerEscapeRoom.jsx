@@ -104,7 +104,6 @@ const MultiplayerEscapeRoom = ({ sessionId, userData, myRole }) => {
         sidebar.style.filter = 'none';
         sidebar.style.opacity = '1';
       }
-      window.history.pushState(null, null, '/games'); // تأمين إعادة المسار عند الخروج النهائي
       window.removeEventListener('popstate', handleBackButton);
     };
   }, []);
@@ -251,7 +250,7 @@ const MultiplayerEscapeRoom = ({ sessionId, userData, myRole }) => {
               <div class="text-center space-y-4">
                   <div class="text-5xl mb-4">💀</div>
                   <p class="text-red-500 font-black uppercase tracking-widest">${data.msg}</p>
-                  <p class="text-gray-400 text-[10px] italic">Security protocols have locked the system permanently.</p>
+                  <p className="text-gray-400 text-[10px] italic">Security protocols have locked the system permanently.</p>
               </div>
           `,
           background: '#050810',
@@ -284,7 +283,7 @@ const MultiplayerEscapeRoom = ({ sessionId, userData, myRole }) => {
     <div className="h-screen bg-[#050810] flex relative overflow-hidden font-mono text-white w-full">
       <div className="flex-1 flex flex-col relative overflow-hidden w-full">
         
-        {/* 🟢 الهيدر العلوي: تم وزنه ليدعم التراص العمودي في الجوال والأفقي اللابتوب بحرية */}
+        {/* 🟢 الهيدر العلوي: تم وزنه ليدعم التراص العمودي في الجوال لتفادي التداخل في صورة 5 */}
         <header className="flex flex-col sm:flex-row items-start sm:items-center justify-between px-4 sm:px-8 py-3 sm:py-4 bg-[#080c16] border-b border-[#00ff9610] gap-3 flex-shrink-0 w-full">
           <div className="flex items-center gap-3 sm:gap-6 w-full sm:w-auto">
             <button 
@@ -314,7 +313,7 @@ const MultiplayerEscapeRoom = ({ sessionId, userData, myRole }) => {
         </header>
 
         {/* المساحة الرئيسية المخصصة للغرف الأربعة */}
-        <main className="flex-1 p-4 sm:p-6 md:p-10 overflow-y-auto flex flex-col items-center custom-scrollbar w-full">
+        <main className="flex-1 p-4 sm:p-6 md:p-10 overflow-y-auto flex flex-col items-center custom-scrollbar w-full pt-16 sm:pt-10">
           <div className="w-full max-w-4xl mt-2 sm:mt-7"> 
             {roomIdx === 0 && <Room01Cipher sessionId={sessionId} myRole={currentRole} data={roomData} />}
             {roomIdx === 1 && <Room02Defender sessionId={sessionId} myRole={currentRole} data={roomData} />}
@@ -341,17 +340,18 @@ const MultiplayerEscapeRoom = ({ sessionId, userData, myRole }) => {
         </button>
       )}
 
-<div className={`fixed top-0 right-0 h-full z-[1100] w-[75vw] sm:w-auto transition-transform duration-500 ease-in-out transform ${isChatOpen ? 'translate-x-0' : 'translate-x-full'}`}>
-  <button onClick={() => setIsChatOpen(false)} className="absolute top-4 right-4 z-[1110] p-2 text-gray-400 hover:text-white bg-black/60 rounded-full sm:bg-transparent">
-    <X size={20} />
-  </button>
-  
-  <TacticalChat 
-    sessionId={sessionId} 
-    userData={userData} 
-    messages={messages} 
-  />
-</div>
+      {/* 🟢 تعديل الحاوية الجانبية للشات: الحين في الجوال تأخذ عرض 75vw فقط لتبان اللعبة خلفها ويسهل الضغط على الفراغ لإغلاقها فوراً */}
+      <div className={`fixed top-0 right-0 h-full z-[1100] w-[75vw] sm:w-auto transition-transform duration-500 ease-in-out transform ${isChatOpen ? 'translate-x-0' : 'translate-x-full'}`}>
+        <button onClick={() => setIsChatOpen(false)} className="absolute top-4 right-4 z-[1110] p-2 text-gray-400 hover:text-white bg-black/40 rounded-full sm:bg-transparent">
+          <X size={20} />
+        </button>
+        
+        <TacticalChat 
+          sessionId={sessionId} 
+          userData={userData} 
+          messages={messages} 
+        />
+      </div>
     </div>
   );
 };

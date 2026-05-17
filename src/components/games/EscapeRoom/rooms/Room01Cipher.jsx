@@ -15,7 +15,7 @@ const Room01Cipher = ({ sessionId, myRole, data }) => {
 
   useEffect(() => {
     socket.on("receive_input_sync", (val) => {
-      if (!isMySpecialty && typeof val === 'string') setAnsInput(val);
+      if (!isMySpecialty) setAnsInput(val);
     });
     return () => socket.off("receive_input_sync");
   }, [isMySpecialty]);
@@ -36,7 +36,7 @@ const Room01Cipher = ({ sessionId, myRole, data }) => {
         </div>
       </div>
 
-      {/* اللغز (النص المشفر): تصغير الخط والـ tracking لمنع خروج النص عن الشاشة بالموبايل */}
+      {/* 🟢 اللغز (النص المشفر): تصغير الخط والـ tracking لمنع خروج النص عن الشاشة بالموبايل في صورة 5 */}
       <div className="bg-[#060e08] border border-[#00ff9620] rounded-2xl sm:rounded-3xl p-6 sm:p-12 text-center shadow-2xl relative group overflow-hidden">
         <div className="absolute -inset-1 bg-[#00ff96]/5 rounded-3xl blur opacity-20 transition duration-1000"></div>
         <div className="relative text-xl sm:text-3xl md:text-5xl font-black text-[#ff88cc] tracking-[0.15em] sm:tracking-[0.4em] drop-shadow-[0_0_15px_rgba(255,136,204,0.3)] break-all uppercase">
@@ -44,8 +44,8 @@ const Room01Cipher = ({ sessionId, myRole, data }) => {
         </div>
       </div>
 
-      {/* حقل الإدخال والحل المتجاوب عمودياً في الجوال */}
-      <div className="space-y-4">
+      {/* حقل الإدخال والحل: الحين الـ gap ملموم في الموبايل عشان ما يطلع برا الشاشة */}
+      <div className="space-y-4 pb-16 sm:pb-0">
         <div className="flex flex-col sm:flex-row gap-2 sm:gap-4 bg-black/40 border border-[#304050] p-2 sm:p-3 rounded-2xl focus-within:border-[#00ff9660] transition-all shadow-inner">
           <div className="flex items-center w-full sm:flex-1 gap-2">
             <div className="pl-2 text-[#304050] font-black text-sm">$</div>
