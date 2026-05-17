@@ -107,7 +107,6 @@ const OnboardingTour = ({ onComplete, onStepChange }) => {
   const currentStep = steps[step];
 
   const updatePosition = useCallback(() => {
-    // إزالة تأثير التوهج السابق من أي أيقونة تحت بالجوال
     document.querySelectorAll('.active-tour-glow').forEach(el => el.classList.remove('active-tour-glow'));
 
     if (currentStep.position === "center") {
@@ -123,23 +122,25 @@ const OnboardingTour = ({ onComplete, onStepChange }) => {
     if (currentStep.position === "friends") elementId = "friends-step"; 
     if (currentStep.position === "profile") elementId = "profile-step"; 
 
-    const element = document.getElementById(elementId);
+    // ⚡ التعديل السحري: نجيب كل العناصر اللي تحمل الـ ID ونقّي منها العنصر الظاهر حالياً على الشاشة
+    const elements = document.querySelectorAll(`#${elementId}`);
+    const element = Array.from(elements).find(el => el.getBoundingClientRect().width > 0) || document.getElementById(elementId);
 
     if (element) {
       const rect = element.getBoundingClientRect();
       
       if (isMobile) {
-        // 📱 للجوال: إضافة التوهج الأزرق الدائري على الأيقونة النشطة لترتبط ميكانيكياً بالشرح
+        // 📱 للجوال: نحدد العنصر النشط تحت في الناف بار ونعطيه التوهج الأزرق
         element.classList.add('active-tour-glow');
         setCoords({
           top: rect.top,
           left: rect.left + rect.width / 2,
         });
       } else {
-        // 💻 للابتوب: الإحداثيات الأصلية الفخمة حقتكم بدون لمس
+        // 💻 للابتوب: حساباتكم الفخمة الأصلية بدون أي تغيير لشغل جنب الشاشة
         setCoords({
           top: rect.top + rect.height / 2,
-          left: rect.right + 25 , 
+          left: rect.right + 25 ,
         });
       }
     } else {
@@ -184,31 +185,18 @@ const OnboardingTour = ({ onComplete, onStepChange }) => {
     );
   }
 
-return (
+  return (
     <div className="fixed inset-0 z-[10000]">
-      {/* ستايل التوهج السيبراني للأيقونة المشروحة حالياً بالجوال */}
-      <style>{`
-        .active-tour-glow {
-          position: relative;
-          z-index: 100005;
-          background: rgba(59, 130, 246, 0.3) !important;
-          box-shadow: 0 0 25px 8px rgba(59, 130, 246, 0.6) !important;
-          border-radius: 50% !important;
-          transition: all 0.3s ease-in-out;
-        }
-      `}</style>
       <div className="absolute inset-0 bg-black/80 backdrop-blur-sm transition-opacity duration-500"></div>
 
       <div
         style={(coords && !isMobile) ? {
-          // 💻 اللابتوب: يمين السايد بار بالملي (حساباتكم الأصلية المحمية)
           position: "fixed",
           top: `${coords.top}px`,
           left: `${coords.left}px`,
           transform: "translateY(-50%)",
           zIndex: 10001
         } : isMobile ? {
-          // 📱 الجوال: رفعنا الـ bottom لـ 140px عشان يرتفع المربع ويترك مساحة كاملة للأيقونات تحت تبان
           position: "fixed",
           bottom: "140px", 
           left: "50%",
@@ -221,7 +209,6 @@ return (
       >
         <div key={step} className="relative w-full max-w-[350px] bg-[#1e2330]/95 backdrop-blur-xl border border-white/10 rounded-[2rem] p-6 shadow-2xl text-white animate-in zoom-in duration-300">
           
-          {/* السهم يظهر باللابتوب فقط ليشير إلى السايد بار يسار */}
           {!isMobile && currentStep.hasArrow && coords && (
             <div className="absolute top-1/2 -left-2 -translate-y-1/2 w-4 h-4 bg-[#1e2330] border-l border-b border-white/10 rotate-45"></div>
           )}
