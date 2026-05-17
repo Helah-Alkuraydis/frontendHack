@@ -115,7 +115,8 @@ const MainLayout = ({ children, activePage, headerActions, highlightedId, forceH
   }, [user]);
 
   return (
-    <div className="flex min-h-screen bg-[#050810] text-white font-sans overflow-x-hidden relative w-full">
+    // 🟢 التعديل الوحيد هنا: إضافة md:h-screen md:overflow-hidden عشان الشاشة تصير ثابتة باللابتوب وما ينقص السايد بار
+    <div className="flex min-h-screen md:h-screen md:overflow-hidden bg-[#050810] text-white font-sans overflow-x-hidden relative w-full">
       <aside
         className={`hidden md:flex py-8 flex-col h-screen border-r border-gray-800/30 bg-[#050810] sticky top-0 transition-all duration-500
         ${highlightedId ? 'z-[100005]' : 'z-[100]'} 

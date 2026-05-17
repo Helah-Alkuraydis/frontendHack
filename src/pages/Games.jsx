@@ -10,7 +10,7 @@ import MainLayout from "../components/MainLayout";
 import Swal from "sweetalert2";
 import confetti from "canvas-confetti";
 import { BASE_URL } from '../api/auth.js';
-
+import { createPortal } from "react-dom";
 const getLevelInfo = (level) => {
   if (level > 20) return { label: "MASTERED", color: "#EAB308", bonus: 1000 };
   if (level >= 16) return { label: "EXPERT", color: "#EF4444", bonus: 500 };
@@ -678,8 +678,8 @@ const Games = () => {
           </div>
         </div>
 
-        {isModalOpen && selectedGame && (
-          <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+{isModalOpen && selectedGame && createPortal(
+          <div className="fixed inset-0 z-[999999] flex items-center justify-center p-4">
             <div
               className="absolute inset-0 bg-black/80 backdrop-blur-sm"
               onClick={() => {
@@ -720,7 +720,7 @@ const Games = () => {
                           setTempMode("single");
                           setModalStep("role");
                         } else {
-                          handleStartGame(); // الدالة الأصلية حقتك لبدء السنقل
+                          handleStartGame(); 
                         }
                       }}
                       className={`flex-1 bg-gradient-to-b from-white/10 to-white/5 border border-white/10 rounded-2xl md:rounded-3xl p-6 md:p-8 flex flex-col items-center text-center transition-all shadow-lg hover:border-blue-400/30 ${sessionLoading ? "cursor-wait opacity-50" : "cursor-pointer hover:scale-105 hover:bg-white/15"}`}
@@ -774,7 +774,6 @@ const Games = () => {
                         </p>
                       </div>
                     ) : (
-                      /* وضع القفل للألعاب التي لا تدعم ملتي بلاير */
                       <div className="flex-1 bg-white/5 opacity-30 cursor-not-allowed border border-white/5 rounded-2xl md:rounded-3xl p-6 md:p-8 flex flex-col items-center text-center">
                         <Users
                           strokeWidth={1.5}
@@ -798,13 +797,12 @@ const Games = () => {
                     Select Protocol Role
                   </p>
                   <div className="flex flex-col md:flex-row gap-4 md:gap-6 justify-center mb-8 md:mb-10">
-                    {/* اختيار Maker */}
                     <button
                       onClick={() => {
                         if (tempMode === "single") {
-                          handleStartGame("maker"); // يروح للبلاي قيم
+                          handleStartGame("maker"); 
                         } else {
-                          handleCreateMultiplayer("maker"); // أنشئ الغرفة مع تحديد الدور كـ Maker
+                          handleCreateMultiplayer("maker"); 
                         }
                       }}
                       className="group flex flex-row md:flex-col items-center justify-center gap-4 p-6 md:p-8 bg-emerald-500/5 border border-emerald-500/20 rounded-2xl md:rounded-3xl hover:bg-emerald-500 hover:text-black transition-all w-full md:w-48 shadow-[0_0_20px_rgba(16,185,129,0.1)]"
@@ -844,7 +842,8 @@ const Games = () => {
                 </div>
               )}
             </div>
-          </div>
+          </div>,
+          document.body
         )}
 
         <style>{`
