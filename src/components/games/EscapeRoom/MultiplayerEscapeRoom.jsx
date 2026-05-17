@@ -159,8 +159,6 @@ const MultiplayerEscapeRoom = ({ sessionId, userData, myRole }) => {
     socket.on("receive_tactical_msg", handleGlobalMsg);
 
     socket.on("room_cleared", (data) => {
-      console.log("🔓 Room UNLOCK", data.msg);
-
       Swal.fire({
           title: 'WORK SUCCESSFUL',
           html: `
@@ -189,8 +187,6 @@ const MultiplayerEscapeRoom = ({ sessionId, userData, myRole }) => {
     });
 
     socket.on("solve_error", (data) => {
-        console.log("⚠️ Penalty Applied:", data.msg);
-
         Swal.fire({
             title: 'PROTOCOL ERROR',
             text: `${data.msg} (-${data.penalty} s)`,
@@ -216,7 +212,7 @@ const MultiplayerEscapeRoom = ({ sessionId, userData, myRole }) => {
 
     socket.on("mission_accomplished", (data) => {
       Swal.fire({
-          title: 'MISSION ACCOMPLISHED!',
+          title: 'MISSION ACCOMPلISHED!',
           html: `
             <div class="flex flex-col items-center gap-6">
               <div class="text-7xl animate-bounce">🏆</div>
@@ -274,16 +270,16 @@ const MultiplayerEscapeRoom = ({ sessionId, userData, myRole }) => {
       socket.off("receive_tactical_msg", handleGlobalMsg);
       socket.off("room_cleared");
       socket.off("solve_error");
-      socket.off("mission_accomplished");
-      socket.off("escape_game_over");
     };
   }, [isChatOpen, userData?.username]);
 
   return (
-    <div className="h-screen bg-[#050810] flex relative overflow-hidden font-mono text-white w-full">
-      <div className="flex-1 flex flex-col relative overflow-hidden w-full">
+    // 🟢 [تعديل الإعصار الهيكلي]: تحويل الكادر الأبوي في الجوال ليكون fixed inset-0 وبطبقة z خارقة ليفرد كامل الشاشة ويغطي الملاحة العامة والـ paddings المتداخلة تماماً! وينسحب بأمان للابتوب sm:relative
+    <div className="fixed inset-0 sm:relative sm:h-screen bg-[#050810] flex flex-col overflow-hidden font-mono text-white w-full z-[100008]">
+      <div className="flex-1 flex flex-col relative overflow-hidden w-full h-full">
         
-        <header className="flex flex-col sm:flex-row items-start sm:items-center justify-between px-4 sm:px-8 pt-8 pb-3 sm:py-4 bg-[#080c16] border-b border-[#00ff9610] gap-3 flex-shrink-0 w-full relative z-40">
+        {/* 🟢 [تأمين العناوين وحماية الـ Notch]: إعطاء الهيدر مساحة أمان علوية px-4 pt-5 لكي ينزل تحت ساعة وبطارية الجوال تماماً ويظهر واضح بالملي */}
+        <header className="flex flex-col sm:flex-row items-start sm:items-center justify-between px-4 sm:px-8 pt-5 pb-3 sm:py-4 bg-[#080c16] border-b border-[#00ff9610] gap-3 flex-shrink-0 w-full relative z-40">
           <div className="flex items-center gap-3 sm:gap-6 w-full sm:w-auto">
             <button 
               onClick={handleBackClick}
@@ -311,7 +307,8 @@ const MultiplayerEscapeRoom = ({ sessionId, userData, myRole }) => {
           </div>
         </header>
 
-        <main className="flex-1 p-4 sm:p-6 md:p-10 overflow-y-auto flex flex-col items-center custom-scrollbar w-full pt-6 sm:pt-10">
+        {/* المساحة الداخلية للغرف الأربعة مع تأمين الهوامش السفلية المتجاوبة */}
+        <main className="flex-1 p-4 sm:p-6 md:p-10 overflow-y-auto flex flex-col items-center custom-scrollbar w-full pb-20 sm:pb-6">
           <div className="w-full max-w-4xl mt-2 sm:mt-7"> 
             {roomIdx === 0 && <Room01Cipher sessionId={sessionId} myRole={currentRole} data={roomData} />}
             {roomIdx === 1 && <Room02Defender sessionId={sessionId} myRole={currentRole} data={roomData} />}
@@ -321,10 +318,11 @@ const MultiplayerEscapeRoom = ({ sessionId, userData, myRole }) => {
         </main>
       </div>
 
+      {/* 🟢 [إصلاح حجب زر الشات المقصوص]: تحويل التموضع ليكون absolute bottom-6 right-6 وبطبقة z-[200000]؛ الحين بيقعد ملموم وثابت داخل إطار اللعبة كاملاً ومستحيل ينقس أو يختفي تحت أي عنصر ثانٍ */}
       {!isChatOpen && (
         <button 
           onClick={() => { setIsChatOpen(true); setUnreadCount(0); }}
-          className="fixed bottom-20 right-4 sm:bottom-8 sm:right-8 z-[200000] p-4 sm:p-5 bg-[#00ff96] text-black rounded-2xl shadow-[0_0_30px_rgba(0,255,150,0.4)] hover:scale-110 transition-all border border-white/20 flex items-center justify-center"
+          className="absolute bottom-6 right-4 z-[200000] p-4 bg-[#00ff96] text-black rounded-2xl shadow-[0_0_30px_rgba(0,255,150,0.4)] hover:scale-110 transition-all border border-white/20 flex items-center justify-center"
         >
           <div className="relative">
             <MessageSquareCode size={24} sm:size={28} />
@@ -337,7 +335,8 @@ const MultiplayerEscapeRoom = ({ sessionId, userData, myRole }) => {
         </button>
       )}
 
-      <div className={`fixed top-0 right-0 h-full z-[200010] w-full sm:w-80 transition-transform duration-500 ease-in-out transform ${isChatOpen ? 'translate-x-0' : 'translate-x-full'}`}>
+      {/* 🟢 [تأمين درج الشات الطويل]: تحويل التموضع لـ absolute وبطبقة z خارقة ليفرد بكامل فخامته فوق الصفحة بدون أي قص عمودي أو أفقي */}
+      <div className={`absolute top-0 right-0 h-full z-[200010] w-full sm:w-80 transition-transform duration-500 ease-in-out transform ${isChatOpen ? 'translate-x-0' : 'translate-x-full'}`}>
         <button onClick={() => setIsChatOpen(false)} className="absolute top-4 right-4 z-[200020] p-2 text-gray-400 hover:text-white bg-black/40 rounded-full sm:bg-transparent transition-colors">
           <X size={20} />
         </button>

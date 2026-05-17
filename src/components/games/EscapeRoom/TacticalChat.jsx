@@ -59,6 +59,7 @@ const TacticalChat = ({ sessionId, userData, messages }) => {
                 {m.username} • {m.ts}
               </span>
               
+              {/* 🟢 [موازنة السطر الأفقي للمحادثة]: ألغينا طوق الـ 150px القاسي؛ الحين الجمل بتفرد أفقياً بكامل عرض الشاشة المتاح بالجوال وبتختفي الطوالة العمودية المشوهة نهائياً! */}
               <div className={`px-4 py-2 rounded-2xl break-words shadow-sm leading-relaxed text-[11px] sm:text-[12px] max-w-full
                 ${m.username === myUsername 
                   ? 'bg-[#00ff96]/20 text-white rounded-tr-none border border-[#00ff96]/80' 
