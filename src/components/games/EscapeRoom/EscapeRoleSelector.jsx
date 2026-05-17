@@ -58,15 +58,14 @@ const EscapeRoleSelector = ({ players, onSelect, currentUserId }) => {
   const ROLES = getDynamicRoles();
 
   return (
-    <div className="fixed inset-0 z-[500] bg-[#050810]/95 backdrop-blur-xl flex flex-col items-center justify-start p-3 sm:p-10 font-mono text-white overflow-y-auto custom-scrollbar">
-      <div className="text-center mb-6 sm:mb-12 mt-6 sm:mt-0">
-        <h2 className="text-cyan-400 text-lg sm:text-3xl font-black italic tracking-[0.15em] sm:tracking-[0.3em] mb-1 animate-pulse">
+    <div className="fixed inset-0 z-[500] bg-[#050810]/95 backdrop-blur-xl flex flex-col items-center justify-start p-4 sm:p-10 font-mono text-white overflow-y-auto custom-scrollbar">
+      <div className="text-center mb-8 md:mb-12 mt-6 sm:mt-0">
+        <h2 className="text-cyan-400 text-xl sm:text-3xl font-black italic tracking-[0.15em] sm:tracking-[0.3em] mb-2 animate-pulse">
           — SELECT ROLE —
         </h2>
       </div>
 
-      {/* 🟢 تعديل الـ Grid: الحين في الموبايلStacked الكامل `grid-cols-1` عشان تفرد الكروت وتسير "مودز" ملمومة ومنسقة مثل ما طلبتِ */}
-      <div className={`grid gap-3 sm:gap-6 w-full max-w-6xl 
+      <div className={`grid gap-4 sm:gap-6 w-full max-w-6xl 
         ${ROLES.length === 2 ? 'grid-cols-1 sm:grid-cols-2 max-w-4xl' : 
           ROLES.length === 3 ? 'grid-cols-1 sm:grid-cols-3' : 'grid-cols-1 sm:grid-cols-2 md:grid-cols-4'}`}>
         
@@ -78,25 +77,25 @@ const EscapeRoleSelector = ({ players, onSelect, currentUserId }) => {
             <div 
               key={role.id}
               onClick={() => !occupant && onSelect(role.name)}
-              className={`relative p-3 sm:p-8 rounded-[1.2rem] sm:rounded-[2.5rem] border-2 transition-all duration-500 group min-h-fit
+              className={`relative p-6 sm:p-8 rounded-[1.5rem] sm:rounded-[2.5rem] border-2 transition-all duration-500 group min-h-fit
                 ${occupant 
                   ? (isMe ? 'border-emerald-500 bg-emerald-500/10 shadow-[0_0_30px_rgba(16,185,129,0.1)]' : 'border-red-500/20 opacity-40 grayscale') 
-                  : 'border-white/10 bg-white/5 hover:border-blue-500/50 hover:bg-blue-500/5 hover:scale-105 cursor-pointer'}`}
+                  : 'border-white/10 bg-white/5 hover:border-blue-500/50 hover:bg-blue-500/5 hover:scale-[1.02] cursor-pointer'}`}
             >
               <div className="flex flex-col items-center text-center h-full">
-                {/* عزل مقاسات النصوص والأيقونات بالجوال لتكون ملمومة ومنسقة */}
-                <div className="text-3xl sm:text-5xl mb-3 sm:mb-6 transform group-hover:scale-110 transition-transform duration-500 drop-shadow-[0_0_15px_rgba(255,255,255,0.3)]">
+                {/* 🟢 تم تكبير البادينج والخطوط لتصبح الكروت ضخمة وواضحة جداً في نسخة الجوال */}
+                <div className="text-4xl sm:text-5xl mb-4 sm:mb-6 transform group-hover:scale-110 transition-transform duration-500 drop-shadow-[0_0_15px_rgba(255,255,255,0.3)]">
                   {role.icon}
                 </div>
-                <h3 className="text-xs sm:text-lg font-black uppercase italic tracking-tighter mb-1 truncate w-full">{role.name}</h3>
+                <h3 className="text-sm sm:text-lg font-black uppercase italic tracking-tighter mb-2 w-full text-cyan-400">{role.name}</h3>
                 
-                <p className="text-[9px] sm:text-[10px] text-gray-400 leading-tight sm:leading-relaxed mb-3 min-h-[auto] sm:min-h-[30px] line-clamp-2 sm:line-clamp-none">
+                <p className="text-[11px] sm:text-[12px] text-gray-300 leading-relaxed mb-4 min-h-[auto] sm:min-h-[30px]">
                   {role.desc}
                 </p>
 
-                <div className="flex flex-wrap justify-center gap-1 mt-auto">
+                <div className="flex flex-wrap justify-center gap-1.5 mt-auto">
                   {role.rooms.map(room => (
-                    <span key={room} className="text-[7px] sm:text-[8px] bg-white/10 px-1.5 py-0.5 rounded text-cyan-400/70 font-bold border border-white/5 whitespace-nowrap">
+                    <span key={room} className="text-[9px] bg-white/10 px-2.5 py-1 rounded-md text-white font-bold border border-white/5 whitespace-nowrap">
                       {room}
                     </span>
                   ))}
@@ -104,10 +103,10 @@ const EscapeRoleSelector = ({ players, onSelect, currentUserId }) => {
               </div>
               
               {occupant && (
-                <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/70 rounded-[1.1rem] sm:rounded-[2.3rem] backdrop-blur-[2px] p-2 animate-in fade-in duration-300">
-                  <span className={`text-[8px] sm:text-[10px] font-black px-2 sm:px-4 py-1 rounded-full tracking-wider shadow-xl text-center truncate w-11/12
+                <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/75 rounded-[1.3rem] sm:rounded-[2.3rem] backdrop-blur-[2px] p-4 animate-in fade-in duration-300">
+                  <span className={`text-[10px] font-black px-4 py-2 rounded-full tracking-widest shadow-xl text-center truncate w-11/12
                     ${isMe ? 'bg-emerald-500 text-black' : 'bg-red-500 text-white'}`}>
-                    {isMe ? "YOU" : occupant.username.toUpperCase()}
+                    {isMe ? "YOU SELECTED" : occupant.username.toUpperCase()}
                   </span>
                 </div>
               )}
