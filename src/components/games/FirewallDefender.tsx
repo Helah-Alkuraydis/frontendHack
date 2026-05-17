@@ -209,7 +209,7 @@ const FirewallDefender = ({ initialLevel = 1, timeLimit = 30, onFinish, mode }: 
   const timeColor = pct > 50 ? H.bright : pct > 25 ? '#ffaa00' : '#ff0000';
 
   return (
-    <div className="flex flex-col h-full w-full bg-[#030303] text-white p-2 md:p-6 select-none overflow-hidden relative font-mono z-10 fd-wrapper">
+    <div className="flex flex-col h-full w-full bg-[#030303] text-white p-3 md:p-6 select-none overflow-hidden relative font-mono z-10 fd-wrapper">
       <style>{STYLES}</style>
 
       <div style={{ position:'absolute', top:'50%', left:'50%', transform:'translate(-50%,-50%)',
@@ -252,7 +252,7 @@ const FirewallDefender = ({ initialLevel = 1, timeLimit = 30, onFinish, mode }: 
         </div>
       </div>
 
-      <div className="relative w-full flex-1 min-h-[200px] md:min-h-[280px] border border-white/5 rounded-[1.5rem] md:rounded-[2rem] bg-[#050505] overflow-hidden mb-2 md:mb-4 shadow-[inset_0_0_40px_rgba(0,0,0,0.8)] fd-arena">
+      <div className="relative w-full flex-1 min-h-[220px] md:min-h-[350px] border border-white/5 rounded-[1.5rem] md:rounded-[2rem] bg-[#050505] overflow-hidden mb-2 md:mb-4 shadow-[inset_0_0_40px_rgba(0,0,0,0.8)] fd-arena">
         <div style={{ position:'absolute', inset:0, opacity:.07, backgroundImage:'linear-gradient(#111 1px,transparent 1px),linear-gradient(90deg,#111 1px,transparent 1px)', backgroundSize:'32px 32px', pointerEvents:'none' }}/>
 
         <div style={{ position:'absolute', left:0, right:0, height:1, background:`linear-gradient(90deg, transparent, ${H.bright}44, transparent)`, animation:'scan-line 4s linear infinite', zIndex:1, pointerEvents:'none' }}/>
@@ -280,6 +280,7 @@ const FirewallDefender = ({ initialLevel = 1, timeLimit = 30, onFinish, mode }: 
           <div key={ex.id} className="w-[40px] h-[40px] md:w-[80px] md:h-[80px]" style={{ position:'absolute', top:'50%', left:`${ex.x}%`, transform:'translate(-50%,-50%)', borderRadius:'50%', border:`2px solid ${ex.color}`, boxShadow:`0 0 20px ${ex.color}`, animation:'explode .6s ease forwards', pointerEvents:'none', zIndex:30 }}/>
         ))}
 
+        {/* OVERLAYS */}
         {gameState === 'tutorial' && (
           <div style={{ position:'absolute', inset:0, zIndex:200, background:'rgba(0,0,0,.95)', backdropFilter:'blur(12px)', display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', borderRadius:32, border:'1px solid rgba(255,255,255,.05)' }} className="gap-3 p-6 text-center animate-in fade-in duration-500 fd-overlay">
             <div className="text-4xl md:text-7xl mb-2 md:mb-4 fd-overlay-icon" style={{ animation:'hero-pulse 2s ease-in-out infinite' }}>📖</div>
@@ -374,20 +375,18 @@ const FirewallDefender = ({ initialLevel = 1, timeLimit = 30, onFinish, mode }: 
         })}
       </div>
 
+      {/* 🔥 مسحت البوزشن فيكسد الغبي، واعتمدت كود الهاك ريس 100% 🔥 */}
       <style>{`
         @media (max-width: 930px) and (max-height: 600px) and (orientation: landscape) {
             .fd-wrapper { 
-                position: fixed !important;
-                top: 0 !important; left: 0 !important; right: 0 !important; bottom: 0 !important;
-                height: 100dvh !important; max-height: 100dvh !important;
-                width: 100vw !important; max-width: 100vw !important;
-                padding: 4px !important; gap: 4px !important; 
+                padding: 4px !important; 
+                height: 100dvh !important; 
                 overflow: hidden !important; 
                 display: flex !important;
-                flex-direction: column !important;
+                flex-direction: column !important; 
+                gap: 4px !important; 
                 justify-content: flex-start !important;
                 background: #030303 !important;
-                z-index: 9999 !important;
             }
             .fd-header { 
                 flex: none !important;
@@ -401,7 +400,12 @@ const FirewallDefender = ({ initialLevel = 1, timeLimit = 30, onFinish, mode }: 
             .fd-header-text-lg { font-size: 12px !important; }
             .fd-header-sub { font-size: 5px !important; }
             
-            .fd-arena { min-height: 0 !important; flex: 1 1 auto !important; border-radius: 0.75rem !important; margin-bottom: 0 !important; }
+            .fd-arena { 
+                min-height: 0 !important; 
+                flex: 1 1 auto !important; 
+                border-radius: 0.75rem !important; 
+                margin-bottom: 0 !important; 
+            }
             .fd-guardian { transform: scale(0.8) !important; right: 5% !important; margin-top: -10px !important; }
             .fd-guardian-img { width: 65px !important; height: 65px !important; }
             .fd-guardian-text { font-size: 6px !important; padding: 1px 4px !important; }
