@@ -1,4 +1,3 @@
-// src/components/MainLayout.tsx
 import { useState, useEffect, ReactNode } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
@@ -37,6 +36,7 @@ const MainLayout = ({ children, activePage, headerActions, highlightedId, forceH
   const [hasUnread, setHasUnread] = useState(false);
   const navigate = useNavigate();
   const [hasUnseenAchievements, setHasUnseenAchievements] = useState(false);
+  const [isTourRendered, setIsTourRendered] = useState(false);
 
   const fetchUserData = async () => {
     try {
@@ -114,12 +114,22 @@ const MainLayout = ({ children, activePage, headerActions, highlightedId, forceH
     };
   }, [user]);
 
+  useEffect(() => {
+    const checkTourOverlay = () => {
+      const tourActive = !!document.querySelector('.fixed.inset-0.z-\\[10000\\]') || highlightedId === 'center';
+      setIsTourRendered(tourActive);
+    };
+    checkTourOverlay();
+    const timeout = setTimeout(checkTourOverlay, 150); // جدولة قصيرة لضمان اللقط الفوري عند رندر التور
+    return () => clearTimeout(timeout);
+  }, [highlightedId, activePage]);
+
   return (
-    // 🟢 التعديل الوحيد هنا: إضافة md:h-screen md:overflow-hidden عشان الشاشة تصير ثابتة باللابتوب وما ينقص السايد بار
     <div className="flex min-h-screen md:h-screen md:overflow-hidden bg-[#050810] text-white font-sans overflow-x-hidden relative w-full">
+      {/* 🟢 السايد بار باللابتوب: حماية تامة من الخروج ومراعاة حالة الـ center حقت أسترا */}
       <aside
         className={`hidden md:flex py-8 flex-col h-screen border-r border-gray-800/30 bg-[#050810] sticky top-0 transition-all duration-500
-        ${highlightedId ? 'z-[100005]' : 'z-[100]'} 
+        ${(highlightedId && highlightedId !== 'center') ? 'z-[100005]' : 'z-[100]'} 
         ${isSidebarCollapsed ? 'w-24 px-2' : 'w-64 px-6'}`}
       >
         <div className="flex items-center justify-between mb-12">
@@ -136,31 +146,31 @@ const MainLayout = ({ children, activePage, headerActions, highlightedId, forceH
 
         <nav className="flex-1 flex flex-col space-y-4">
           <Link to="/home" className={`block transition-all duration-500 ${highlightedId ? 'tour-blur-out pointer-events-none' : ''}`}>
-            <NavItem icon={<Home size={20} />} label="Home" active={activePage === 'home'} isCollapsed={isSidebarCollapsed} />
+            <NavItem icon={<Home size={20} />} label="Home" active={activePage === 'home' && !isTourRendered} isCollapsed={isSidebarCollapsed} />
           </Link>
 
           <Link to="/games" id="games-step" className={`transition-all duration-500 rounded-xl block ${highlightedId === 'games-step' ? 'tour-spotlight-active' : (highlightedId ? 'tour-blur-out' : '')}`}>
-            <NavItem icon={<Gamepad2 size={20} />} label="Games" active={activePage === 'games'} isCollapsed={isSidebarCollapsed} />
+            <NavItem icon={<Gamepad2 size={20} />} label="Games" active={activePage === 'games' && !isTourRendered} isCollapsed={isSidebarCollapsed} />
           </Link>
 
           <Link to="/challenges" id="challenge-step" className={`transition-all duration-500 rounded-xl block ${highlightedId === 'challenge-step' ? 'tour-spotlight-active' : (highlightedId ? 'tour-blur-out' : '')}`}>
-            <NavItem icon={<Swords size={20} />} label="Challenge" active={activePage === 'challenge'} isCollapsed={isSidebarCollapsed} />
+            <NavItem icon={<Swords size={20} />} label="Challenge" active={activePage === 'challenge' && !isTourRendered} isCollapsed={isSidebarCollapsed} />
           </Link>
 
           <Link to="/achievements" id="achievements-step" className={`transition-all duration-500 rounded-xl block ${highlightedId === 'achievements-step' ? 'tour-spotlight-active' : (highlightedId ? 'tour-blur-out' : '')} ${(hasUnseenAchievements && !forceHideGlow) ? 'border-2 border-cyan-400 shadow-[0_0_35px_rgba(34,211,238,1),inset_0_0_15px_rgba(34,211,238,0.6)] bg-cyan-400/15 animate-pulse' : ''}`}>
-            <NavItem icon={<Trophy size={20} />} label="Achievements" active={activePage === 'achievements'} isCollapsed={isSidebarCollapsed} />
+            <NavItem icon={<Trophy size={20} />} label="Achievements" active={activePage === 'achievements' && !isTourRendered} isCollapsed={isSidebarCollapsed} />
           </Link>
 
           <Link to="/dashboard" id="dashboard-step" className={`transition-all duration-500 rounded-xl block ${highlightedId === 'dashboard-step' ? 'tour-spotlight-active' : (highlightedId ? 'tour-blur-out' : '')}`}>
-            <NavItem icon={<LayoutDashboard size={20} />} label="Dashboard" active={activePage === 'dashboard'} isCollapsed={isSidebarCollapsed} />
+            <NavItem icon={<LayoutDashboard size={20} />} label="Dashboard" active={activePage === 'dashboard' && !isTourRendered} isCollapsed={isSidebarCollapsed} />
           </Link>
 
           <Link to="/friends" id="friends-step" className={`transition-all duration-500 rounded-xl block ${highlightedId === 'friends-step' ? 'tour-spotlight-active' : (highlightedId ? 'tour-blur-out' : '')}`}>
-            <NavItem icon={<Users size={20} />} label="Friends" active={activePage === 'friends'} isCollapsed={isSidebarCollapsed} />
+            <NavItem icon={<Users size={20} />} label="Friends" active={activePage === 'friends' && !isTourRendered} isCollapsed={isSidebarCollapsed} />
           </Link>
 
           <Link to="/profile" id="profile-step" className={`transition-all duration-500 rounded-xl block ${highlightedId === 'profile-step' ? 'tour-spotlight-active' : (highlightedId ? 'tour-blur-out' : '')}`}>
-            <NavItem icon={<User size={20} />} label="Profile" active={activePage === 'profile'} isCollapsed={isSidebarCollapsed} />
+            <NavItem icon={<User size={20} />} label="Profile" active={activePage === 'profile' && !isTourRendered} isCollapsed={isSidebarCollapsed} />
           </Link>
 
           <div className={`mt-auto pt-6 border-t border-gray-800/30 ${highlightedId ? 'tour-blur-out' : ''}`}>
@@ -172,9 +182,7 @@ const MainLayout = ({ children, activePage, headerActions, highlightedId, forceH
         </nav>
       </aside>
 
-      {/* 🟢 تعديل الـ padding والـ margin للجوال عشان المحتوى يتنفس والناف بار يضبط */}
       <main className="flex-1 px-3 md:px-16 pt-4 pb-24 md:py-8 overflow-y-auto w-full transition-all duration-500">
-        {/* 🟢 توزين الهيدر عشان المساحات والـ XP والـ Avatar يقعدون بمكانهم صح */}
         <header className="flex justify-between items-center mb-6 md:mb-10 w-full gap-2">
           <div className="flex-shrink-0">{headerActions}</div>
           <div className="flex items-center gap-2 md:gap-4 ml-auto">
@@ -212,7 +220,7 @@ const MainLayout = ({ children, activePage, headerActions, highlightedId, forceH
         {children}
       </main>
 
-      <MobileNav activePage={activePage} />
+      <MobileNav activePage={activePage} highlightedId={highlightedId} isTourRendered={isTourRendered} />
 
       <NotificationsModal
         isOpen={isNotifOpen}
@@ -236,33 +244,39 @@ const NavItem = ({ icon, label, active, isCollapsed, isDanger }: any) => (
   </div>
 );
 
-// MobileNav Component
-const MobileNav = ({ activePage }: any) => {
+const MobileNav = ({ activePage, highlightedId, isTourRendered }: any) => {
+  const getIconColor = (page: string, stepId: string) => {
+    if (isTourRendered && (!highlightedId || highlightedId === 'center')) return 'text-gray-500';
+    
+    if (highlightedId) return highlightedId === stepId ? 'text-[#ff3b6b]' : 'text-gray-500';
+    return activePage === page ? 'text-[#ff3b6b]' : 'text-gray-500';
+  };
+
   return (
     <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-[#050810] border-t border-gray-800/50 px-2 pt-3 pb-5 flex justify-around items-center z-[100006] shadow-[0_-10px_20px_rgba(0,0,0,0.5)]">
-      <Link to="/home">
-        <Home size={22} className={activePage === 'home' ? 'text-[#ff3b6b]' : 'text-gray-500'} />
+      <Link to="/home" className="relative z-[100007]">
+        <Home size={22} className={getIconColor('home', 'home-step')} />
       </Link>
 
       <Link to="/games" id="games-step" className="relative z-[100007]">
-        <Gamepad2 size={22} className={activePage === 'games' ? 'text-[#ff3b6b]' : 'text-gray-500'} />
+        <Gamepad2 size={22} className={getIconColor('games', 'games-step')} />
       </Link>
       <Link to="/challenges" id="challenge-step" className="relative z-[100007]">
-        <Swords size={22} className={activePage === 'challenge' ? 'text-[#ff3b6b]' : 'text-gray-500'} />
+        <Swords size={22} className={getIconColor('challenge', 'challenge-step')} />
       </Link>
 
       <Link to="/achievements" id="achievements-step" className="relative z-[100007]">
-        <Trophy size={22} className={activePage === 'achievements' ? 'text-[#ff3b6b]' : 'text-gray-500'} />
+        <Trophy size={22} className={getIconColor('achievements', 'achievements-step')} />
       </Link>
 
       <Link to="/dashboard" id="dashboard-step" className="relative z-[100007]">
-        <LayoutDashboard size={22} className={activePage === 'dashboard' ? 'text-[#ff3b6b]' : 'text-gray-500'} />
+        <LayoutDashboard size={22} className={getIconColor('dashboard', 'dashboard-step')} />
       </Link>
       <Link to="/friends" id="friends-step" className="relative z-[100007]">
-        <Users size={22} className={activePage === 'friends' ? 'text-[#ff3b6b]' : 'text-gray-500'} />
+        <Users size={22} className={getIconColor('friends', 'friends-step')} />
       </Link>
       <Link to="/profile" id="profile-step" className="relative z-[100007]">
-        <User size={22} className={activePage === 'profile' ? 'text-[#ff3b6b]' : 'text-gray-500'} />
+        <User size={22} className={getIconColor('profile', 'profile-step')} />
       </Link>
     </nav>
   );
