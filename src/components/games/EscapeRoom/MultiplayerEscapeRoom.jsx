@@ -212,7 +212,7 @@ const MultiplayerEscapeRoom = ({ sessionId, userData, myRole }) => {
 
     socket.on("mission_accomplished", (data) => {
       Swal.fire({
-          title: 'MISSION ACCOMPلISHED!',
+          title: 'MISSION ACCOMPLISHED!',
           html: `
             <div class="flex flex-col items-center gap-6">
               <div class="text-7xl animate-bounce">🏆</div>
@@ -267,47 +267,62 @@ const MultiplayerEscapeRoom = ({ sessionId, userData, myRole }) => {
     return () => {
       socket.off("sync_escape_state");
       socket.off("timer_update");
-      socket.off("receive_tactical_msg", handleGlobalMsg);
+      socket.off("receive_tactical_msg");
       socket.off("room_cleared");
       socket.off("solve_error");
     };
   }, [isChatOpen, userData?.username]);
 
   return (
-    // 🟢 [تعديل الإعصار الهيكلي]: تحويل الكادر الأبوي في الجوال ليكون fixed inset-0 وبطبقة z خارقة ليفرد كامل الشاشة ويغطي الملاحة العامة والـ paddings المتداخلة تماماً! وينسحب بأمان للابتوب sm:relative
     <div className="fixed inset-0 sm:relative sm:h-screen bg-[#050810] flex flex-col overflow-hidden font-mono text-white w-full z-[100008]">
       <div className="flex-1 flex flex-col relative overflow-hidden w-full h-full">
         
-        {/* 🟢 [تأمين العناوين وحماية الـ Notch]: إعطاء الهيدر مساحة أمان علوية px-4 pt-5 لكي ينزل تحت ساعة وبطارية الجوال تماماً ويظهر واضح بالملي */}
-        <header className="flex flex-col sm:flex-row items-start sm:items-center justify-between px-4 sm:px-8 pt-5 pb-3 sm:py-4 bg-[#080c16] border-b border-[#00ff9610] gap-3 flex-shrink-0 w-full relative z-40">
-          <div className="flex items-center gap-3 sm:gap-6 w-full sm:w-auto">
-            <button 
-              onClick={handleBackClick}
-              className="p-2 bg-white/5 hover:bg-red-500/20 border border-white/10 rounded-full transition-all text-gray-500 hover:text-red-500 group flex-shrink-0"
-              title="Abort Mission"
-            >
-              <ArrowLeft size={18} className="group-hover:-translate-x-1 transition-transform" />
-            </button>
-            <div className="flex flex-col text-left truncate">
-              <span className="text-[9px] text-[#00ff96] font-black tracking-[0.2em] sm:tracking-[0.3em] uppercase">⬡ Mission_Active</span>
-              <h2 className="text-sm sm:text-lg font-black italic uppercase truncate">Room_0{roomIdx + 1}: {roomData?.title || "Initializing..."}</h2>
+        {/* 🟢 [تأمين وحماية الهيدر]: تغيير الـ Padding ليكون pt-12 في الجوال عشان نضمن نزول العناوين تحت الساعة والبطارية بالملي وتظهر واضحة للمحكمين */}
+        <header className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between px-4 sm:px-8 pt-12 sm:pt-4 pb-3 sm:py-4 bg-[#080c16] border-b border-[#00ff9610] gap-3 flex-shrink-0 w-full relative z-40">
+          
+          {/* الجزء الأول: سهم العودة والعنوان والمؤقت في صف واحد متناسق بالجوال */}
+          <div className="flex items-center justify-between w-full sm:w-auto gap-3">
+            <div className="flex items-center gap-3 sm:gap-6 truncate">
+              <button 
+                onClick={handleBackClick}
+                className="p-2 bg-white/5 hover:bg-red-500/20 border border-white/10 rounded-full transition-all text-gray-500 hover:text-red-500 group flex-shrink-0"
+                title="Abort Mission"
+              >
+                <ArrowLeft size={18} className="group-hover:-translate-x-1 transition-transform" />
+              </button>
+              <div className="flex flex-col text-left truncate">
+                <span className="text-[9px] text-[#00ff96] font-black tracking-[0.2em] sm:tracking-[0.3em] uppercase">⬡ Mission_Active</span>
+                <h2 className="text-sm sm:text-lg font-black italic uppercase truncate">Room_0{roomIdx + 1}: {roomData?.title || "Initializing..."}</h2>
+              </div>
+            </div>
+
+            {/* المؤقت بالجوال يقعد بجانب اسم الغرفة مباشرة عشان نكسب مساحة شاقولية ونقفل الفوضى */}
+            <div className="bg-[#0d1a0d] border border-[#00ff9630] px-3 py-1 rounded-sm flex-shrink-0 sm:hidden">
+              <span className="font-mono text-base font-bold text-[#00ff96]">
+                {Math.floor(timeLeft / 60)}:{(timeLeft % 60).toString().padStart(2, '0')}
+              </span>
             </div>
           </div>
           
+          {/* الجزء الثاني: التخصص ورول اللاعب مفرود ومحمي بالأسفل في الموبايل */}
           <div className="flex items-center justify-between sm:justify-end gap-4 sm:gap-5 w-full sm:w-auto border-t border-white/5 sm:border-0 pt-2 sm:pt-0">
             <div className="text-left">
-              <p className="text-[8px] text-gray-500 uppercase font-black">Agent_Specialty</p>
-              <p className="text-cyan-400 text-xs sm:text-sm font-black italic truncate max-w-[120px] sm:max-w-none">{currentRole}</p>
+              {/* تكبير خط عنوان التخصص ليكون واضح ومقروء */}
+              <p className="text-[10px] text-gray-500 uppercase font-black tracking-wider">Agent_Specialty</p>
+              {/* توسيع الـ max-w لـ 200px لمنع القص البشع لاسم الرول بالجوال */}
+              <p className="text-cyan-400 text-xs sm:text-sm font-black italic truncate max-w-[200px] sm:max-w-none">{currentRole}</p>
             </div>
-            <div className="bg-[#0d1a0d] border border-[#00ff9630] px-3 py-1 sm:px-5 rounded-sm flex-shrink-0">
-              <span className="font-mono text-lg sm:text-2xl font-bold text-[#00ff96]">
+            
+            {/* مؤقت الكمبيوتر الافتراضي مستقر بمكانه */}
+            <div className="hidden sm:block bg-[#0d1a0d] border border-[#00ff9630] px-5 py-1 rounded-sm flex-shrink-0">
+              <span className="font-mono text-2xl font-bold text-[#00ff96]">
                 {Math.floor(timeLeft / 60)}:{(timeLeft % 60).toString().padStart(2, '0')}
               </span>
             </div>
           </div>
         </header>
 
-        {/* المساحة الداخلية للغرف الأربعة مع تأمين الهوامش السفلية المتجاوبة */}
+        {/* المساحة الداخلية للغرف الأربعة */}
         <main className="flex-1 p-4 sm:p-6 md:p-10 overflow-y-auto flex flex-col items-center custom-scrollbar w-full pb-20 sm:pb-6">
           <div className="w-full max-w-4xl mt-2 sm:mt-7"> 
             {roomIdx === 0 && <Room01Cipher sessionId={sessionId} myRole={currentRole} data={roomData} />}
@@ -318,7 +333,7 @@ const MultiplayerEscapeRoom = ({ sessionId, userData, myRole }) => {
         </main>
       </div>
 
-      {/* 🟢 [إصلاح حجب زر الشات المقصوص]: تحويل التموضع ليكون absolute bottom-6 right-6 وبطبقة z-[200000]؛ الحين بيقعد ملموم وثابت داخل إطار اللعبة كاملاً ومستحيل ينقس أو يختفي تحت أي عنصر ثانٍ */}
+      {/* زر فتح الشات التكتيكي العائم في مكانه الآمن المقاوم للحجب */}
       {!isChatOpen && (
         <button 
           onClick={() => { setIsChatOpen(true); setUnreadCount(0); }}
@@ -335,7 +350,7 @@ const MultiplayerEscapeRoom = ({ sessionId, userData, myRole }) => {
         </button>
       )}
 
-      {/* 🟢 [تأمين درج الشات الطويل]: تحويل التموضع لـ absolute وبطبقة z خارقة ليفرد بكامل فخامته فوق الصفحة بدون أي قص عمودي أو أفقي */}
+      {/* شريط الشات التكتيكي الجانبي المنعزل */}
       <div className={`absolute top-0 right-0 h-full z-[200010] w-full sm:w-80 transition-transform duration-500 ease-in-out transform ${isChatOpen ? 'translate-x-0' : 'translate-x-full'}`}>
         <button onClick={() => setIsChatOpen(false)} className="absolute top-4 right-4 z-[200020] p-2 text-gray-400 hover:text-white bg-black/40 rounded-full sm:bg-transparent transition-colors">
           <X size={20} />
