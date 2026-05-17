@@ -32,7 +32,7 @@ const OnboardingTour = ({ onComplete, onStepChange }) => {
       btnSkip: "Skip",
       showAvatar: true,
       avatar: "/game-icon.png",
-      icon: <Gamepad2 size={24} className="text-blue-400" />,
+      icon: <Gamepad2 size={22} className="text-blue-400" />,
       role: "guide_small",
       hasArrow: true
     },
@@ -44,7 +44,7 @@ const OnboardingTour = ({ onComplete, onStepChange }) => {
       btnBack: "Back",
       showAvatar: true,
       avatar: "/Avatar.png", 
-      icon: <Swords size={24} className="text-blue-400" />,
+      icon: <Swords size={22} className="text-blue-400" />,
       role: "guide_small",
       hasArrow: true
     },
@@ -64,7 +64,7 @@ const OnboardingTour = ({ onComplete, onStepChange }) => {
       content: "Real-time intel at your fingertips. Monitor your tactical efficiency, win rates, and XP progression to stay ahead of the competition",
       position: "dashboard",
       avatar: "/dashboard-icon.png",
-      icon: <LayoutDashboard size={24} className="text-blue-400" />, 
+      icon: <LayoutDashboard size={22} className="text-blue-400" />, 
       btnNext: "Next",
       btnBack: "Back",
       showAvatar: true,
@@ -76,7 +76,7 @@ const OnboardingTour = ({ onComplete, onStepChange }) => {
       content: "Cybersecurity is better together! Connect with friends, build your team, and see who's online.",
       position: "friends",
       avatar: "/friends-icon.png",
-      icon: <Users size={24} className="text-blue-400" />, 
+      icon: <Users size={22} className="text-blue-400" />, 
       btnNext: "Next",
       btnBack: "Back",
       showAvatar: true,
@@ -123,7 +123,12 @@ const OnboardingTour = ({ onComplete, onStepChange }) => {
     if (currentStep.position === "profile") elementId = "profile-step"; 
 
     const elements = document.querySelectorAll(`#${elementId}`);
-    const element = Array.from(elements).find(el => el.getBoundingClientRect().width > 0) || document.getElementById(elementId);
+    
+    // ⚡ التعديل السحري الحاسم لعزل الأجهزة عن بعضها ديناميكياً:
+    const element = Array.from(elements).find(el => {
+      const isMobileNavInstance = el.closest('nav')?.classList.contains('md:hidden');
+      return isMobile ? isMobileNavInstance : !isMobileNavInstance;
+    }) || document.getElementById(elementId);
 
     if (element) {
       const rect = element.getBoundingClientRect();
@@ -131,7 +136,7 @@ const OnboardingTour = ({ onComplete, onStepChange }) => {
       if (isMobile) {
         element.classList.add('active-tour-glow');
         setCoords({
-          top: rect.top, // أعلى الأيقونة السفلية بالضبط
+          top: rect.top,
           left: rect.left + rect.width / 2,
         });
       } else {
@@ -166,14 +171,14 @@ const OnboardingTour = ({ onComplete, onStepChange }) => {
     return (
       <div className="fixed inset-0 z-[10000] flex items-center justify-center p-4">
         <div className="absolute inset-0 bg-[#050810]/85 backdrop-blur-sm transition-opacity duration-500"></div>
-        <div key={step} className="relative w-[85%] max-w-[340px] bg-gradient-to-b from-[#2a324b]/90 to-[#161b2e]/95 backdrop-blur-xl border border-blue-500/20 rounded-[2.5rem] p-5 shadow-2xl text-white pt-24">
-          <div className="absolute -top-[90px] left-1/2 -translate-x-1/2 w-[160px] h-[160px] z-20 pointer-events-none">
+        <div key={step} className="relative w-[85%] max-w-[290px] sm:max-w-[340px] bg-gradient-to-b from-[#2a324b]/90 to-[#161b2e]/95 backdrop-blur-xl border border-blue-500/20 rounded-[1.8rem] sm:rounded-[2.5rem] p-4 sm:p-5 shadow-2xl text-white pt-20">
+          <div className="absolute -top-[70px] left-1/2 -translate-x-1/2 w-[130px] h-[130px] z-20 pointer-events-none">
             <img src="/Astra.png" alt="Astra Guide" className="w-full h-full object-contain drop-shadow-[0_10px_20px_rgba(0,0,0,0.5)]" />
           </div>
           <div className="flex flex-col items-center text-center relative z-10">
-            <h2 className="text-xl font-black mb-3 bg-clip-text text-transparent bg-gradient-to-r from-white to-blue-200">{currentStep.title}</h2>
-            <p className="text-blue-100/80 text-xs md:text-sm leading-relaxed mb-6 font-medium">{currentStep.content}</p>
-            <button onClick={handleNext} className="w-full py-3 rounded-xl font-black text-sm bg-gradient-to-r from-blue-600 to-indigo-600 shadow-lg shadow-blue-500/25 transition-all flex items-center justify-center ">
+            <h2 className="text-base sm:text-xl font-black mb-2 bg-clip-text text-transparent bg-gradient-to-r from-white to-blue-200">{currentStep.title}</h2>
+            <p className="text-blue-100/80 text-xs sm:text-sm leading-relaxed mb-5 font-medium">{currentStep.content}</p>
+            <button onClick={handleNext} className="w-full py-2.5 rounded-xl font-black text-xs bg-gradient-to-r from-blue-600 to-indigo-600 shadow-lg shadow-blue-500/25 transition-all flex items-center justify-center gap-1">
               {currentStep.btnIcon} {currentStep.btnNext}
             </button>
           </div>
@@ -189,7 +194,7 @@ const OnboardingTour = ({ onComplete, onStepChange }) => {
           position: relative;
           z-index: 100005;
           background: rgba(6, 182, 212, 0.2) !important;
-          box-shadow: 0 0 20px 6px rgba(6, 182, 212, 0.5) !important;
+          box-shadow: 0 0 15px 5px rgba(6, 182, 212, 0.5) !important;
           border-radius: 30% !important;
           transition: all 0.3s ease-in-out;
         }
@@ -198,65 +203,65 @@ const OnboardingTour = ({ onComplete, onStepChange }) => {
 
       <div
         style={(coords && !isMobile) ? {
-          // 💻 اللابتوب: يمين السايد بار بالملي
+          // 💻 إحداثيات اللابتوب الأصلية المحمية تقعد بمكانها الصح يسار الشاشة
           position: "fixed",
           top: `${coords.top}px`,
           left: `${coords.left}px`,
           transform: "translateY(-50%)",
-          zIndex: 10001
+          zIndex: 10010
         } : (coords && isMobile) ? {
-          // 📱 الجوال الجديد: يطير ديناميكياً ويقعد فوق أيقونته بالضبط بمسافة أمان فخمة
+          // 📱 إحداثيات الجوال الملمومة تطير وتقعد فوق الأيقونات تحت
           position: "fixed",
-          bottom: `${window.innerHeight - coords.top + 16}px`, 
+          bottom: `${window.innerHeight - coords.top + 12}px`, 
           left: `${coords.left}px`,
           transform: "translateX(-50%)",
-          zIndex: 10001
+          zIndex: 10010
         } : {
-          position: "fixed", top: "50%", left: "50%", transform: "translate(-50%, -50%)", zIndex: 10001
+          position: "fixed", top: "50%", left: "50%", transform: "translate(-50%, -50%)", zIndex: 10010
         }}
         className="transition-all duration-300 ease-out w-full px-4 md:block"
       >
-        <div key={step} className="relative w-full max-w-[350px] bg-[#1e2330]/95 backdrop-blur-xl border border-white/10 rounded-[2rem] p-6 shadow-2xl text-white animate-in zoom-in duration-300 mx-auto">
+        <div key={step} className="relative w-full max-w-[290px] sm:max-w-[350px] bg-[#1e2330]/95 backdrop-blur-xl border border-white/10 rounded-[1.8rem] sm:rounded-[2rem] p-4 sm:p-6 shadow-2xl text-white animate-in zoom-in duration-300 mx-auto">
           
-          {/* سهم اللابتوب (يشير لليسار) */}
+          {/* سهم اللابتوب (يشير لليسار باتجاه السايد بار الجانبي) */}
           {!isMobile && currentStep.hasArrow && coords && (
             <div className="absolute top-1/2 -left-2 -translate-y-1/2 w-4 h-4 bg-[#1e2330] border-l border-b border-white/10 rotate-45"></div>
           )}
 
-          {/* ⚡ سهم الجوال الجديد: يشير للأسفل باتجاه الأيقونة النشطة مباشرة */}
+          {/* سهم الجوال (يشير للأسفل باتجاه الناف بار السفلي) */}
           {isMobile && currentStep.hasArrow && coords && (
             <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-4 h-4 bg-[#1e2330] border-r border-b border-white/10 rotate-45"></div>
           )}
 
-          <button onClick={handleSkip} className="absolute top-5 right-5 text-gray-400 hover:text-white bg-white/5 rounded-full p-1 transition-colors">
-            <X size={20} />
+          <button onClick={handleSkip} className="absolute top-4 right-4 text-gray-400 hover:text-white bg-white/5 rounded-full p-1 transition-colors">
+            <X size={16} />
           </button>
 
-          <div className="flex gap-2 mb-6">
+          <div className="flex gap-1.5 mb-4 sm:mb-6">
             {steps.map((_, i) => (
-              <div key={i} className={`h-1.5 rounded-full transition-all duration-300 ${i === step ? 'w-8 bg-blue-500' : 'w-2 bg-white/20'}`}></div>
+              <div key={i} className={`h-1 rounded-full transition-all duration-300 ${i === step ? 'w-6 bg-blue-500' : 'w-1.5 bg-white/20'}`}></div>
             ))}
           </div>
 
           <div className="flex flex-col items-start relative z-10 w-full">
-            <div className="flex items-center gap-3 mb-4">
-              <div className="w-10 h-10 rounded-full border border-blue-500 p-[2px] bg-[#121620] flex items-center justify-center overflow-hidden shrink-0 shadow-lg">
+            <div className="flex items-center gap-2.5 mb-3 sm:mb-4">
+              <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full border border-blue-500 p-[2px] bg-[#121620] flex items-center justify-center overflow-hidden shrink-0 shadow-lg">
                 { (currentStep.position === 'profile' || currentStep.position === 'achievements') ? (
                   <img src={currentStep.avatar} className="w-full h-full object-cover rounded-full" alt="Avatar" />
                 ) : (
                   currentStep.icon || <img src={currentStep.avatar} className="w-full h-full object-cover rounded-full" alt="Icon" />
                 )}
               </div>
-              <h2 className="text-lg font-semibold">{currentStep.title}</h2>
+              <h2 className="text-sm sm:text-lg font-bold tracking-tight">{currentStep.title}</h2>
             </div>
 
-            <p className="text-gray-300 text-sm leading-relaxed mb-6 font-medium whitespace-pre-line">{currentStep.content}</p>
+            <p className="text-gray-300 text-xs sm:text-sm leading-relaxed mb-4 sm:mb-6 font-medium whitespace-pre-line">{currentStep.content}</p>
 
-            <div className="flex gap-3 w-full justify-end border-t border-white/10 pt-4">
-              <button onClick={() => setStep(step - 1)} disabled={step === 0} className="px-6 py-2 rounded-xl font-bold text-gray-400 hover:text-white transition-colors text-sm">
+            <div className="flex gap-2 w-full justify-end border-t border-white/10 pt-3 sm:pt-4">
+              <button onClick={() => setStep(step - 1)} disabled={step === 0} className="px-4 sm:px-6 py-1.5 rounded-xl font-bold text-gray-400 hover:text-white transition-colors text-xs sm:text-sm">
                 Back
               </button>
-              <button onClick={handleNext} className="px-8 py-2 rounded-xl font-bold bg-blue-600 hover:bg-blue-500 shadow-lg shadow-blue-600/20 transition-all text-sm">
+              <button onClick={handleNext} className="px-5 sm:px-8 py-1.5 rounded-xl font-bold bg-blue-600 hover:bg-blue-500 shadow-lg shadow-blue-600/20 transition-all text-xs sm:text-sm">
                 {currentStep.btnNext}
               </button>
             </div>
