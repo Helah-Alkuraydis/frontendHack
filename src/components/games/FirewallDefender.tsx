@@ -209,7 +209,7 @@ const FirewallDefender = ({ initialLevel = 1, timeLimit = 30, onFinish, mode }: 
   const timeColor = pct > 50 ? H.bright : pct > 25 ? '#ffaa00' : '#ff0000';
 
   return (
-    <div className="flex flex-col h-full grow w-full bg-[#030303] text-white p-2 md:p-3 select-none overflow-hidden relative font-mono z-10 fd-wrapper">
+    <div className="flex flex-col h-full w-full bg-[#030303] text-white p-2 select-none overflow-hidden relative font-mono z-10 fd-wrapper">
       <style>{STYLES}</style>
 
       <div style={{ position:'absolute', top:'50%', left:'50%', transform:'translate(-50%,-50%)',
@@ -219,7 +219,7 @@ const FirewallDefender = ({ initialLevel = 1, timeLimit = 30, onFinish, mode }: 
         animation:'damage-flash .4s ease', pointerEvents:'none', zIndex:99 }}/>}
 
       {/* HEADER */}
-      <div className="flex justify-between items-center mb-2 md:mb-3 bg-[#0a0505f2] backdrop-blur-md px-3 md:px-6 py-1.5 md:py-2 rounded-[1rem] md:rounded-[18px] border-b-2 shadow-[0_10px_30px_rgba(0,0,0,0.8)] z-[100] w-full shrink-0 relative fd-header" style={{ borderBottomColor: health < 30 ? E.red : '#ff440044' }}>
+      <div className="flex justify-between items-center mb-1.5 md:mb-3 bg-[#0a0505f2] backdrop-blur-md px-3 md:px-6 py-1.5 md:py-2 rounded-[1rem] md:rounded-[18px] border-b-2 shadow-[0_10px_30px_rgba(0,0,0,0.8)] z-[100] w-full shrink-0 relative fd-header" style={{ borderBottomColor: health < 30 ? E.red : '#ff440044' }}>
         <div className="flex items-center gap-2 md:gap-3 shrink">
           <div className="text-sm md:text-xl fd-header-icon" style={{ filter: `drop-shadow(0 0 10px ${health < 30 ? E.red : H.bright})`, animation: health < 30 ? 'blink 0.5s ease infinite' : 'hero-pulse 2s ease-in-out infinite' }}>
             ❤️
@@ -253,20 +253,20 @@ const FirewallDefender = ({ initialLevel = 1, timeLimit = 30, onFinish, mode }: 
         </div>
       </div>
 
-      {/* ARENA */}
-      <div className="relative w-full grow min-h-[120px] shrink-1 md:grow-0 md:h-[270px] border border-white/5 rounded-[1.5rem] md:rounded-[2rem] bg-[#050505] overflow-hidden mb-1 md:mb-2 shadow-[inset_0_0_40px_rgba(0,0,0,0.8)] fd-arena">
+      {/* ARENA (أعطيناها flex-1 عشان تتمدد وتاخذ راحتها في الطول) */}
+      <div className="relative w-full flex-1 min-h-[220px] md:h-[270px] border border-white/5 rounded-[1.5rem] md:rounded-[2rem] bg-[#050505] overflow-hidden mb-1.5 shadow-[inset_0_0_40px_rgba(0,0,0,0.8)] fd-arena">
         <div style={{ position:'absolute', inset:0, opacity:.07, backgroundImage:'linear-gradient(#111 1px,transparent 1px),linear-gradient(90deg,#111 1px,transparent 1px)', backgroundSize:'32px 32px', pointerEvents:'none' }}/>
 
         <div style={{ position:'absolute', left:0, right:0, height:1, background:`linear-gradient(90deg, transparent, ${H.bright}44, transparent)`, animation:'scan-line 4s linear infinite', zIndex:1, pointerEvents:'none' }}/>
 
-        <div className="md:right-[32px] fd-guardian" style={{ position:'absolute', right:'5%', top:'30%', transform:'translateY(-50%)', zIndex:20, display:'flex', flexDirection:'column', alignItems:'center', animation: isBlocking ? 'blocked .5s ease' : 'float-hero 3s ease-in-out infinite', pointerEvents:'none' }}>
+        <div className="md:right-[32px] fd-guardian" style={{ position:'absolute', right:'5%', top:'50%', transform:'translateY(-50%)', zIndex:20, display:'flex', flexDirection:'column', alignItems:'center', animation: isBlocking ? 'blocked .5s ease' : 'float-hero 3s ease-in-out infinite', pointerEvents:'none' }}>
           <div style={{ position:'relative' }}>
-            <img src="/F-Person.png" alt="Guardian" className="w-[80px] h-[80px] md:w-[128px] md:h-[128px] object-contain fd-guardian-img" style={{ filter: isBlocking ? `drop-shadow(0 0 20px ${blockColor}) drop-shadow(0 0 40px ${blockColor}) brightness(1.3)` : 'drop-shadow(0 0 8px #ff4400) drop-shadow(0 0 16px #ff6600) brightness(.9)', transition:'filter .3s ease' }}/>
+            <img src="/F-Person.png" alt="Guardian" className="w-[90px] h-[90px] md:w-[128px] md:h-[128px] object-contain fd-guardian-img" style={{ filter: isBlocking ? `drop-shadow(0 0 20px ${blockColor}) drop-shadow(0 0 40px ${blockColor}) brightness(1.3)` : 'drop-shadow(0 0 8px #ff4400) drop-shadow(0 0 16px #ff6600) brightness(.9)', transition:'filter .3s ease' }}/>
             {isBlocking && (
               <div style={{ position:'absolute', top:'10%', left:'5%', width:'90%', height:'90%', borderRadius:'50%', border:`2.5px solid ${blockColor}`, boxShadow:`0 0 30px ${blockColor}`, animation:'explode .5s ease forwards' }}/>
             )}
           </div>
-          <div className="mt-1 md:mt-1.5 text-[5px] md:text-[7px] font-black tracking-[0.35em] uppercase px-2 md:px-3 py-0.5 md:py-1 rounded-full border fd-guardian-text" style={{ color:'rgba(255,68,0,.4)', background:'rgba(255,68,0,.05)', border:'1px solid rgba(255,68,0,.1)' }}>GUARDIAN</div>
+          <div className="mt-1 md:mt-1.5 text-[6px] md:text-[7px] font-black tracking-[0.35em] uppercase px-2 md:px-3 py-0.5 md:py-1 rounded-full border fd-guardian-text" style={{ color:'rgba(255,68,0,.4)', background:'rgba(255,68,0,.05)', border:'1px solid rgba(255,68,0,.1)' }}>GUARDIAN</div>
         </div>
 
         {activeAttacks.map(atk => (
@@ -347,8 +347,8 @@ const FirewallDefender = ({ initialLevel = 1, timeLimit = 30, onFinish, mode }: 
         )}
       </div>
 
-      {/* 🔥 التعديل هنا: شبكة 4 أعمدة في وضع الجوال بالطول (grid-cols-4) 🔥 */}
-      <div className="grid grid-cols-4 md:grid-cols-12 gap-2 md:gap-3 w-full py-2 md:py-2 shrink-0 z-[100] relative fd-tools">
+      {/* TOOLS GRID (أزرار مضغوطة عشان ما تاكل مساحة المضمار) */}
+      <div className="grid grid-cols-4 md:grid-cols-12 gap-1.5 md:gap-3 w-full shrink-0 z-[100] relative fd-tools">
         {availableTools.map((tool, index) => {
           const isHov = hoveredTool === tool.id;
 
@@ -358,7 +358,7 @@ const FirewallDefender = ({ initialLevel = 1, timeLimit = 30, onFinish, mode }: 
               onClick={(e) => handleDefend(tool, e)} 
               onMouseEnter={() => setHoveredTool(tool.id)}
               onMouseLeave={() => setHoveredTool(null)}
-              className="flex flex-col items-center justify-center gap-1 md:gap-2 rounded-xl md:rounded-2xl transition-all duration-300 relative shrink-1 p-2.5 md:p-4 text-center h-auto min-w-0 min-h-0 fd-tool-btn"
+              className="flex flex-col items-center justify-center gap-0.5 md:gap-2 rounded-[0.75rem] md:rounded-2xl transition-all duration-300 relative shrink-1 p-1.5 md:p-4 text-center h-auto min-w-0 min-h-0 fd-tool-btn"
               style={{
                 background: isHov ? "#161616" : "#0b0b0b",
                 border: `2px solid ${tool.color}`,
@@ -366,13 +366,11 @@ const FirewallDefender = ({ initialLevel = 1, timeLimit = 30, onFinish, mode }: 
                 boxShadow: isHov ? `0 0 18px ${tool.color}` : "none",
               }}
             >
-              {/* 🔥 تكبير الآيكونات بالجوال (scale-[0.8]) 🔥 */}
-              <div className="scale-[0.8] md:scale-100 shrink-0 -my-1.5 md:my-0 fd-tool-icon" style={{ transition: "0.2s" }}>
+              <div className="scale-[0.65] md:scale-100 shrink-0 -my-1.5 md:my-0 fd-tool-icon" style={{ transition: "0.2s" }}>
                 <ToolIcon id={tool.id} size={42} />
               </div>
               
-              {/* 🔥 تكبير النص بالجوال (text-[9px]) 🔥 */}
-              <span className="text-[9px] md:text-[12px] font-black uppercase leading-tight mt-0.5 md:mt-0 fd-tool-text" style={{ color: isHov ? tool.color : "#bbb", letterSpacing: "0.05em", wordBreak: 'break-word' }}>
+              <span className="text-[7.5px] md:text-[12px] font-black uppercase leading-tight mt-0.5 md:mt-0 fd-tool-text" style={{ color: isHov ? tool.color : "#bbb", letterSpacing: "0.05em", wordBreak: 'break-word' }}>
                 {tool.name}
               </span>
             </button>
@@ -380,39 +378,50 @@ const FirewallDefender = ({ initialLevel = 1, timeLimit = 30, onFinish, mode }: 
         })}
       </div>
 
-      {/* سحر ببجي المخصص لـ FirewallDefender في الجوال بالعرض فقط */}
+      {/* 🔥 سحر ببجي السري: يعزل اللعبة داخل إطار الشاشة فقط بدون تمدد أو سكرول 🔥 */}
       <style>{`
         @media (max-width: 930px) and (max-height: 600px) and (orientation: landscape) {
-            .fd-wrapper { padding: 4px !important; gap: 2px !important; }
-            .fd-header { padding: 2px 10px !important; margin-bottom: 2px !important; min-height: 25px !important;}
+            .fd-wrapper { 
+                position: absolute !important;
+                top: 0 !important; left: 0 !important; right: 0 !important; bottom: 0 !important;
+                height: 100% !important; max-height: 100% !important;
+                padding: 4px !important; gap: 4px !important; 
+                overflow: hidden !important; 
+            }
+            .fd-header { padding: 2px 10px !important; margin-bottom: 0 !important; min-height: 25px !important;}
             .fd-header-icon { font-size: 12px !important; }
-            .fd-header-health { width: 50px !important; height: 4px !important; }
-            .fd-header-text { font-size: 9px !important; }
-            .fd-header-text-lg { font-size: 14px !important; }
+            .fd-header-health { width: 40px !important; height: 3px !important; }
+            .fd-header-text { font-size: 8px !important; }
+            .fd-header-text-lg { font-size: 12px !important; }
             .fd-header-sub { font-size: 5px !important; }
             
-            .fd-arena { min-height: 0 !important; flex: 1 !important; border-radius: 1rem !important; margin-bottom: 2px !important; }
-            .fd-guardian { transform: scale(0.6) !important; right: 2% !important; margin-top: -15px !important; }
-            .fd-guardian-img { width: 50px !important; height: 50px !important; }
-            .fd-guardian-text { font-size: 5px !important; padding: 1px 4px !important; }
+            /* أرينا واسعة ومريحة */
+            .fd-arena { min-height: 0 !important; flex: 1 1 auto !important; border-radius: 0.75rem !important; margin-bottom: 0 !important; }
+            .fd-guardian { transform: scale(1) !important; right: 5% !important; margin-top: -5px !important; }
+            .fd-guardian-img { width: 65px !important; height: 65px !important; }
+            .fd-guardian-text { font-size: 6px !important; padding: 1px 4px !important; }
             
-            .fd-attack-icon { transform: scale(0.5) !important; margin-bottom: -5px !important; }
-            .fd-attack-text { font-size: 5px !important; padding: 1px 3px !important; margin-top: -5px !important; }
+            .fd-attack-icon { transform: scale(0.6) !important; margin-bottom: -5px !important; }
+            .fd-attack-text { font-size: 6px !important; padding: 1px 3px !important; margin-top: -5px !important; }
             
+            /* أزرار مضغوطة بالأسفل بشكل صف واحد 6 أعمدة أو صفين */
             .fd-tools { 
+                flex: 0 0 auto !important;
                 grid-template-columns: repeat(6, 1fr) !important; 
                 gap: 4px !important; 
-                padding: 2px !important;
+                padding: 0 !important;
+                margin-bottom: 2px !important;
             }
             .fd-tool-btn { 
                 padding: 2px !important; 
-                height: 35px !important; 
+                height: 38px !important; 
+                min-height: 38px !important;
                 border-radius: 0.5rem !important; 
                 justify-content: center !important;
                 gap: 0 !important;
             }
-            .fd-tool-icon { transform: scale(0.4) !important; margin-top: -12px !important; margin-bottom: -12px !important; }
-            .fd-tool-text { font-size: 5.5px !important; line-height: 1 !important; }
+            .fd-tool-icon { transform: scale(0.4) !important; margin-top: -14px !important; margin-bottom: -14px !important; }
+            .fd-tool-text { font-size: 5.5px !important; line-height: 1 !important; margin-top: -2px !important; }
             
             .fd-overlay { padding: 8px !important; border-radius: 1rem !important; }
             .fd-overlay-icon { font-size: 24px !important; margin-bottom: 2px !important; }
