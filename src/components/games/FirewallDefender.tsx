@@ -252,8 +252,7 @@ const FirewallDefender = ({ initialLevel = 1, timeLimit = 30, onFinish, mode }: 
         </div>
       </div>
 
-      {/* 🔥 التعديل للابتوب: المضمار صار ياخذ مساحة ضخمة ومريحة للعين 🔥 */}
-      <div className="relative w-full flex-1 min-h-[150px] md:min-h-[350px] border border-white/5 rounded-[1.5rem] md:rounded-[2rem] bg-[#050505] overflow-hidden mb-2 md:mb-4 shadow-[inset_0_0_40px_rgba(0,0,0,0.8)] fd-arena">
+      <div className="relative w-full flex-1 min-h-[200px] md:min-h-[280px] border border-white/5 rounded-[1.5rem] md:rounded-[2rem] bg-[#050505] overflow-hidden mb-2 md:mb-4 shadow-[inset_0_0_40px_rgba(0,0,0,0.8)] fd-arena">
         <div style={{ position:'absolute', inset:0, opacity:.07, backgroundImage:'linear-gradient(#111 1px,transparent 1px),linear-gradient(90deg,#111 1px,transparent 1px)', backgroundSize:'32px 32px', pointerEvents:'none' }}/>
 
         <div style={{ position:'absolute', left:0, right:0, height:1, background:`linear-gradient(90deg, transparent, ${H.bright}44, transparent)`, animation:'scan-line 4s linear infinite', zIndex:1, pointerEvents:'none' }}/>
@@ -281,7 +280,6 @@ const FirewallDefender = ({ initialLevel = 1, timeLimit = 30, onFinish, mode }: 
           <div key={ex.id} className="w-[40px] h-[40px] md:w-[80px] md:h-[80px]" style={{ position:'absolute', top:'50%', left:`${ex.x}%`, transform:'translate(-50%,-50%)', borderRadius:'50%', border:`2px solid ${ex.color}`, boxShadow:`0 0 20px ${ex.color}`, animation:'explode .6s ease forwards', pointerEvents:'none', zIndex:30 }}/>
         ))}
 
-        {/* OVERLAYS */}
         {gameState === 'tutorial' && (
           <div style={{ position:'absolute', inset:0, zIndex:200, background:'rgba(0,0,0,.95)', backdropFilter:'blur(12px)', display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', borderRadius:32, border:'1px solid rgba(255,255,255,.05)' }} className="gap-3 p-6 text-center animate-in fade-in duration-500 fd-overlay">
             <div className="text-4xl md:text-7xl mb-2 md:mb-4 fd-overlay-icon" style={{ animation:'hero-pulse 2s ease-in-out infinite' }}>📖</div>
@@ -346,7 +344,6 @@ const FirewallDefender = ({ initialLevel = 1, timeLimit = 30, onFinish, mode }: 
         )}
       </div>
 
-      {/* 🔥 التعديل هنا: اللابتوب 6x6 (بدون تمطيط مساحات)، الجوال العادي 4x3 🔥 */}
       <div className="grid grid-cols-4 md:grid-cols-6 gap-2 md:gap-3 w-full shrink-0 z-[100] relative fd-tools mb-1 md:mb-2">
         {availableTools.map((tool, index) => {
           const isHov = hoveredTool === tool.id;
@@ -377,7 +374,6 @@ const FirewallDefender = ({ initialLevel = 1, timeLimit = 30, onFinish, mode }: 
         })}
       </div>
 
-      {/* 🔥 سحر ببجي المخصص لـ الجوال بالعرض فقط: إظهار المضمار بقوة ومنع الاختفاء، والأزرار 6x6 مربعات صغيرة 🔥 */}
       <style>{`
         @media (max-width: 930px) and (max-height: 600px) and (orientation: landscape) {
             .fd-wrapper { 
@@ -405,13 +401,7 @@ const FirewallDefender = ({ initialLevel = 1, timeLimit = 30, onFinish, mode }: 
             .fd-header-text-lg { font-size: 12px !important; }
             .fd-header-sub { font-size: 5px !important; }
             
-            /* 🔥 إجبار المضمار على الظهور في العرض وعدم التخفي 🔥 */
-            .fd-arena { 
-                flex: 1 1 0% !important; 
-                min-height: 100px !important; 
-                border-radius: 0.75rem !important; 
-                margin-bottom: 0 !important; 
-            }
+            .fd-arena { min-height: 0 !important; flex: 1 1 auto !important; border-radius: 0.75rem !important; margin-bottom: 0 !important; }
             .fd-guardian { transform: scale(0.8) !important; right: 5% !important; margin-top: -10px !important; }
             .fd-guardian-img { width: 65px !important; height: 65px !important; }
             .fd-guardian-text { font-size: 6px !important; padding: 1px 4px !important; }
@@ -419,7 +409,6 @@ const FirewallDefender = ({ initialLevel = 1, timeLimit = 30, onFinish, mode }: 
             .fd-attack-icon { transform: scale(0.6) !important; margin-bottom: -5px !important; }
             .fd-attack-text { font-size: 6px !important; padding: 1px 3px !important; margin-top: -5px !important; }
             
-            /* 🔥 أزرار الجوال بالعرض: صفين 6 أعمدة (مربعات صغيرة) 🔥 */
             .fd-tools { 
                 flex: none !important;
                 grid-template-columns: repeat(6, 1fr) !important; 
@@ -428,17 +417,17 @@ const FirewallDefender = ({ initialLevel = 1, timeLimit = 30, onFinish, mode }: 
                 margin-bottom: 4px !important;
             }
             .fd-tool-btn { 
-                padding: 2px !important; 
-                height: 50px !important; 
-                min-height: 50px !important;
+                padding: 2px 4px !important; 
+                height: 38px !important; 
+                min-height: 38px !important;
                 border-radius: 0.5rem !important; 
-                flex-direction: column !important; /* شكل مربع */
-                justify-content: center !important;
+                flex-direction: row !important;
+                justify-content: flex-start !important;
                 align-items: center !important;
-                gap: 2px !important;
+                gap: 4px !important;
             }
-            .fd-tool-icon { transform: scale(0.55) !important; margin: -8px 0 !important; }
-            .fd-tool-text { font-size: 6px !important; line-height: 1.1 !important; margin: 0 !important; text-align: center !important; }
+            .fd-tool-icon { transform: scale(0.65) !important; margin: -6px -4px -6px -8px !important; }
+            .fd-tool-text { font-size: 6.5px !important; line-height: 1.1 !important; margin: 0 !important; text-align: left !important; }
             
             .fd-overlay { padding: 8px !important; border-radius: 1rem !important; }
             .fd-overlay-icon { font-size: 24px !important; margin-bottom: 2px !important; }
