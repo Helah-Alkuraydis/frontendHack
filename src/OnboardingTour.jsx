@@ -122,7 +122,6 @@ const OnboardingTour = ({ onComplete, onStepChange }) => {
     if (currentStep.position === "friends") elementId = "friends-step"; 
     if (currentStep.position === "profile") elementId = "profile-step"; 
 
-    // ⚡ التعديل السحري: نجيب كل العناصر اللي تحمل الـ ID ونقّي منها العنصر الظاهر حالياً على الشاشة
     const elements = document.querySelectorAll(`#${elementId}`);
     const element = Array.from(elements).find(el => el.getBoundingClientRect().width > 0) || document.getElementById(elementId);
 
@@ -130,17 +129,15 @@ const OnboardingTour = ({ onComplete, onStepChange }) => {
       const rect = element.getBoundingClientRect();
       
       if (isMobile) {
-        // 📱 للجوال: نحدد العنصر النشط تحت في الناف بار ونعطيه التوهج الأزرق
         element.classList.add('active-tour-glow');
         setCoords({
-          top: rect.top,
+          top: rect.top, // أعلى الأيقونة السفلية بالضبط
           left: rect.left + rect.width / 2,
         });
       } else {
-        // 💻 للابتوب: حساباتكم الفخمة الأصلية بدون أي تغيير لشغل جنب الشاشة
         setCoords({
           top: rect.top + rect.height / 2,
-          left: rect.right + 25 ,
+          left: rect.right + 25 , 
         });
       }
     } else {
@@ -169,7 +166,7 @@ const OnboardingTour = ({ onComplete, onStepChange }) => {
     return (
       <div className="fixed inset-0 z-[10000] flex items-center justify-center p-4">
         <div className="absolute inset-0 bg-[#050810]/85 backdrop-blur-sm transition-opacity duration-500"></div>
-        <div key={step} className="relative w-[85%] max-w-[340px] bg-gradient-to-b from-[#2a324b]/90 to-[#161b2e]/95 backdrop-blur-xl border border-blue-500/20 rounded-[2.5rem] p-5 shadow-2xl animate-in zoom-in fade-in duration-500 text-white pt-24">
+        <div key={step} className="relative w-[85%] max-w-[340px] bg-gradient-to-b from-[#2a324b]/90 to-[#161b2e]/95 backdrop-blur-xl border border-blue-500/20 rounded-[2.5rem] p-5 shadow-2xl text-white pt-24">
           <div className="absolute -top-[90px] left-1/2 -translate-x-1/2 w-[160px] h-[160px] z-20 pointer-events-none">
             <img src="/Astra.png" alt="Astra Guide" className="w-full h-full object-contain drop-shadow-[0_10px_20px_rgba(0,0,0,0.5)]" />
           </div>
@@ -187,19 +184,31 @@ const OnboardingTour = ({ onComplete, onStepChange }) => {
 
   return (
     <div className="fixed inset-0 z-[10000]">
+      <style>{`
+        .active-tour-glow {
+          position: relative;
+          z-index: 100005;
+          background: rgba(6, 182, 212, 0.2) !important;
+          box-shadow: 0 0 20px 6px rgba(6, 182, 212, 0.5) !important;
+          border-radius: 30% !important;
+          transition: all 0.3s ease-in-out;
+        }
+      `}</style>
       <div className="absolute inset-0 bg-black/80 backdrop-blur-sm transition-opacity duration-500"></div>
 
       <div
         style={(coords && !isMobile) ? {
+          // 💻 اللابتوب: يمين السايد بار بالملي
           position: "fixed",
           top: `${coords.top}px`,
           left: `${coords.left}px`,
           transform: "translateY(-50%)",
           zIndex: 10001
-        } : isMobile ? {
+        } : (coords && isMobile) ? {
+          // 📱 الجوال الجديد: يطير ديناميكياً ويقعد فوق أيقونته بالضبط بمسافة أمان فخمة
           position: "fixed",
-          bottom: "140px", 
-          left: "50%",
+          bottom: `${window.innerHeight - coords.top + 16}px`, 
+          left: `${coords.left}px`,
           transform: "translateX(-50%)",
           zIndex: 10001
         } : {
@@ -207,10 +216,16 @@ const OnboardingTour = ({ onComplete, onStepChange }) => {
         }}
         className="transition-all duration-300 ease-out w-full px-4 md:block"
       >
-        <div key={step} className="relative w-full max-w-[350px] bg-[#1e2330]/95 backdrop-blur-xl border border-white/10 rounded-[2rem] p-6 shadow-2xl text-white animate-in zoom-in duration-300">
+        <div key={step} className="relative w-full max-w-[350px] bg-[#1e2330]/95 backdrop-blur-xl border border-white/10 rounded-[2rem] p-6 shadow-2xl text-white animate-in zoom-in duration-300 mx-auto">
           
+          {/* سهم اللابتوب (يشير لليسار) */}
           {!isMobile && currentStep.hasArrow && coords && (
             <div className="absolute top-1/2 -left-2 -translate-y-1/2 w-4 h-4 bg-[#1e2330] border-l border-b border-white/10 rotate-45"></div>
+          )}
+
+          {/* ⚡ سهم الجوال الجديد: يشير للأسفل باتجاه الأيقونة النشطة مباشرة */}
+          {isMobile && currentStep.hasArrow && coords && (
+            <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-4 h-4 bg-[#1e2330] border-r border-b border-white/10 rotate-45"></div>
           )}
 
           <button onClick={handleSkip} className="absolute top-5 right-5 text-gray-400 hover:text-white bg-white/5 rounded-full p-1 transition-colors">
