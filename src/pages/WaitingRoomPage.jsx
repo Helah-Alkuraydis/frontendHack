@@ -545,8 +545,15 @@ const handleSearchUsers = async (query) => {
     const storedUser = JSON.parse(localStorage.getItem("user") || "{}");
     socket.emit("send_game_invite", { targetUserId: friendId, senderName: storedUser.username || "Agent", gameName: location.state?.gameName || "Cyber Escape Room", sessionId: sessionId });
 
-    Swal.fire({ title: "INVITATION DEPLOYED", text: "Mission sent to agent's radar.", icon: "success", toast: true, position: "top-end", timer: 3000, showConfirmButton: false });
-    setTimeout(() => { setIsInviteModalOpen(false); }, 800);
+Swal.fire({ 
+  title: "INVITATION SENT", 
+  text: "The invitation has been successfully sent to the user 🛡️", 
+  icon: "success", 
+  toast: true, 
+  position: "top-end", 
+  timer: 3000, 
+  showConfirmButton: false 
+});    setTimeout(() => { setIsInviteModalOpen(false); }, 800);
   } catch (err) {
     setInvitedIds((prev) => prev.filter((id) => id !== friendId));
     Swal.fire({ title: "Mission Failed", text: "Could not sync notification hub.", icon: "warning", background: "#0f172a", color: "#fff" });
