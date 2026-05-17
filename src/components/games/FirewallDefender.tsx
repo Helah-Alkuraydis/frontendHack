@@ -209,7 +209,7 @@ const FirewallDefender = ({ initialLevel = 1, timeLimit = 30, onFinish, mode }: 
   const timeColor = pct > 50 ? H.bright : pct > 25 ? '#ffaa00' : '#ff0000';
 
   return (
-    <div className="flex flex-col h-full w-full bg-[#030303] text-white p-3 md:p-6 select-none overflow-hidden relative font-mono z-10 fd-wrapper">
+    <div className="flex flex-col h-full w-full bg-[#030303] text-white p-2 md:p-6 select-none overflow-hidden relative font-mono z-10 fd-wrapper">
       <style>{STYLES}</style>
 
       <div style={{ position:'absolute', top:'50%', left:'50%', transform:'translate(-50%,-50%)',
@@ -218,8 +218,7 @@ const FirewallDefender = ({ initialLevel = 1, timeLimit = 30, onFinish, mode }: 
       {damageFlash && <div style={{ position:'absolute', inset:0, background:'rgba(255,0,0,.22)',
         animation:'damage-flash .4s ease', pointerEvents:'none', zIndex:99 }}/>}
 
-      {/* HEADER */}
-      <div className="flex justify-between items-center mb-2 md:mb-4 bg-[#0a0505f2] backdrop-blur-md px-4 md:px-8 py-2 md:py-3 rounded-[1rem] md:rounded-[1.5rem] border-b-2 shadow-[0_10px_30px_rgba(0,0,0,0.8)] z-[100] w-full shrink-0 relative fd-header" style={{ borderBottomColor: health < 30 ? E.red : '#ff440044' }}>
+      <div className="flex justify-between items-center mb-1.5 md:mb-6 bg-[#0a0505f2] backdrop-blur-md px-3 md:px-8 py-1.5 md:py-4 rounded-[1rem] md:rounded-[1.5rem] border-b-2 shadow-[0_10px_30px_rgba(0,0,0,0.8)] z-[100] w-full shrink-0 relative fd-header" style={{ borderBottomColor: health < 30 ? E.red : '#ff440044' }}>
         <div className="flex items-center gap-2 md:gap-4 shrink">
           <div className="text-sm md:text-2xl fd-header-icon" style={{ filter: `drop-shadow(0 0 10px ${health < 30 ? E.red : H.bright})`, animation: health < 30 ? 'blink 0.5s ease infinite' : 'hero-pulse 2s ease-in-out infinite' }}>
             ❤️
@@ -253,8 +252,7 @@ const FirewallDefender = ({ initialLevel = 1, timeLimit = 30, onFinish, mode }: 
         </div>
       </div>
 
-      {/* ARENA - flex-1 gives it the remaining space and pushes tools down */}
-      <div className="relative w-full flex-1 min-h-[220px] md:min-h-[300px] border border-white/5 rounded-[1.5rem] md:rounded-[2rem] bg-[#050505] overflow-hidden mb-2 md:mb-4 shadow-[inset_0_0_40px_rgba(0,0,0,0.8)] fd-arena">
+      <div className="relative w-full flex-1 min-h-[220px] border border-white/5 rounded-[1.5rem] md:rounded-[2rem] bg-[#050505] overflow-hidden mb-1.5 md:mb-6 shadow-[inset_0_0_40px_rgba(0,0,0,0.8)] fd-arena">
         <div style={{ position:'absolute', inset:0, opacity:.07, backgroundImage:'linear-gradient(#111 1px,transparent 1px),linear-gradient(90deg,#111 1px,transparent 1px)', backgroundSize:'32px 32px', pointerEvents:'none' }}/>
 
         <div style={{ position:'absolute', left:0, right:0, height:1, background:`linear-gradient(90deg, transparent, ${H.bright}44, transparent)`, animation:'scan-line 4s linear infinite', zIndex:1, pointerEvents:'none' }}/>
@@ -347,7 +345,6 @@ const FirewallDefender = ({ initialLevel = 1, timeLimit = 30, onFinish, mode }: 
         )}
       </div>
 
-      {/* 🔥 التعديل: 6x6 للديسكتوب (md:grid-cols-6) و 4x3 للجوال بالطول (grid-cols-4) 🔥 */}
       <div className="grid grid-cols-4 md:grid-cols-6 gap-2 md:gap-4 w-full shrink-0 z-[100] relative fd-tools">
         {availableTools.map((tool, index) => {
           const isHov = hoveredTool === tool.id;
@@ -381,21 +378,17 @@ const FirewallDefender = ({ initialLevel = 1, timeLimit = 30, onFinish, mode }: 
       <style>{`
         @media (max-width: 930px) and (max-height: 600px) and (orientation: landscape) {
             .fd-wrapper { 
-                position: fixed !important;
-                top: 0 !important; left: 0 !important; right: 0 !important; bottom: 0 !important;
-                height: 100dvh !important; max-height: 100dvh !important;
-                width: 100vw !important; max-width: 100vw !important;
-                padding: 4px !important; gap: 4px !important; 
+                height: 100% !important; 
+                max-height: 100% !important;
+                padding: 4px !important; 
+                gap: 4px !important; 
                 overflow: hidden !important; 
                 display: flex !important;
                 flex-direction: column !important;
-                justify-content: flex-start !important;
-                background: #030303 !important;
-                z-index: 9999 !important;
             }
             .fd-header { 
                 flex: none !important;
-                padding: 2px 10px !important; 
+                padding: 4px 10px !important; 
                 margin-bottom: 0 !important; 
                 min-height: 25px !important;
             }
@@ -405,33 +398,37 @@ const FirewallDefender = ({ initialLevel = 1, timeLimit = 30, onFinish, mode }: 
             .fd-header-text-lg { font-size: 12px !important; }
             .fd-header-sub { font-size: 5px !important; }
             
-            .fd-arena { min-height: 0 !important; flex: 1 1 auto !important; border-radius: 0.75rem !important; margin-bottom: 0 !important; }
-            .fd-guardian { transform: scale(0.8) !important; right: 5% !important; margin-top: -10px !important; }
-            .fd-guardian-img { width: 65px !important; height: 65px !important; }
-            .fd-guardian-text { font-size: 6px !important; padding: 1px 4px !important; }
+            .fd-arena { 
+                flex: 1 1 0 !important; 
+                min-height: 0 !important; 
+                border-radius: 0.75rem !important; 
+                margin-bottom: 0 !important; 
+            }
+            .fd-guardian { transform: scale(0.7) !important; right: 2% !important; margin-top: -10px !important; }
+            .fd-guardian-img { width: 60px !important; height: 60px !important; }
+            .fd-guardian-text { font-size: 5px !important; padding: 1px 4px !important; }
             
-            .fd-attack-icon { transform: scale(0.6) !important; margin-bottom: -5px !important; }
-            .fd-attack-text { font-size: 6px !important; padding: 1px 3px !important; margin-top: -5px !important; }
+            .fd-attack-icon { transform: scale(0.5) !important; margin-bottom: -5px !important; }
+            .fd-attack-text { font-size: 5px !important; padding: 1px 3px !important; margin-top: -5px !important; }
             
             .fd-tools { 
                 flex: none !important;
                 grid-template-columns: repeat(6, 1fr) !important; 
                 gap: 4px !important; 
                 padding: 0 !important;
-                margin-bottom: 4px !important;
+                margin-bottom: 2px !important;
             }
             .fd-tool-btn { 
-                padding: 2px 4px !important; 
-                height: 38px !important; 
-                min-height: 38px !important;
+                padding: 4px 2px !important; 
+                height: 44px !important; 
                 border-radius: 0.5rem !important; 
-                flex-direction: row !important;
-                justify-content: flex-start !important;
+                flex-direction: column !important; 
+                justify-content: center !important;
                 align-items: center !important;
-                gap: 4px !important;
+                gap: 2px !important;
             }
-            .fd-tool-icon { transform: scale(0.65) !important; margin: -6px -4px -6px -8px !important; }
-            .fd-tool-text { font-size: 6.5px !important; line-height: 1.1 !important; margin: 0 !important; text-align: left !important; }
+            .fd-tool-icon { transform: scale(0.5) !important; margin: -10px 0 !important; }
+            .fd-tool-text { font-size: 6px !important; line-height: 1.1 !important; margin: 0 !important; text-align: center !important; }
             
             .fd-overlay { padding: 8px !important; border-radius: 1rem !important; }
             .fd-overlay-icon { font-size: 24px !important; margin-bottom: 2px !important; }
