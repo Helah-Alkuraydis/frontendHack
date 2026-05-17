@@ -1,4 +1,4 @@
-import React, { useState, useEffect ,useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { ArrowLeft, CheckCircle, AlertTriangle, ShieldCheck, Zap } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { getSocket } from '../../socket';
@@ -220,7 +220,7 @@ const SecureCodingChallenge = ({ level = 1, gameId, sessionId, onFinish, mode }:
     if (loading) return <div className="min-h-screen bg-[#0b1121] text-[#00ff9d] flex items-center justify-center font-mono">INITIALIZING MISSION...</div>;
 
     return (
-        <div className="min-h-screen bg-[#0b1121] text-slate-300 p-8 font-mono relative">
+        <div className="min-h-screen bg-[#0b1121] text-slate-300 p-4 md:p-8 font-mono relative overflow-hidden">
             
             {sessionId && !winner && opponentProgress > 0 && (
                 <div className="fixed top-0 left-0 w-full h-1.5 bg-slate-900 z-50">
@@ -231,15 +231,15 @@ const SecureCodingChallenge = ({ level = 1, gameId, sessionId, onFinish, mode }:
                 </div>
             )}
 
-            <header className="mb-8 border-b border-slate-800 pb-4 flex flex-col gap-2">
-                <button onClick={handleQuit} className="text-slate-500 hover:text-red-500 flex items-center gap-2 w-fit transition-colors font-bold">
-                    <ArrowLeft className="w-4 h-4" /> ABORT MISSION
+            <header className="mb-6 md:mb-8 border-b border-slate-800 pb-4 flex flex-col gap-3">
+                <button onClick={handleQuit} className="text-slate-500 hover:text-red-500 flex items-center gap-2 w-fit transition-colors font-bold text-xs md:text-base">
+                    <ArrowLeft className="w-4 h-4 md:w-5 md:h-5" /> ABORT MISSION
                 </button>
-                <div className="flex justify-between items-end">
+                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4 sm:gap-0">
                     <div>
-                        <h1 className="text-2xl font-black italic text-[#00ff9d] tracking-tighter uppercase flex items-center gap-4">
+                        <h1 className="text-lg md:text-2xl font-black italic text-[#00ff9d] tracking-tighter uppercase flex flex-wrap items-center gap-3 md:gap-4">
                             SECURE CODING {sessionId ? "RACE" : "CHALLENGE"}
-                            <span className={`text-xl font-mono px-3 py-1 rounded border-2 shadow-lg ${timeLeft <= 60 ? 'text-red-500 border-red-500/50 animate-pulse' : 'text-cyan-400 border-cyan-500/30'}`}>
+                            <span className={`text-sm md:text-xl font-mono px-2 md:px-3 py-1 rounded border-2 shadow-lg ${timeLeft <= 60 ? 'text-red-500 border-red-500/50 animate-pulse' : 'text-cyan-400 border-cyan-500/30'}`}>
                                 ⏱️ {formatTime(timeLeft)}
                             </span>
                         </h1>
@@ -247,23 +247,23 @@ const SecureCodingChallenge = ({ level = 1, gameId, sessionId, onFinish, mode }:
                 </div>
             </header>
 
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
-                <div className="space-y-6">
-                    <div className="bg-[#1e293b] rounded-2xl border border-white/5 p-6 shadow-lg">
-                        <h2 className="text-[#00ff9d] font-bold tracking-widest uppercase mb-4 text-xs">CHALLENGE: {scenario?.title}</h2>
-                        <p className="text-sm text-slate-400 leading-relaxed">{scenario?.explanation}</p>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6 items-start">
+                <div className="space-y-4 md:space-y-6">
+                    <div className="bg-[#1e293b] rounded-2xl border border-white/5 p-4 md:p-6 shadow-lg">
+                        <h2 className="text-[#00ff9d] font-bold tracking-widest uppercase mb-2 md:mb-4 text-[10px] md:text-xs">CHALLENGE: {scenario?.title}</h2>
+                        <p className="text-xs md:text-sm text-slate-400 leading-relaxed">{scenario?.explanation}</p>
                     </div>
 
-                    <div className={`bg-[#1e293b] rounded-2xl border p-6 shadow-lg transition-all ${phase === 1 ? 'border-[#00ff9d]/30' : 'opacity-40'}`}>
-                        <h2 className="text-white font-bold tracking-widest uppercase mb-4 text-xs">PHASE 1: IDENTIFY VULNERABILITY</h2>
-                        <div className="bg-[#0d1117] rounded-xl border border-white/5 p-4 overflow-x-auto text-sm">
+                    <div className={`bg-[#1e293b] rounded-2xl border p-4 md:p-6 shadow-lg transition-all ${phase === 1 ? 'border-[#00ff9d]/30' : 'opacity-40'}`}>
+                        <h2 className="text-white font-bold tracking-widest uppercase mb-2 md:mb-4 text-[10px] md:text-xs">PHASE 1: IDENTIFY VULNERABILITY</h2>
+                        <div className="bg-[#0d1117] rounded-xl border border-white/5 p-3 md:p-4 overflow-x-auto text-xs md:text-sm custom-scrollbar">
                             {scenario?.vulnerable_code.split('\n').map((line, idx) => (
                                 <div 
                                     key={idx} 
                                     onClick={() => handleLineClick(line, idx)}
-                                    className={`flex cursor-pointer py-0.5 rounded px-2 ${phase !== 1 || winner ? 'pointer-events-none' : 'hover:bg-white/5'} ${selectedLineIdx === idx ? (feedback?.isError ? 'bg-red-500/20 text-red-400' : 'bg-green-500/20 text-green-400') : ''}`}
+                                    className={`flex cursor-pointer py-1 rounded px-2 ${phase !== 1 || winner ? 'pointer-events-none' : 'hover:bg-white/5'} ${selectedLineIdx === idx ? (feedback?.isError ? 'bg-red-500/20 text-red-400' : 'bg-green-500/20 text-green-400') : ''}`}
                                 >
-                                    <span className="w-8 text-right pr-4 text-slate-600">{idx + 1}</span>
+                                    <span className="w-6 md:w-8 text-right pr-2 md:pr-4 text-slate-600 select-none">{idx + 1}</span>
                                     <code className="whitespace-pre">{line || ' '}</code>
                                 </div>
                             ))}
@@ -271,37 +271,39 @@ const SecureCodingChallenge = ({ level = 1, gameId, sessionId, onFinish, mode }:
                     </div>
                 </div>
 
-                <div className="bg-[#1e293b] rounded-2xl border border-white/5 p-6 shadow-lg flex flex-col min-h-[400px]">
-                    <h2 className="text-white font-bold tracking-widest uppercase mb-4 text-xs">PHASE 2: SECURE TERMINAL</h2>
+                <div className="bg-[#1e293b] rounded-2xl border border-white/5 p-4 md:p-6 shadow-lg flex flex-col min-h-[300px] md:min-h-[400px]">
+                    <h2 className="text-white font-bold tracking-widest uppercase mb-2 md:mb-4 text-[10px] md:text-xs">PHASE 2: SECURE TERMINAL</h2>
                     {phase === 1 ? (
-                        <div className="flex-1 flex items-center justify-center border-2 border-dashed border-white/5 rounded-xl text-slate-600 italic text-sm text-center">
+                        <div className="flex-1 flex items-center justify-center border-2 border-dashed border-white/5 rounded-xl text-slate-600 italic text-xs md:text-sm text-center p-4">
                             Identify the vulnerability in Phase 1<br/>to unlock the patch terminal...
                         </div>
                     ) : (
-                        <div className="flex-1 flex flex-col">
+                        <div className="flex-1 flex flex-col h-full">
                             <textarea 
-                                className="flex-1 w-full bg-[#0d1117] text-cyan-400 font-mono text-sm resize-none focus:outline-none p-4 rounded-xl border border-white/10"
+                                className="flex-1 w-full min-h-[150px] md:min-h-[250px] bg-[#0d1117] text-cyan-400 font-mono text-xs md:text-sm resize-none focus:outline-none p-3 md:p-4 rounded-xl border border-white/10 custom-scrollbar"
                                 value={userCode}
                                 onChange={(e) => setUserCode(e.target.value)}
                                 spellCheck="false"
                                 disabled={!!winner}
                             />
                             
-                            {/* 🔥 شاشة التنبيه للحل الخاطئ أو الصحيح 🔥 */}
                             {feedback && (
-                                <div className={`mt-4 p-4 rounded-xl flex items-center gap-3 font-bold transition-all duration-300 ${
+                                <div className={`mt-3 md:mt-4 p-3 md:p-4 rounded-xl flex flex-col gap-3 font-bold transition-all duration-300 text-xs md:text-base ${
                                     feedback.isError 
                                     ? 'bg-red-500/20 border border-red-500 text-red-400 animate-pulse' 
                                     : 'bg-green-500/20 border border-green-500 text-green-400'
                                 }`}>
-                                    {feedback.isError ? <AlertTriangle className="w-6 h-6" /> : <CheckCircle className="w-6 h-6" />}
-                                    <span>{feedback.message}</span>
+                                    <div className="flex items-start gap-2 md:gap-3 w-full">
+                                        {feedback.isError ? <AlertTriangle className="w-5 h-5 shrink-0 mt-0.5" /> : <CheckCircle className="w-5 h-5 shrink-0 mt-0.5" />}
+                                        <span className="leading-relaxed">{feedback.message}</span>
+                                    </div>
                                     
-                                    {/* تلميح ذكي يظهر إذا اللاعب أخطأ أكثر من مرتين */}
                                     {feedback.isError && mistakes > 2 && (
-                                        <span className="ml-auto text-xs bg-red-900/80 px-3 py-1 rounded-full text-red-100">
-                                            Hint: Use data sanitization functions!
-                                        </span>
+                                        <div className="flex justify-end w-full border-t border-red-500/20 pt-2 mt-1">
+                                            <span className="text-[10px] md:text-xs bg-red-900/90 px-3 py-1.5 rounded-full text-red-100 whitespace-nowrap shadow-lg">
+                                                Hint: Use data sanitization!
+                                            </span>
+                                        </div>
                                     )}
                                 </div>
                             )}
@@ -309,9 +311,9 @@ const SecureCodingChallenge = ({ level = 1, gameId, sessionId, onFinish, mode }:
                             <button 
                                 onClick={handleCodeSubmit}
                                 disabled={!!winner}
-                                className="mt-4 w-full py-4 bg-[#00ff9d] hover:bg-[#00e68e] text-black font-black uppercase italic rounded-xl transition-all shadow-lg disabled:opacity-50"
+                                className="mt-3 md:mt-4 w-full py-3 md:py-4 bg-[#00ff9d] hover:bg-[#00e68e] text-black font-black uppercase italic rounded-xl transition-all shadow-lg disabled:opacity-50 text-sm md:text-base"
                             >
-                                <ShieldCheck className="w-5 h-5 inline-block mr-2" /> SUBMIT SECURE PATCH
+                                <ShieldCheck className="w-4 h-4 md:w-5 md:h-5 inline-block mr-2" /> SUBMIT SECURE PATCH
                             </button>
                         </div>
                     )}
@@ -319,26 +321,33 @@ const SecureCodingChallenge = ({ level = 1, gameId, sessionId, onFinish, mode }:
             </div>
 
             {winner && (
-                <div className="fixed inset-0 bg-black/80 backdrop-blur-md z-[100] flex items-center justify-center">
-                    <div className="text-center p-12 bg-[#0f172a] border border-white/10 rounded-[3rem] shadow-2xl max-w-md w-full">
-                        <div className={`w-20 h-20 mx-auto mb-6 rounded-full flex items-center justify-center ${winner === user?.username || !sessionId ? 'bg-green-500/20 text-green-500' : 'bg-red-500/20 text-red-500'}`}>
-                            {winner === user?.username || !sessionId ? <Zap size={40} fill="currentColor"/> : <AlertTriangle size={40}/>}
+                <div className="fixed inset-0 bg-black/80 backdrop-blur-md z-[100] flex items-center justify-center p-4">
+                    <div className="text-center p-8 md:p-12 bg-[#0f172a] border border-white/10 rounded-[2rem] md:rounded-[3rem] shadow-2xl max-w-md w-full animate-in zoom-in duration-300">
+                        <div className={`w-16 h-16 md:w-20 md:h-20 mx-auto mb-4 md:mb-6 rounded-full flex items-center justify-center ${winner === user?.username || !sessionId ? 'bg-green-500/20 text-green-500' : 'bg-red-500/20 text-red-500'}`}>
+                            {winner === user?.username || !sessionId ? <Zap size={32} className="md:w-10 md:h-10" fill="currentColor"/> : <AlertTriangle size={32} className="md:w-10 md:h-10"/>}
                         </div>
-                        <h2 className="text-4xl font-black italic uppercase text-white mb-2">
+                        <h2 className="text-3xl md:text-4xl font-black italic uppercase text-white mb-2">
                             {winner === user?.username || !sessionId ? "Victory!" : "Defeat!"}
                         </h2>
-                        <p className="text-slate-400 mb-8 font-medium italic">
+                        <p className="text-sm md:text-base text-slate-400 mb-6 md:mb-8 font-medium italic">
                             {winner === user?.username || !sessionId ? "System secured! Mission Accomplished." : `${winner} was faster.`}
                         </p>
                         <button 
                             onClick={handleEndGame} 
-                            className="w-full py-4 bg-white text-black font-black uppercase rounded-2xl hover:bg-gray-200 transition-all"
+                            className="w-full py-3 md:py-4 bg-white text-black font-black text-sm md:text-base uppercase rounded-xl md:rounded-2xl hover:bg-gray-200 transition-all active:scale-95"
                         >
                             RETURN TO HQ
                         </button>
                     </div>
                 </div>
             )}
+            
+            <style>{`
+                .custom-scrollbar::-webkit-scrollbar { height: 6px; width: 6px; }
+                .custom-scrollbar::-webkit-scrollbar-track { background: rgba(255,255,255,0.02); border-radius: 4px; }
+                .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(0, 255, 157, 0.2); border-radius: 4px; }
+                .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: rgba(0, 255, 157, 0.4); }
+            `}</style>
         </div>
     );
 };

@@ -490,21 +490,20 @@ const ChallengePage = () => {
     fetchUserLevels();
   }, []);
 
-  const getGameIcon = (gameName) => {
+const getGameIcon = (gameName) => {
     const icons = {
-      "Phishing Hunter": <ShieldAlert className="text-emerald-400" size={24} />,
-      "Firewall Defender": <ShieldCheck className="text-blue-400" size={24} />,
-      "Cyber Escape Room": <DoorOpen className="text-purple-400" size={24} />,
-      "Hack Race": <Timer className="text-red-400" size={24} />,
-      "Privacy Awareness": <Fingerprint className="text-cyan-400" size={24} />,
-      "Password Maker/Breaker": <Key className="text-yellow-400" size={24} />,
-      "Secure Coding Challenge": (
-        <FileCode className="text-orange-400" size={24} />
-      ),
+      "Phishing Hunter": <ShieldAlert style={{ stroke: "#34d399" }} size={24} />,
+      "Firewall Defender": <ShieldCheck style={{ stroke: "#60a5fa" }} size={24} />,
+      "Cyber Escape Room": <DoorOpen style={{ stroke: "#c084fc" }} size={24} />,
+      "Hack Race": <Timer style={{ stroke: "#f87171" }} size={24} />,
+      "Privacy Awareness": <Fingerprint style={{ stroke: "#22d3ee" }} size={24} />,
+      "Password Maker/Breaker": <Key style={{ stroke: "#facc15" }} size={24} />,
+      "Secure Coding Challenge": <FileCode style={{ stroke: "#fb923c" }} size={24} />,
     };
+
     return (
       icons[gameName] || (
-        <Zap size={14} className="text-blue-400 fill-blue-400" />
+        <Zap size={14} style={{ stroke: "#60a5fa", fill: "#60a5fa" }} />
       )
     );
   };

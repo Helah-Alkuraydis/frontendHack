@@ -104,7 +104,7 @@ const Achievements = () => {
         </div>
       )}
 
-      <div className="w-full max-w-[1400px] mx-auto space-y-8 lg:space-y-16 pb-20 px-4 lg:px-6">
+      <div className="w-full max-w-[1400px] mx-auto space-y-6 lg:space-y-16 pb-20 px-4 lg:px-6">
         <div className="flex items-center gap-4 pt-6">
           <h2 className="text-2xl lg:text-3xl font-black tracking-tight text-white uppercase italic">
             Achievements
@@ -117,8 +117,8 @@ const Achievements = () => {
             <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-cyan-500"></div>
           </div>
         ) : (
-          /* 🔥 رجعناها 3 أعمدة للابتوب كحد أقصى عشان ترجع مستطيلة وفخمة 🔥 */
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-10">
+          /* 🔥 هنا السحر: خليناها grid-cols-2 في الجوال عشان تصير مربعات جنب بعض 🔥 */
+          <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 lg:gap-10">
             {filteredAchievements.map((item) => (
               <AchievementCard
                 key={item._id}
