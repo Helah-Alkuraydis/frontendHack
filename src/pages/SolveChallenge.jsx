@@ -16,6 +16,7 @@ import {
   Clock,
   ShieldAlert,
   ShieldCheck,
+  Lightbulb,
   DoorOpen,
   Timer,
   Fingerprint,
@@ -29,7 +30,6 @@ const ChallengeSolvePage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const timerRef = useRef(null);
-
 
   const [challengeData, setChallengeData] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -103,7 +103,6 @@ const ChallengeSolvePage = () => {
           setChallengeData(rawData);
         }
       } catch (err) {
-
         navigate("/challenges");
       } finally {
         setLoading(false);
@@ -112,7 +111,6 @@ const ChallengeSolvePage = () => {
     fetchChallenge();
   }, [id]);
 
-  
   useEffect(() => {
     if (timerRef.current) clearInterval(timerRef.current);
 
@@ -150,7 +148,7 @@ const ChallengeSolvePage = () => {
   useEffect(() => {
     if (timeLeft === 0 && challengeData && !isAnswered && !showResult) {
       console.log("⏰ Time is Up! Executing final action...");
-      
+
       setIsAnswered(true);
 
       if (challengeData.gameId.gameName === "Privacy Awareness") {
@@ -164,11 +162,10 @@ const ChallengeSolvePage = () => {
           icon: "error",
           background: "#080c14",
           color: "#fff",
-          allowOutsideClick: false // نمنعه يضغط برا الرسالة
+          allowOutsideClick: false, // نمنعه يضغط برا الرسالة
         }).then(() => {
-           navigate("/challenges"); // طرد للقائمة
+          navigate("/challenges"); // طرد للقائمة
         });
-        
       }
     }
   }, [timeLeft, challengeData, isAnswered, showResult]);
@@ -217,6 +214,51 @@ const ChallengeSolvePage = () => {
   const handleSecureSubmit = () => {
     // نرسل الكود اللي كتبه المستخدم للسيرفر للتحقق منه
     handleChallengeSubmit(userCode);
+  };
+
+  const handleForfeitSecureCoding = async () => {
+    Swal.fire({
+      title: "TERMINATE CHALLENGE?",
+      text: "Are you sure you want to forfeit? This will consume all attempts, register a LOSS on the server, and reveal the solution.",
+      icon: "warning",
+      showCancelButton: true,
+      background: "#080c14",
+      color: "#ffffff",
+      confirmButtonColor: "#ef4444",
+      cancelButtonColor: "#374151",
+      confirmButtonText: "YES, FORFEIT & REVEAL",
+      cancelButtonText: "CANCEL",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          // 2. جلب التوضيح وعرضه
+          const finalExplanation =
+            challengeData?.scenarioData?.explanation ||
+            "Analysis Decrypted: Review defensive programming functions.";
+
+          await Swal.fire({
+            title: "CHALLENGE FORFEITED ❌",
+            html: `
+              <p style="color: #ef4444; font-weight: bold; margin-bottom: 15px;">Your attempts have been neutralized. Status: LOSS</p>
+              <div style="text-align: left; background: #000; padding: 10px; border-radius: 8px; font-family: monospace;">
+                ${finalExplanation}
+              </div>
+            `,
+            icon: "error",
+            background: "#080c14",
+            color: "#fff",
+            confirmButtonColor: "#ef4444",
+            confirmButtonText: "EXIT ROOM",
+          });
+
+          
+          setTimeLeft(0)
+        } catch (error) {
+          console.error("Forfeit Sync Error:", error);
+          window.location.href = "/challenges";
+        }
+      }
+    });
   };
 
   const handleAddData = (item) => {
@@ -648,8 +690,64 @@ const ChallengeSolvePage = () => {
             </div>
           </div>
 
-          {/* الجزء الأيسر: القلوب والوقت */}
+          {/* الجزء الأيسر:  التلميح ، القلوب والوقت */}
           <div className="flex items-center gap-6">
+            {/* 1️⃣ زر التلميح الطبيعي (يظهر في Hack Race, Phishing Hunter, Password Maker) */}
+            {challengeData?.gameId?.gameName !== "Cyber Escape Room" &&
+              challengeData?.gameId?.gameName !== "Privacy Awareness" &&
+              challengeData?.gameId?.gameName !== "Secure Coding Challenge" && (
+                <button
+                  onClick={() => {
+                    const gameName = challengeData?.gameId?.gameName;
+                    let activeHint =
+                      "No decrypted transmission available for this node.";
+
+                    if (gameName === "Hack Race") {
+                      const currentQ =
+                        challengeData?.scenarioData?.questions?.[
+                          currentQuestionIndex
+                        ];
+                      if (currentQ?.explanation)
+                        activeHint = currentQ.explanation;
+                    } else if (gameName === "Phishing Hunter") {
+                      if (
+                        Array.isArray(challengeData?.scenarioData?.hints) &&
+                        challengeData.scenarioData.hints.length > 0
+                      ) {
+                        activeHint = challengeData.scenarioData.hints[0];
+                      }
+                    } else if (gameName === "Password Maker/Breaker") {
+                      if (challengeData?.scenarioData?.hint)
+                        activeHint = challengeData.scenarioData.hint;
+                    }
+
+                    Swal.fire({
+                      title: "SYSTEM HINT 💡",
+                      text: activeHint,
+                      icon: "info",
+                      background: "#080c14",
+                      color: "#60a5fa",
+                      confirmButtonColor: "#10b981",
+                      confirmButtonText: "UNDERSTOOD",
+                    });
+                  }}
+                  className="flex items-center gap-2 px-3 py-1.5 rounded-xl border border-yellow-500/30 bg-yellow-500/10 text-yellow-400 hover:bg-yellow-500/20 transition-all text-xs font-black uppercase tracking-wider"
+                >
+                  <Lightbulb size={14} className="animate-pulse" />
+                  Hint
+                </button>
+              )}
+
+            {challengeData?.gameId?.gameName === "Secure Coding Challenge" && (
+              <button
+                onClick={handleForfeitSecureCoding} // 👈 نداء مباشر للدالة فوق، نظافة!
+                className="flex items-center gap-2 px-3 py-1.5 rounded-xl border border-red-500/30 bg-red-500/10 text-red-400 hover:bg-yellow-500/20 transition-all text-xs font-black uppercase tracking-wider"
+              >
+                <ShieldAlert size={14} className="animate-pulse" />
+                Show Explanation
+              </button>
+            )}
+
             {/* القلوب */}
             <div className="flex gap-1">
               {[...Array(3)].map((_, i) => (
