@@ -18,10 +18,10 @@ interface HackRaceLayoutProps {
     selectedOptionIndex: number | null;
     showExplanation: boolean;
     userData: any;
-    gameResult: "win" | "loss" | null; 
+    gameResult: "win" | "loss" | null;
     onAnswer: (index: number) => void;
     onReset: () => void;
-    onNavigateGames: () => void; 
+    onNavigateGames: () => void;
 }
 
 const HackRaceLayout: React.FC<HackRaceLayoutProps> = ({
@@ -34,7 +34,7 @@ const HackRaceLayout: React.FC<HackRaceLayoutProps> = ({
 
     return (
         <div className="flex flex-col items-center px-3 py-6 md:p-8 text-white w-full max-w-6xl mx-auto font-sans">
-{/* <div className="flex items-center gap-8 bg-[#1c2438]/60 px-8 py-3 rounded-full border border-white/10 mb-10 backdrop-blur-md">
+            {/* <div className="flex items-center gap-8 bg-[#1c2438]/60 px-8 py-3 rounded-full border border-white/10 mb-10 backdrop-blur-md">
                 <div className="flex items-center gap-2 text-amber-500 font-bold border-r border-white/10 pr-5 text-sm">
                         <Key size={14} fill="currentColor" /> <span>Points: {points_pool} XP</span>
                     </div>
@@ -146,9 +146,15 @@ const HackRaceLayout: React.FC<HackRaceLayoutProps> = ({
                         if (!isAnswered) {
                             style += "border-emerald-500/20 bg-[#0f172a] hover:bg-emerald-950/40 cursor-pointer";
                         } else {
-                            if (isCorrectOption) style += "border-emerald-400 bg-emerald-900 animate-pulse text-white";
-                            else if (idx === selectedOptionIndex) style += "border-red-400 bg-red-900 text-white";
-                            else style += "border-gray-700 bg-gray-800 text-gray-400 opacity-50";
+                            if (idx === selectedOptionIndex) {
+                                if (isCorrectOption) {
+                                    style += "border-emerald-400 bg-emerald-900 animate-pulse text-white"; // صح ينور أخضر
+                                } else {
+                                    style += "border-red-400 bg-red-900 text-white"; // خطأ ينور أحمر
+                                }
+                            } else {
+                                style += "border-gray-700 bg-gray-800 text-gray-400 opacity-50";
+                            }
                         }
 
                         return (

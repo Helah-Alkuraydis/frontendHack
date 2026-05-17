@@ -13,6 +13,7 @@ const EscapeRoomLayout = ({
   activeHint,  
   onShowHint,   
   isWrong, 
+  setLives,
 }) => {
   // --- حالات خاصة بالغرفة الرابعة (الطبقات) ---
   const [layer1Done, setLayer1Done] = useState(false);
@@ -49,10 +50,11 @@ const EscapeRoomLayout = ({
   
   useEffect(() => {
     if (isWrong) {
-      triggerPenalty("-15s");
+      // triggerPenalty("-15s");
+      triggerPenalty("ACCESS_DENIED");
       Swal.fire({
         title: 'ACCESS_DENIED',
-        text: 'Security Trap Triggered: Penalty Applied.',
+        text: 'Incorrect security key! Node deployment failed. Retry configuration.',
         icon: 'error',
         timer: 1500, 
         showConfirmButton: false,
@@ -75,9 +77,21 @@ const EscapeRoomLayout = ({
     onBreach(value); 
   };
 
-  // دالة فحص الطبقة الأولى (Base64) محلياً قبل فتح الطبقة الثانية
+  // 1. تأكدي أنكِ ممررة setLives مع الـ Props فوق في المكون هكذا:
+  // const EscapeRoomLayout = ({ scenario, currentRoomIdx, setLives, ... }) => {
+
   const checkLayer1 = () => {
-    if (!layer1Input.trim()) return;
+    if (!layer1Input.trim()) {
+      Swal.fire({
+        title: "ALERT",
+        text: "Please enter an answer first!",
+        icon: "warning",
+        background: "#080c14",
+        color: "#f87171",
+        confirmButtonColor: "#3b82f6"
+      });
+      return;
+    }
 
     try {
       const safeBase64 = (currentRoom?.puzzle_data || "").replace(/[^A-Za-z0-9+/=]/g, "");
@@ -87,7 +101,7 @@ const EscapeRoomLayout = ({
         setLayer1Done(true);
         setAnswerInput(""); 
         Swal.fire({ 
-          title: 'LAYER_01_DECRYPTED', 
+          title: 'LAYER_01_DECRYPTED 🔓', 
           icon: 'success', 
           toast: true, 
           position: 'top-end', 
@@ -95,38 +109,55 @@ const EscapeRoomLayout = ({
           showConfirmButton: false 
         });
       } else {
-        // إجابة خاطئة
-        if (typeof setTimeLeft === 'function') setTimeLeft(prev => Math.max(0, prev - 10));
-        triggerPenalty("-10s");
+        // ❌ إجابة خاطئة محلياً بالطبقة الأولى للغرفة الرابعة:
+        triggerPenalty("INVALID_HASH");
+        
+        // 🚨 التعديل الجوهري: خصم قلب حقيقي من الـ State الأساسي فوق!
+        if (typeof setLives === "function") {
+          setLives((prevLives) => {
+            const updatedLives = prevLives - 1;
+            if (updatedLives <= 0) {
+              Swal.fire({
+                title: "LOCKDOWN TRIGGERED 🚨",
+                text: "Too many failed attempts in decryption! The system locked you out.",
+                icon: "error",
+                background: "#080c14",
+                color: "#f87171",
+                confirmButtonColor: "#ef4444",
+                confirmButtonText: "EXIT GAME"
+              }).then(() => {
+                if (typeof onFinish === "function") onFinish({ score: 0, status: 'Loss' });
+                window.location.href = "/challenges";
+              });
+            }
+            return updatedLives;
+          });
+        }
+
+        // عرض رسالة الخطأ للطبقة الأولى
+        Swal.fire({
+          title: 'DECRYPTION FAILED ❌',
+          text: 'The input does not match the decoded Base64 layer. One attempt lost!',
+          icon: 'error',
+          background: '#080c14',
+          color: '#ff0055',
+          confirmButtonColor: '#ff0055'
+        });
       }
 
-      // const decoded = window.atob(currentRoom?.puzzle_data || "");
-      // if (layer1Input.trim().toUpperCase() === decoded.toUpperCase()) {
-      //   setLayer1Done(true);
-      //   setAnswerInput(""); // تصفير الحقل للخطوة النهائية
-      //   Swal.fire({ title: 'LAYER_01_DECRYPTED', icon: 'success', toast: true, position: 'top-end', timer: 2000, showConfirmButton: false });
-      // } else {
-      //   if (typeof setTimeLeft === 'function') setTimeLeft(prev => Math.max(0, prev - 10));
-      //   triggerPenalty("-10s");
-      // }
-
-
     } catch (e) {
-      // triggerPenalty("-10s");
-
       console.error("Base64 Decode Error:", e);
-      // 3. منع التهنيق: إظهار رسالة واضحة للمشكلة
+      triggerPenalty("CORRUPT_PACKET");
+      
       Swal.fire({
         title: "DECRYPTION FAILED",
-        text: "The data packet is corrupted or invalid.",
+        text: "The data packet is corrupted or invalid structure.",
         icon: "error",
         background: "#080c14",
         color: "#ff0055",
-        showConfirmButton: false,
-        timer: 1500
+        showConfirmButton: true,
+        confirmButtonColor: '#ff0055'
       });
-      if (typeof setTimeLeft === 'function') setTimeLeft(prev => Math.max(0, prev - 10));
-      triggerPenalty("-10s");
     }
   };
 

@@ -31,7 +31,7 @@ const BreakerLayout: React.FC<BreakerLayoutProps> = ({
     return (
         <div className="max-w-7xl mx-auto w-full flex flex-col gap-6 md:gap-10 animate-in slide-in-from-bottom-12 duration-1000 font-mono relative px-3 py-6 md:p-6">
 
-            <div className="flex justify-center mb-4">
+            {/* <div className="flex justify-center mb-4">
                 <div className="flex items-center gap-8 bg-[#1c2438]/60 px-6 py-2 rounded-full border border-white/5 backdrop-blur-xl shadow-xl">
                     <div className="flex items-center gap-2 text-amber-500 font-bold border-r border-white/10 pr-5 text-sm">
                         <Key size={14} fill="currentColor" /> <span>Points: {points_pool} XP</span>
@@ -48,7 +48,7 @@ const BreakerLayout: React.FC<BreakerLayoutProps> = ({
                         ))}
                     </div>
                 </div>
-            </div>
+            </div> */}
 
             <div className="bg-[#0a0000] border-2 border-red-500/20 rounded-[1.5rem] md:rounded-[2.5rem] p-5 md:p-10 shadow-[0_0_50px_rgba(239,68,68,0.05)] relative overflow-hidden group">
                 <div className="flex justify-between items-start mb-6 md:mb-10 pb-4 md:pb-6 border-b border-red-500/10">
