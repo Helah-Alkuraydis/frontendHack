@@ -7,6 +7,14 @@ import {
 const OnboardingTour = ({ onComplete, onStepChange }) => {
   const [step, setStep] = useState(0);
   const [coords, setCoords] = useState(null);
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+
+  // تحديث حالة الشاشة عند التكبير والتصغير لضمان عزل حقيقي
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth < 768);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   const steps = [
     {
@@ -100,6 +108,14 @@ const OnboardingTour = ({ onComplete, onStepChange }) => {
   const currentStep = steps[step];
 
   const updatePosition = useCallback(() => {
+    // تنظيف كلاسات التوهج للجوال
+    document.querySelectorAll('.active-tour-glow').forEach(el => el.classList.remove('active-tour-glow'));
+
+    if (currentStep.position === "center") {
+      setCoords(null);
+      return;
+    }
+    
     let elementId = "";
     if (currentStep.position === "games") elementId = "games-step";
     if (currentStep.position === "challenge") elementId = "challenge-step";
@@ -108,16 +124,35 @@ const OnboardingTour = ({ onComplete, onStepChange }) => {
     if (currentStep.position === "friends") elementId = "friends-step"; 
     if (currentStep.position === "profile") elementId = "profile-step"; 
 
-    const element = document.getElementById(elementId);
-
-    if (element) {
-      const rect = element.getBoundingClientRect();
-      setCoords({
-        top: rect.top + rect.height / 2,
-        left: rect.right + 25, 
-      });
+    if (window.innerWidth < 768) {
+      // 📱 [بيئة الجوال معزولة تماماً]: نبحث فقط عن الأيقونة النشطة داخل الـ MobileNav السفلي
+      const elements = document.querySelectorAll(`#${elementId}`);
+      const element = Array.from(elements).find(el => el.closest('nav')) || document.getElementById(elementId);
+      
+      if (element) {
+        const rect = element.getBoundingClientRect();
+        element.classList.add('active-tour-glow');
+        setCoords({
+          top: rect.top,
+          left: rect.left + rect.width / 2,
+          isMobile: true // وسم لتأكيد تفعيل استثناء الجوال
+        });
+      } else {
+        setCoords(null);
+      }
     } else {
-      setCoords(null);
+      // 💻 [بيئة اللابتوب معزولة ومحمية 100%]: الكود والعمليات الحسابية الأصلية حقتكم بدون لمس أي حرف
+      const element = document.getElementById(elementId);
+      if (element) {
+        const rect = element.getBoundingClientRect();
+        setCoords({
+          top: rect.top + rect.height / 2,
+          left: rect.right + 25, 
+          isMobile: false
+        });
+      } else {
+        setCoords(null);
+      }
     }
   }, [currentStep.position]);
 
@@ -160,27 +195,54 @@ const OnboardingTour = ({ onComplete, onStepChange }) => {
 
   return (
     <div className="fixed inset-0 z-[10000]">
+      {/* ستايل التوهج السيبراني للأيقونة في الجوال فقط ولا يظهر في اللابتوب */}
+      <style>{`
+        .active-tour-glow {
+          position: relative;
+          z-index: 100005;
+          background: rgba(6, 182, 212, 0.2) !important;
+          box-shadow: 0 0 15px 5px rgba(6, 182, 212, 0.5) !important;
+          border-radius: 30% !important;
+          transition: all 0.3s ease-in-out;
+        }
+      `}</style>
       <div className="absolute inset-0 bg-black/80 backdrop-blur-sm transition-opacity duration-500"></div>
 
       <div
-        style={coords ? {
+        style={(coords && !coords.isMobile) ? {
+          // 💻 قواعد اللابتوب الأصلية الناجحة والقديمة حقتكم رجعت تماماً بمكانها الطبيعي
           position: "fixed",
           top: `${coords.top}px`,
           left: `${coords.left}px`,
           transform: "translateY(-50%)",
           zIndex: 10001
-        } : {
+        } : (coords && coords.isMobile) ? {
+          // 📱 استثناء الجوال الخاص: يطير فوق الأيقونة السفلية النشطة بالضبط
           position: "fixed",
-          top: "50%",
-          left: "50%",
-          transform: "translate(-50%, -50%)"
+          bottom: `${window.innerHeight - coords.top + 12}px`, 
+          left: `${coords.left}px`,
+          transform: "translateX(-50%)",
+          zIndex: 10001
+        } : {
+          position: "fixed", top: "50%", left: "50%", transform: "translate(-50%, -50%)", zIndex: 10001
         }}
         className="transition-all duration-300 ease-out"
       >
-        <div key={step} className="relative w-[380px] bg-[#1e2330]/95 backdrop-blur-xl border border-gray-600/30 rounded-[1.5rem] p-6 shadow-2xl text-white animate-in zoom-in duration-300">
+        {/* 🟢 عزل الحجم التام: إذا كان لابتوب يرجع w-[380px] وبادينج p-6، وإذا كان جوال يصغر لـ w-[280px] وبادينج p-4 عشان ما يغطي على الأيقونات جمبه */}
+        <div 
+          key={step} 
+          className={`relative bg-[#1e2330]/95 backdrop-blur-xl border border-gray-600/30 rounded-[1.5rem] shadow-2xl text-white animate-in zoom-in duration-300 mx-auto
+            ${coords?.isMobile ? 'w-[280px] p-4' : 'w-[380px] p-6'}`}
+        >
           
-          {currentStep.hasArrow && coords && (
+          {/* سهم اللابتوب الأصلي (يشير لليسار باتجاه السايد بار الجانبي) */}
+          {!coords?.isMobile && currentStep.hasArrow && coords && (
             <div className="absolute top-1/2 -left-2 -translate-y-1/2 w-4 h-4 bg-[#1e2330] border-l border-b border-gray-600/30 rotate-45"></div>
+          )}
+
+          {/* سهم الجوال المستثنى (يشير للأسفل باتجاه الناف بار السفلي) */}
+          {coords?.isMobile && currentStep.hasArrow && coords && (
+            <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-4 h-4 bg-[#1e2330] border-r border-b border-gray-600/30 rotate-45"></div>
           )}
 
           <button onClick={handleSkip} className="absolute top-5 right-5 text-gray-400 hover:text-white bg-white/5 rounded-full p-1 transition-colors">
@@ -209,7 +271,10 @@ const OnboardingTour = ({ onComplete, onStepChange }) => {
               <h2 className="text-2xl font-bold mb-4">{currentStep.title}</h2>
             )}
 
-            <p className="text-gray-300 text-sm leading-relaxed mb-6 font-medium whitespace-pre-line">{currentStep.content}</p>
+            {/* عزل مقاسات النصوص والهوامش الداخلية لتصغر فقط في شاشة الجوال */}
+            <p className={`text-gray-300 leading-relaxed font-medium whitespace-pre-line ${coords?.isMobile ? 'text-xs mb-4' : 'text-sm mb-6'}`}>
+              {currentStep.content}
+            </p>
 
             <div className="flex gap-3 w-full justify-end border-t border-white/10 pt-4">
               <button onClick={() => setStep(step - 1)} disabled={step === 0} className="px-6 py-2 rounded-xl font-bold text-gray-400 hover:text-white transition-colors text-sm">
