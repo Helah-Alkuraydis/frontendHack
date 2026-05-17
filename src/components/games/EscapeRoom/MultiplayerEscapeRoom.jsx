@@ -283,7 +283,7 @@ const MultiplayerEscapeRoom = ({ sessionId, userData, myRole }) => {
     <div className="h-screen bg-[#050810] flex relative overflow-hidden font-mono text-white w-full">
       <div className="flex-1 flex flex-col relative overflow-hidden w-full">
         
-        {/* 🟢 الهيدر العلوي: تم وزنه ليدعم التراص العمودي في الجوال لتفادي التداخل في صورة 5 */}
+        {/* الهيدر العلوي المتجاوب عمودياً في الجوال */}
         <header className="flex flex-col sm:flex-row items-start sm:items-center justify-between px-4 sm:px-8 py-3 sm:py-4 bg-[#080c16] border-b border-[#00ff9610] gap-3 flex-shrink-0 w-full">
           <div className="flex items-center gap-3 sm:gap-6 w-full sm:w-auto">
             <button 
@@ -323,11 +323,11 @@ const MultiplayerEscapeRoom = ({ sessionId, userData, myRole }) => {
         </main>
       </div>
 
-      {/* زر فتح الشات التكتيكي العائم */}
+      {/* 🟢 [تثبيت الـ Z-Index]: تم رفع زر الـ Chat العائم لطبقة z-[99999] الإعجازية غصب عن أي كود لتضمنين بقاءه طائراً فوق كافة عناصر اللعبة بجمال */}
       {!isChatOpen && (
         <button 
           onClick={() => { setIsChatOpen(true); setUnreadCount(0); }}
-          className="fixed bottom-4 right-4 sm:bottom-8 sm:right-8 z-[1050] p-4 sm:p-5 bg-[#00ff96] text-black rounded-2xl shadow-[0_0_30px_rgba(0,255,150,0.4)] hover:scale-110 transition-all border border-white/20 flex items-center justify-center"
+          className="fixed bottom-4 right-4 sm:bottom-8 sm:right-8 z-[99999] p-4 sm:p-5 bg-[#00ff96] text-black rounded-2xl shadow-[0_0_30px_rgba(0,255,150,0.4)] hover:scale-110 transition-all border border-white/20 flex items-center justify-center"
         >
           <div className="relative">
             <MessageSquareCode size={24} sm:size={28} />
@@ -340,9 +340,9 @@ const MultiplayerEscapeRoom = ({ sessionId, userData, myRole }) => {
         </button>
       )}
 
-      {/* 🟢 تعديل الحاوية الجانبية للشات: الحين في الجوال تأخذ عرض 75vw فقط لتبان اللعبة خلفها ويسهل الضغط على الفراغ لإغلاقها فوراً */}
-      <div className={`fixed top-0 right-0 h-full z-[1100] w-[75vw] sm:w-auto transition-transform duration-500 ease-in-out transform ${isChatOpen ? 'translate-x-0' : 'translate-x-full'}`}>
-        <button onClick={() => setIsChatOpen(false)} className="absolute top-4 right-4 z-[1110] p-2 text-gray-400 hover:text-white bg-black/40 rounded-full sm:bg-transparent">
+      {/* 🟢 [إصلاح الشات الطويل]: الحاوية الجانبية للشات الحين في الجوال تنفتح كصفحة (Drawer) كاملة العرض w-full لتمنع حشر ونقص الكلمات ومريحة بالقراءة والسوالف */}
+      <div className={`fixed top-0 right-0 h-full z-[100000] w-full sm:w-80 transition-transform duration-500 ease-in-out transform ${isChatOpen ? 'translate-x-0' : 'translate-x-full'}`}>
+        <button onClick={() => setIsChatOpen(false)} className="absolute top-4 right-4 z-[100010] p-2 text-gray-400 hover:text-white bg-black/40 rounded-full sm:bg-transparent transition-colors">
           <X size={20} />
         </button>
         
