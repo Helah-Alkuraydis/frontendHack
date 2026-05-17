@@ -114,7 +114,7 @@ const UserHome = () => {
           </div>
       </div>
 
-      <h3 className="text-2xl font-black mb-8 tracking-tighter italic uppercase text-white/90 px-1">Most games</h3>
+      <h3 className="text-2xl font-black mb-8 tracking-tighter italic uppercase text-white/90 px-1">Most popular games</h3>
       
       {/* 🎮 حاوي الألعاب الأفقي */}
       <div className="flex flex-nowrap overflow-x-auto md:grid md:grid-cols-2 gap-6 md:gap-8 mb-12 pb-4 snap-x scrollbar-none md:scrollbar-thin scrollbar-thumb-gray-800 scrollbar-track-transparent px-1">
