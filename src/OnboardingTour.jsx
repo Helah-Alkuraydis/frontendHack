@@ -124,10 +124,10 @@ const OnboardingTour = ({ onComplete, onStepChange }) => {
 
     const elements = document.querySelectorAll(`#${elementId}`);
     
-    // ⚡ التعديل السحري الحاسم لعزل الأجهزة عن بعضها ديناميكياً:
+    // 🎯 ✅ استثناء ذكي لعزل الجوال: يبحث عن العنصر الموجود داخل ناف بار الموبايل (md:hidden)
     const element = Array.from(elements).find(el => {
-      const isMobileNavInstance = el.closest('nav')?.classList.contains('md:hidden');
-      return isMobile ? isMobileNavInstance : !isMobileNavInstance;
+      const isMobileInstance = el.closest('nav')?.classList.contains('md:hidden');
+      return isMobile ? isMobileInstance : !isMobileInstance;
     }) || document.getElementById(elementId);
 
     if (element) {
@@ -140,6 +140,7 @@ const OnboardingTour = ({ onComplete, onStepChange }) => {
           left: rect.left + rect.width / 2,
         });
       } else {
+        // 💻 وزنيتكم الأصلية المحمية للابتوب بدون أي تغيير نهائياً
         setCoords({
           top: rect.top + rect.height / 2,
           left: rect.right + 25 , 
@@ -171,7 +172,7 @@ const OnboardingTour = ({ onComplete, onStepChange }) => {
     return (
       <div className="fixed inset-0 z-[10000] flex items-center justify-center p-4">
         <div className="absolute inset-0 bg-[#050810]/85 backdrop-blur-sm transition-opacity duration-500"></div>
-        <div key={step} className="relative w-[85%] max-w-[290px] sm:max-w-[340px] bg-gradient-to-b from-[#2a324b]/90 to-[#161b2e]/95 backdrop-blur-xl border border-blue-500/20 rounded-[1.8rem] sm:rounded-[2.5rem] p-4 sm:p-5 shadow-2xl text-white pt-20">
+        <div key={step} className="relative w-[85%] max-w-[280px] sm:max-w-[340px] bg-gradient-to-b from-[#2a324b]/90 to-[#161b2e]/95 backdrop-blur-xl border border-blue-500/20 rounded-[1.8rem] sm:rounded-[2.5rem] p-4 sm:p-5 shadow-2xl text-white pt-20">
           <div className="absolute -top-[70px] left-1/2 -translate-x-1/2 w-[130px] h-[130px] z-20 pointer-events-none">
             <img src="/Astra.png" alt="Astra Guide" className="w-full h-full object-contain drop-shadow-[0_10px_20px_rgba(0,0,0,0.5)]" />
           </div>
@@ -203,14 +204,14 @@ const OnboardingTour = ({ onComplete, onStepChange }) => {
 
       <div
         style={(coords && !isMobile) ? {
-          // 💻 إحداثيات اللابتوب الأصلية المحمية تقعد بمكانها الصح يسار الشاشة
+          // 💻 قواعد اللابتوب الأصلية والناجحة 100% تقعد ثابتة بمكانها
           position: "fixed",
           top: `${coords.top}px`,
           left: `${coords.left}px`,
           transform: "translateY(-50%)",
           zIndex: 10010
         } : (coords && isMobile) ? {
-          // 📱 إحداثيات الجوال الملمومة تطير وتقعد فوق الأيقونات تحت
+          // 📱 قواعد الجوال الخاصة: يطير فوق الأيقونات النشطة السفلية بالضبط
           position: "fixed",
           bottom: `${window.innerHeight - coords.top + 12}px`, 
           left: `${coords.left}px`,
@@ -221,7 +222,8 @@ const OnboardingTour = ({ onComplete, onStepChange }) => {
         }}
         className="transition-all duration-300 ease-out w-full px-4 md:block"
       >
-        <div key={step} className="relative w-full max-w-[290px] sm:max-w-[350px] bg-[#1e2330]/95 backdrop-blur-xl border border-white/10 rounded-[1.8rem] sm:rounded-[2rem] p-4 sm:p-6 shadow-2xl text-white animate-in zoom-in duration-300 mx-auto">
+        {/* 🟢 الاستثناء الجمالي لحجم الكرت: max-w-[280px] للجوال و ينفتح لـ max-w-[350px] للابتوب */}
+        <div key={step} className="relative w-full max-w-[280px] sm:max-w-[350px] bg-[#1e2330]/95 backdrop-blur-xl border border-white/10 rounded-[1.8rem] sm:rounded-[2rem] p-4 sm:p-6 shadow-2xl text-white animate-in zoom-in duration-300 mx-auto">
           
           {/* سهم اللابتوب (يشير لليسار باتجاه السايد بار الجانبي) */}
           {!isMobile && currentStep.hasArrow && coords && (
@@ -255,6 +257,7 @@ const OnboardingTour = ({ onComplete, onStepChange }) => {
               <h2 className="text-sm sm:text-lg font-bold tracking-tight">{currentStep.title}</h2>
             </div>
 
+            {/* تصغير مقاسات النصوص والهوامش في شاشة الموبايل حصراً ليبقى أنيقاً وملموماً */}
             <p className="text-gray-300 text-xs sm:text-sm leading-relaxed mb-4 sm:mb-6 font-medium whitespace-pre-line">{currentStep.content}</p>
 
             <div className="flex gap-2 w-full justify-end border-t border-white/10 pt-3 sm:pt-4">
