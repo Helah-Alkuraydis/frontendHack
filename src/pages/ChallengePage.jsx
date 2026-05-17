@@ -492,14 +492,14 @@ const ChallengePage = () => {
 
   const getGameIcon = (gameName) => {
     const icons = {
-      "Phishing Hunter": <ShieldAlert className="text-emerald-400" size={24} />,
-      "Firewall Defender": <ShieldCheck className="text-blue-400" size={24} />,
-      "Cyber Escape Room": <DoorOpen className="text-purple-400" size={24} />,
-      "Hack Race": <Timer className="text-red-400" size={24} />,
-      "Privacy Awareness": <Fingerprint className="text-cyan-400" size={24} />,
-      "Password Maker/Breaker": <Key className="text-yellow-400" size={24} />,
+      "Phishing Hunter": <ShieldAlert className="!text-emerald-400" size={24} />,
+      "Firewall Defender": <ShieldCheck className="!text-blue-400" size={24} />,
+      "Cyber Escape Room": <DoorOpen className="!text-purple-400" size={24} />,
+      "Hack Race": <Timer className="!text-red-400" size={24} />,
+      "Privacy Awareness": <Fingerprint className="!text-cyan-400" size={24} />,
+      "Password Maker/Breaker": <Key className="!text-yellow-400" size={24} />,
       "Secure Coding Challenge": (
-        <FileCode className="text-orange-400" size={24} />
+        <FileCode className="!text-orange-400" size={24} />
       ),
     };
     return (
