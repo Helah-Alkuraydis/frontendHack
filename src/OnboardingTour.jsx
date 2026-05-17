@@ -139,7 +139,7 @@ const OnboardingTour = ({ onComplete, onStepChange }) => {
         // 💻 للابتوب: الإحداثيات الأصلية الفخمة حقتكم بدون لمس
         setCoords({
           top: rect.top + rect.height / 2,
-          left: rect.right + 25, 
+          left: rect.right + 25 , 
         });
       }
     } else {
@@ -164,7 +164,6 @@ const OnboardingTour = ({ onComplete, onStepChange }) => {
   const handleNext = () => step < steps.length - 1 ? setStep(step + 1) : onComplete();
   const handleSkip = () => onComplete();
 
-  // المظهر الخارجي لمرشد الرحلة (البداية والنهاية)
   if (currentStep.layout === 'astra') {
     return (
       <div className="fixed inset-0 z-[10000] flex items-center justify-center p-4">
@@ -176,7 +175,7 @@ const OnboardingTour = ({ onComplete, onStepChange }) => {
           <div className="flex flex-col items-center text-center relative z-10">
             <h2 className="text-xl font-black mb-3 bg-clip-text text-transparent bg-gradient-to-r from-white to-blue-200">{currentStep.title}</h2>
             <p className="text-blue-100/80 text-xs md:text-sm leading-relaxed mb-6 font-medium">{currentStep.content}</p>
-            <button onClick={handleNext} className="w-full py-3 rounded-xl font-black text-sm bg-gradient-to-r from-blue-600 to-indigo-600 shadow-lg shadow-blue-500/25 transition-all flex items-center justify-center gap-2">
+            <button onClick={handleNext} className="w-full py-3 rounded-xl font-black text-sm bg-gradient-to-r from-blue-600 to-indigo-600 shadow-lg shadow-blue-500/25 transition-all flex items-center justify-center ">
               {currentStep.btnIcon} {currentStep.btnNext}
             </button>
           </div>
@@ -218,7 +217,7 @@ return (
         } : {
           position: "fixed", top: "50%", left: "50%", transform: "translate(-50%, -50%)", zIndex: 10001
         }}
-        className="transition-all duration-300 ease-out w-full px-4 flex justify-center"
+        className="transition-all duration-300 ease-out w-full px-4 md:block"
       >
         <div key={step} className="relative w-full max-w-[350px] bg-[#1e2330]/95 backdrop-blur-xl border border-white/10 rounded-[2rem] p-6 shadow-2xl text-white animate-in zoom-in duration-300">
           

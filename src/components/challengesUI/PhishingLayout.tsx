@@ -41,7 +41,8 @@ const PhishingLayout: React.FC<PhishingLayoutProps> = ({
     };
 
     return (
-        <div className="flex flex-1 flex-col h-full p-6 z-10">
+        // 🟢 التعديل: px-3 py-6 للجوال و md:p-6 للابتوب عشان المحتوى يتنفس
+        <div className="flex flex-1 flex-col h-full px-3 py-6 md:p-6 z-10">
             {/* <div className="flex justify-center mb-6">
                 <div className="flex items-center gap-8 bg-[#1c2438]/60 px-6 py-2 rounded-full border border-white/5 backdrop-blur-xl shadow-xl mx-auto">
                     <div className="flex items-center gap-2 text-yellow-500 font-bold border-r border-white/10 pr-5 text-sm"><Zap size={14} fill="currentColor" /> <span>Points: {points_pool} XP</span></div>
@@ -72,53 +73,57 @@ const PhishingLayout: React.FC<PhishingLayoutProps> = ({
             </div> */}
 
             <div className="w-full max-w-5xl mx-auto bg-white rounded-[1.25rem] overflow-hidden shadow-2xl flex flex-col h-full border border-gray-200 animate-in slide-in-from-bottom-12 duration-700 font-sans text-gray-900">
-                <div className="bg-[#f2f6fc] px-8 py-3 border-b border-gray-200 flex justify-between items-center text-gray-400">
-                    <div className="flex gap-10"><Archive size={18} /><OctagonAlert size={18} /><Trash2 size={18} /><Mail size={18} /></div>
+                {/* 🟢 التعديل: px-4 للجوال و md:px-8 للابتوب */}
+                <div className="bg-[#f2f6fc] px-4 md:px-8 py-3 border-b border-gray-200 flex justify-between items-center text-gray-400">
+                    <div className="flex gap-6 md:gap-10"><Archive size={18} /><OctagonAlert size={18} /><Trash2 size={18} /><Mail size={18} /></div>
                     <MoreVertical size={18} className="cursor-pointer" />
                 </div>
 
                 <div className="flex flex-1 overflow-hidden">
-                    <div className="w-16 bg-[#f8fafc] border-r border-gray-100 flex flex-col items-center py-8 gap-8">
+                    {/* 🟢 التعديل: إخفاء القائمة الجانبية بالجوال hidden md:flex عشان مساحة النص */}
+                    <div className="hidden md:flex w-16 bg-[#f8fafc] border-r border-gray-100 flex-col items-center py-8 gap-8">
                         <div className="w-10 h-10 rounded-2xl bg-blue-50 flex items-center justify-center text-blue-600 shadow-sm"><Mail size={18} /></div>
                         <Star size={16} className="text-gray-300" /><CornerUpLeft size={16} className="text-gray-300" />
                     </div>
 
-                    <div className="flex-1 bg-white p-10 overflow-y-auto flex flex-col">
-                        <h2 className="text-[22px] font-normal text-[#202124] mb-6 leading-tight tracking-tight">{scenario.subject}</h2>
+                    {/* 🟢 التعديل: p-5 للجوال و md:p-10 للابتوب */}
+                    <div className="flex-1 bg-white p-5 md:p-10 overflow-y-auto flex flex-col">
+                        <h2 className="text-lg md:text-[22px] font-normal text-[#202124] mb-4 md:mb-6 leading-tight tracking-tight">{scenario.subject}</h2>
 
-                        <div className="flex justify-between items-start mb-8">
-                            <div className="flex gap-4">
-                                <div className="w-10 h-10 rounded-full bg-[#1a73e8] flex items-center justify-center text-white font-bold text-lg uppercase shadow-md">
+                        <div className="flex justify-between items-start mb-6 md:mb-8">
+                            <div className="flex gap-3 md:gap-4">
+                                <div className="w-8 h-8 md:w-10 md:h-10 rounded-full bg-[#1a73e8] flex items-center justify-center text-white font-bold text-base md:text-lg uppercase shadow-md">
                                     {scenario.sender?.charAt(0)}
                                 </div>
                                 <div className="flex flex-col">
-                                    <span className="font-bold text-gray-900 text-[14px]">{scenario.sender}</span>
-                                    <div className="text-[11px] text-[#5f6368] mt-1">to {userData?.email || "target@hackhero.com"} <ChevronDown size={11} className="inline-block ml-1" /></div>
+                                    <span className="font-bold text-gray-900 text-[12px] md:text-[14px]">{scenario.sender}</span>
+                                    <div className="text-[10px] md:text-[11px] text-[#5f6368] mt-0.5 md:mt-1">to {userData?.email || "target@hackhero.com"} <ChevronDown size={11} className="inline-block ml-1" /></div>
                                 </div>
                             </div>
-                            <span className="text-[10px] text-[#5f6368] font-bold uppercase mt-2">JUST NOW</span>
+                            <span className="text-[9px] md:text-[10px] text-[#5f6368] font-bold uppercase mt-1 md:mt-2">JUST NOW</span>
                         </div>
 
-                        <div className="text-[14px] text-[#202124] leading-[1.6] mb-10 flex-1 whitespace-pre-line">
+                        <div className="text-sm md:text-[14px] text-[#202124] leading-[1.6] mb-8 md:mb-10 flex-1 whitespace-pre-line">
                             {scenario.body}
-                            <div onClick={(e) => { e.stopPropagation(); onLinkCheck(); }} className="mt-8 p-4 bg-[#f8f9fa] border border-[#dadce0] rounded-xl flex items-center gap-4 group cursor-pointer hover:bg-red-50 transition-all shadow-sm max-w-sm">
-                                <div className="p-2 bg-white rounded-lg shadow-sm border border-[#dadce0] text-[#1a73e8] group-hover:scale-110 group-hover:text-red-600 transition-all"><Lock size={18} /></div>
-                                <div className="flex flex-col gap-0.5 overflow-hidden"><span className="text-[12px] font-medium text-[#202124]">Verify Link</span><span className="text-[10px] text-[#0b57d0] font-mono truncate underline group-hover:text-red-700">{scenario.links?.[0]?.url}</span></div>
+                            {/* 🟢 التعديل: تصغير المساحات بالجوال لزر اللينك */}
+                            <div onClick={(e) => { e.stopPropagation(); onLinkCheck(); }} className="mt-6 md:mt-8 p-3 md:p-4 bg-[#f8f9fa] border border-[#dadce0] rounded-xl flex items-center gap-3 md:gap-4 group cursor-pointer hover:bg-red-50 transition-all shadow-sm max-w-sm">
+                                <div className="p-2 bg-white rounded-lg shadow-sm border border-[#dadce0] text-[#1a73e8] group-hover:scale-110 group-hover:text-red-600 transition-all"><Lock size={16} className="md:w-[18px] md:h-[18px]" /></div>
+                                <div className="flex flex-col gap-0.5 overflow-hidden"><span className="text-[11px] md:text-[12px] font-medium text-[#202124]">Verify Link</span><span className="text-[9px] md:text-[10px] text-[#0b57d0] font-mono truncate underline group-hover:text-red-700">{scenario.links?.[0]?.url}</span></div>
                             </div>
                         </div>
 
-                        <div className="flex flex-col items-center gap-3 mt-auto pt-4 border-t border-gray-100 w-full overflow-visible pb-3">
-                            <div className="flex items-center gap-2 px-4 py-1 bg-blue-50/50 rounded-full border border-blue-100 shadow-sm">
-                                <OctagonAlert size={16} className="text-blue-600" />
-                                <span className="text-[15px] font-black text-blue-700 uppercase tracking-widest leading-none">Action Required: Choose your response</span>
-                                <OctagonAlert size={16} className="text-blue-600" />
+                        <div className="flex flex-col items-center gap-3 md:gap-4 mt-auto pt-4 border-t border-gray-100 w-full overflow-visible pb-3">
+                            <div className="flex items-center gap-2 px-3 md:px-4 py-1.5 md:py-1 bg-blue-50/50 rounded-full border border-blue-100 shadow-sm text-center">
+                                <OctagonAlert size={14} className="text-blue-600 md:w-4 md:h-4 shrink-0" />
+                                <span className="text-[10px] md:text-[15px] font-black text-blue-700 uppercase tracking-widest leading-tight md:leading-none">Action Required: Choose your response</span>
+                                <OctagonAlert size={14} className="text-blue-600 md:w-4 md:h-4 shrink-0" />
                             </div>
 
-                            <div className="flex flex-row flex-wrap items-center gap-2 justify-center w-full overflow-visible px-4">
+                            <div className="flex flex-row flex-wrap items-center gap-3 md:gap-2 justify-center w-full overflow-visible px-0 md:px-4">
                                 {scenario.actions?.map((act: any, idx: number) => {
                                     let buttonClass = "border-[#dadce0] text-gray-700 hover:border-[#1a73e8] hover:text-[#1a73e8] hover:bg-blue-50 bg-white";
 
-
+                                    // تعليقاتك محفوظة بالملي هنا بدون أي تغيير
                                     // if (isAnswered) {
                                     //     const isThisCorrect = act === scenario.correctAnswer;
                                     //     const isThisSelected = act === selectedAction;
@@ -148,13 +153,14 @@ const PhishingLayout: React.FC<PhishingLayoutProps> = ({
                                     }
 
                                     return (
+                                        // 🟢 التعديل: الأزرار تصير w-full للجوال عشان تنزل تحت بعض، وترجع md:w-[calc(50%-1rem)] للابتوب
                                         <button
                                             key={idx}
                                             onClick={() => onAction(act)}
                                             disabled={isAnswered}
-                                            className={`flex items-center justify-center gap-3 px-6 py-4 rounded-4xl border-2 transition-all duration-300 shadow-sm uppercase tracking-tighter active:scale-95 text-[12px] w-[calc(50%-1rem)] min-w-[200px] h-auto leading-tight ${buttonClass}`}
+                                            className={`flex items-center justify-center gap-3 px-4 md:px-6 py-3 md:py-4 rounded-2xl md:rounded-4xl border-2 transition-all duration-300 shadow-sm uppercase tracking-tighter active:scale-95 text-[11px] md:text-[12px] w-full md:w-[calc(50%-1rem)] md:min-w-[200px] h-auto leading-tight ${buttonClass}`}
                                         >
-                                            <span className="scale-220">{getActionIcon(act)}</span>
+                                            <span className="scale-150 md:scale-220">{getActionIcon(act)}</span>
                                             <span className="flex-1 text-center">{act}</span>
                                         </button>
                                     );

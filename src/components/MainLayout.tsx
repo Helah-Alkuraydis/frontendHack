@@ -13,9 +13,9 @@ import {
   LayoutDashboard, 
   LogOut, 
   Menu,
-  PanelLeftOpen,   // تأكدنا من استيرادها
-  PanelLeftClose,  // تأكدنا من استيرادها
-  Swords,          // تأكدنا من استيرادها للـ Challenge
+  PanelLeftOpen,   
+  PanelLeftClose,  
+  Swords,          
   Zap
 } from "lucide-react";
 import NotificationsModal from './NotificationsModal';
@@ -171,13 +171,15 @@ const MainLayout = ({ children, activePage, headerActions, highlightedId, forceH
         </nav>
       </aside>
 
-      <main className="flex-1 px-4 md:px-16 py-8 overflow-y-auto w-full transition-all duration-500">
-        <header className="flex justify-between items-center mb-10 w-full">
+      {/* 🟢 تعديل الـ padding والـ margin للجوال عشان المحتوى يتنفس والناف بار يضبط */}
+      <main className="flex-1 px-3 md:px-16 pt-4 pb-24 md:py-8 overflow-y-auto w-full transition-all duration-500">
+        {/* 🟢 توزين الهيدر عشان المساحات والـ XP والـ Avatar يقعدون بمكانهم صح */}
+        <header className="flex justify-between items-center mb-6 md:mb-10 w-full gap-2">
           <div className="flex-shrink-0">{headerActions}</div>
-          <div className="flex items-center gap-4">
-            <div className="flex items-center gap-3 bg-[#1c2438] px-3 py-2 rounded-2xl border border-white/5 shadow-2xl">
-              <div className="flex items-center gap-2 px-2 py-1 bg-yellow-500/10 border border-yellow-500/20 rounded-lg whitespace-nowrap">
-                <Zap size={14} className="text-yellow-500 fill-yellow-500" />
+          <div className="flex items-center gap-2 md:gap-4 ml-auto">
+            <div className="flex items-center gap-2 md:gap-3 bg-[#1c2438] px-2 py-1.5 md:px-3 md:py-2 rounded-2xl border border-white/5 shadow-2xl">
+              <div className="flex items-center gap-1.5 px-2 py-1 bg-yellow-500/10 border border-yellow-500/20 rounded-lg whitespace-nowrap">
+                <Zap size={12} className="text-yellow-500 fill-yellow-500" />
                 <span className="text-[10px] md:text-xs font-black text-yellow-500 tracking-wider">
                   {user?.totalScore || 0} XP
                 </span>
@@ -186,7 +188,7 @@ const MainLayout = ({ children, activePage, headerActions, highlightedId, forceH
               <span className="text-white font-black italic text-xs md:text-sm tracking-wide hidden sm:block">
                 {user?.username || "Guest"}
               </span>
-              <div className="w-8 h-8 rounded-full border border-blue-600/50 flex items-center justify-center bg-blue-600/10 overflow-hidden shadow-lg">
+              <div className="w-7 h-7 md:w-8 md:h-8 rounded-full border border-blue-600/50 flex items-center justify-center bg-blue-600/10 overflow-hidden shadow-lg">
                 <img
                   src={user?.characterStyle ? `/${user.characterStyle}` : '/saudi-man.png'}
                   className="w-full h-full object-cover"
@@ -197,11 +199,11 @@ const MainLayout = ({ children, activePage, headerActions, highlightedId, forceH
 
             <div className="flex items-center gap-2">
               <div className="relative cursor-pointer group" onClick={() => setIsNotifOpen(true)}>
-                <Bell size={20} className={`${hasUnread ? 'text-[#ff3b6b] animate-pulse' : 'text-gray-500'} hover:text-white transition-colors`} />
+                <Bell size={18} className={`${hasUnread ? 'text-[#ff3b6b] animate-pulse' : 'text-gray-500'} hover:text-white transition-colors`} />
                 {hasUnread && <span className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-[#ff3b6b] rounded-full border-2 border-[#050810]"></span>}
               </div>
-              <button onClick={handleLogout} className="p-1 text-gray-500 hover:text-red-500 transition-colors">
-                <LogOut size={20} />
+              <button onClick={handleLogout} className="p-1 text-gray-500 hover:text-red-500 transition-colors md:hidden">
+                <LogOut size={18} />
               </button>
             </div>
           </div>
@@ -234,34 +236,32 @@ const NavItem = ({ icon, label, active, isCollapsed, isDanger }: any) => (
 );
 
 // MobileNav Component
-// MobileNav Component بعد إضافة الـ IDs الخاصة بالجوال لربطها بالتور ميكانيكياً
-// MobileNav Component - النسخة النهائية الموزونة والمربوطة بالتور 100%
 const MobileNav = ({ activePage }: any) => {
   return (
-    // التعديل هنا: تم رفع الـ z-index إلى z-[100006] ليصبح فوق طبقة التور السوداء وتظهر الأيقونات بوضوح
-    <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-[#050810] border-t border-gray-800/50 px-2 py-3 flex justify-around items-center z-[100006] shadow-[0_-10px_20px_rgba(0,0,0,0.5)]">
+    <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-[#050810] border-t border-gray-800/50 px-2 pt-3 pb-5 flex justify-around items-center z-[100006] shadow-[0_-10px_20px_rgba(0,0,0,0.5)]">
       <Link to="/home">
-        <Home size={20} className={activePage === 'home' ? 'text-[#ff3b6b]' : 'text-gray-500'} />
-      </Link>
-      
-      <Link to="/dashboard" id="dashboard-step" className="relative z-[100007]">
-        <LayoutDashboard size={20} className={activePage === 'dashboard' ? 'text-[#ff3b6b]' : 'text-gray-500'} />
+        <Home size={22} className={activePage === 'home' ? 'text-[#ff3b6b]' : 'text-gray-500'} />
       </Link>
 
       <Link to="/games" id="games-step" className="relative z-[100007]">
-        <Gamepad2 size={20} className={activePage === 'games' ? 'text-[#ff3b6b]' : 'text-gray-500'} />
+        <Gamepad2 size={22} className={activePage === 'games' ? 'text-[#ff3b6b]' : 'text-gray-500'} />
       </Link>
-      
-      <Link to="/friends" id="friends-step" className="relative z-[100007]">
-        <Users size={20} className={activePage === 'friends' ? 'text-[#ff3b6b]' : 'text-gray-500'} />
+      <Link to="/challenges" id="challenge-step" className="relative z-[100007]">
+        <Swords size={22} className={activePage === 'challenge' ? 'text-[#ff3b6b]' : 'text-gray-500'} />
       </Link>
 
       <Link to="/achievements" id="achievements-step" className="relative z-[100007]">
-        <Trophy size={20} className={activePage === 'achievements' ? 'text-[#ff3b6b]' : 'text-gray-500'} />
+        <Trophy size={22} className={activePage === 'achievements' ? 'text-[#ff3b6b]' : 'text-gray-500'} />
       </Link>
 
+      <Link to="/dashboard" id="dashboard-step" className="relative z-[100007]">
+        <LayoutDashboard size={22} className={activePage === 'dashboard' ? 'text-[#ff3b6b]' : 'text-gray-500'} />
+      </Link>
+      <Link to="/friends" id="friends-step" className="relative z-[100007]">
+        <Users size={22} className={activePage === 'friends' ? 'text-[#ff3b6b]' : 'text-gray-500'} />
+      </Link>
       <Link to="/profile" id="profile-step" className="relative z-[100007]">
-        <User size={20} className={activePage === 'profile' ? 'text-[#ff3b6b]' : 'text-gray-500'} />
+        <User size={22} className={activePage === 'profile' ? 'text-[#ff3b6b]' : 'text-gray-500'} />
       </Link>
     </nav>
   );
