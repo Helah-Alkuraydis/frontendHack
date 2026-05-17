@@ -2,9 +2,11 @@ import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import Swal from 'sweetalert2';
 import MakerSingleLayout from '../layouts/MakerSingleLayout';
-import MakerMultiLayout from '../layouts/MakerMultiLayout'; // استيراد الواجهة الجديدة
+import MakerMultiLayout from '../layouts/MakerMultiLayout'; 
 import { socket } from '../../../../socket';
-import  {BASE_URL} from '../../../../api/auth.js';
+import { BASE_URL } from '../../../../api/auth.js';
+import GameOverOverlay from '../../../GameOverOverlay.js';
+
 interface PasswordProps {
     gameId: string;
     sessionId: string;
@@ -26,9 +28,19 @@ const MakerController: React.FC<PasswordProps> = ({ gameId, sessionId, initialLe
     const [isAiAnalyzing, setIsAiAnalyzing] = useState(false);
     const [displayedText, setDisplayedText] = useState("");
     const [gameStatus, setGameStatus] = useState<'Win' | 'Loss' | null>(null);
-    const [timeLeft, setTimeLeft] = useState(180);
+    const [timeLeft, setTimeLeft] = useState(60);
     const [lives, setLives] = useState(3);
     const [loading, setLoading] = useState(false);
+
+    // --- States الخاصة بالتحكم بالـ GameOverOverlay التفاعلي ---
+    const [showProceedBtn, setShowProceedBtn] = useState(false);
+    const [showOverlay, setShowOverlay] = useState(false);
+    const [overlayData, setOverlayData] = useState({
+        isWinner: false,
+        title: "",
+        message: "",
+        xpGained: 0
+    });
 
     // --- States الخاصة بالوضع الجماعي (Multiplayer Dossier) ---
     const [targetName, setTargetName] = useState('');
@@ -36,8 +48,8 @@ const MakerController: React.FC<PasswordProps> = ({ gameId, sessionId, initialLe
     const [city, setCity] = useState('');
     const [pet, setPet] = useState('');
     const [hint, setHint] = useState('');
-    const [isDeployed, setIsDeployed] = useState(false); // هل تم إرسال المهمة؟
-    const [attackLogs, setAttackLogs] = useState<{ guess: string, isCorrect: boolean, time: string }[]>([]); // سجل الهجمات
+    const [isDeployed, setIsDeployed] = useState(false); 
+    const [attackLogs, setAttackLogs] = useState<{ guess: string, isCorrect: boolean, time: string }[]>([]); 
 
     const typeAudioRef = useRef(new Audio('/sounds/type.mp3'));
     const handleKeyPress = () => {
@@ -45,8 +57,34 @@ const MakerController: React.FC<PasswordProps> = ({ gameId, sessionId, initialLe
         typeAudioRef.current.play().catch(() => { });
     };
 
+    // عداد الوقت التناقسي
+    useEffect(() => {
+        if (timeLeft <= 0 || gameStatus !== null) {
+            if (timeLeft <= 0 && gameStatus === null) {
+                setGameStatus('Loss');
+                Swal.fire({
+                    title: '<span style="color:#ef4444; font-family:monospace; font-weight:900;">TIME_EXPIRED ⏳</span>',
+                    text: "Security mainframe lockdown! You ran out of time.",
+                    icon: "error",
+                    background: "#080c14",
+                    color: "#fff",
+                    confirmButtonColor: "#ef4444",
+                    confirmButtonText: "EXIT SIMULATOR"
+                }).then(() => {
+                    onFinish({ status: 'Loss', score: 0, duration: 60 });
+                });
+            }
+            return;
+        }
 
-    // حساب قوة كلمة المرور (للوضع الفردي)
+        const timer = setInterval(() => {
+            setTimeLeft(prev => prev - 1);
+        }, 1000);
+
+        return () => clearInterval(timer);
+    }, [timeLeft, gameStatus]);
+
+    // حساب قوة كلمة المرور في الوقت الفعلي
     useEffect(() => {
         let s = 0;
         if (password.length >= 10) s++;
@@ -57,7 +95,7 @@ const MakerController: React.FC<PasswordProps> = ({ gameId, sessionId, initialLe
         setStrength(s);
     }, [password]);
 
-    // تأثير الطباعة للـ AI
+    // تأثير الطباعة التلقائي لكونسول النصائح
     useEffect(() => {
         if (!isAiAnalyzing && aiRecommendation) {
             setDisplayedText("");
@@ -69,12 +107,12 @@ const MakerController: React.FC<PasswordProps> = ({ gameId, sessionId, initialLe
                 } else {
                     clearInterval(typingInterval);
                 }
-            }, 50);
+            }, 30);
             return () => clearInterval(typingInterval);
         }
     }, [aiRecommendation, isAiAnalyzing]);
 
-    // 🎧 استماع الميكر لتخمينات البريكر (كاميرا المراقبة)
+    // استماع تخمينات الأونلاين للوضع الجماعي
     useEffect(() => {
         if (mode !== 'multiplayer') return;
 
@@ -82,150 +120,169 @@ const MakerController: React.FC<PasswordProps> = ({ gameId, sessionId, initialLe
             const newLog = {
                 guess: data.guess,
                 isCorrect: data.isCorrect,
-                time: new Date().toLocaleTimeString([], { hour12: false }) // وقت المحاولة
+                time: new Date().toLocaleTimeString([], { hour12: false }) 
             };
-            
-            // إضافة المحاولة الجديدة في بداية السجل
             setAttackLogs(prev => [newLog, ...prev]);
-
-            
         };
 
         socket.on("receive_breaker_guess", handleBreakerAttempt);
-
         return () => {
             socket.off("receive_breaker_guess", handleBreakerAttempt);
         };
     }, [mode]);
 
-    // منطق إرسال المهمة في الوضع الجماعي (Multiplayer Deploy)
     const handleMultiplayerDeploy = (e?: React.FormEvent) => {
         if (e) e.preventDefault();
-
-        console.log("🚀 Deploying Mission...");
         setLoading(true);
 
         const missionData = {
             sessionId,
             password,
-            dossier: {
-                name: targetName,
-                birthYear,
-                city,
-                pet,
-                hint
-            }
+            dossier: { name: targetName, birthYear, city, pet, hint }
         };
 
-        console.log("📦 Sending Data to Socket:", missionData);
-
-        // 🔥 التعديل החاسم: التأكد من اتصال السوكيت قبل الإرسال
         if (!socket.connected) {
-            console.log("🔌 Socket was disconnected. Reconnecting...");
             socket.connect();
-
-            // ننتظر قليلاً لضمان اكتمال الاتصال قبل الإرسال
             setTimeout(() => {
-                // التأكد من الانضمام للغرفة مرة أخرى في حال انقطع الاتصال
                 socket.emit("join_room", sessionId);
                 socket.emit("send_password", missionData);
                 setLoading(false);
                 setIsDeployed(true);
-                showSuccessMessage();
             }, 500);
         } else {
-            // السوكيت متصل بالفعل، نرسل فوراً
             socket.emit("send_password", missionData);
+            setLoading(false);
             setIsDeployed(true);
-            showSuccessMessage();
         }
     };
 
-    // 🏆 استماع الميكر لنتيجة المباراة النهائية من السيرفر
-    // useEffect(() => {
-    //     if (mode !== 'multiplayer') return;
-
-    //     const handleMatchEnded = (data: any) => {
-    //         if (data.winner === 'maker') {
-    //             // الميكر فاز لأن البريكر فشل
-    //             handleFinishGame('Win');
-    //         } else if (data.winner === 'breaker') {
-    //             // الميكر خسر لأن البريكر جاب الكلمة
-    //             handleFinishGame('Loss');
-    //         }
-    //     };
-
-    //     socket.on("match_ended", handleMatchEnded);
-
-    //     return () => {
-    //         socket.off("match_ended", handleMatchEnded);
-    //     };
-    // }, [mode, sessionId]);
-
-    // دالة مساعدة لعرض رسالة النجاح
-    const showSuccessMessage = () => {
-        setTimeout(() => {
-            setLoading(false);
-           
-        }, 1000);
-    }
-
-    // منطق التحقق في الوضع الفردي (يبقى كما هو)
+    // ⚔️ الدالة الذكية للتحقق وتشغيل زر علم بوسط الشاشة
     const handleMakerSubmit = async () => {
+        if (password.length < 6) return;
+
         setIsAlertActive(false);
-        setIsAiAnalyzing(true);
+        setLoading(true); 
+        setIsAiAnalyzing(true); 
+        setShowProceedBtn(false);
+
         try {
             const token = localStorage.getItem('token');
             const res = await axios.post(`${BASE_URL}/games/password/evaluate`, {
-                password, gameId, duration: 180 - timeLeft, level: initialLevel
+                password,
+                gameId,
+                duration: 60 - timeLeft,
+                level: initialLevel
             }, { headers: { Authorization: `Bearer ${token}` } });
 
-            const { status, aiRecommendation: aiRes } = res.data;
-            setAiRecommendation(aiRes);
-            setGameStatus(status);
-            setIsAiAnalyzing(false);
+            const { status, hackerReaction, recommendation, simulationDelay, pointsEarned } = res.data;
+
+            setTimeout(() => {
+                setIsAiAnalyzing(false);
+                setLoading(false);
+                setAiRecommendation(recommendation); 
+
+                // شحن بيانات الأوفرلاي بالخلفية لانتظار ضغطة اللاعب
+                setOverlayData({
+                    isWinner: status === "Win",
+                    title: status === "Win" ? "FIREWALL_UNBREACHABLE 🛡️" : "FIREWALL_BYPASSED 🕵️‍♂️",
+                    message: status === "Win" ? hackerReaction : `${hackerReaction} \n\n Directive: ${recommendation}`,
+                    xpGained: status === "Win" ? pointsEarned : 0
+                });
+
+                if (status === "Loss") {
+                    setIsAlertActive(true); 
+                    setLives(prev => {
+                        const updatedLives = prev - 1;
+                        // حتى لو خسر محاولة، نخليه يضغط العلم بوسط الشاشة أولاً ليقرأ التقرير
+                        setShowProceedBtn(true);
+                        return updatedLives;
+                    });
+                } else if (status === "Win") {
+                    setGameStatus("Win");
+                    setShowProceedBtn(true); // تفعيل زر علم لقراءة الرد الفائز
+                }
+
+            }, simulationDelay); 
+
         } catch (e) {
             setIsAiAnalyzing(false);
-            setAiRecommendation("CRITICAL_ERROR: AI_NEURAL_LINK_SEVERED.");
+            setLoading(false);
+            setAiRecommendation("CRITICAL_ERROR: INTERNAL_SECURITY_LINK_SEVERED.");
         }
     };
 
-    const handleFinishGame = (status: 'Win' | 'Loss') => {
-        const winXP = 25 * initialLevel;
-        onFinish({ status, score: status === 'Win' ? winXP : 0, duration: 180 - timeLeft });
+    // 🔄 الضغط على زر علم [ Acknowledge_Report ] بوسط الشاشة
+    const handleMainAcknowledge = () => {
+        setShowProceedBtn(false);
+        setShowOverlay(true); // تشغيل شاشة الأوفرلاي لعداد الـ XP الكبرى!
     };
 
-    // --- التوجيه بناءً على وضع اللعب ---
-    if (mode === 'multiplayer') {
-        return (
-            <MakerMultiLayout
-                targetName={targetName} setTargetName={setTargetName}
-                birthYear={birthYear} setBirthYear={setBirthYear}
-                city={city} setCity={setCity}
-                pet={pet} setPet={setPet}
-                hint={hint} setHint={setHint}
-                handleKeyPress={handleKeyPress}
-                password={password} setPassword={setPassword}
-                handleDeploy={handleMultiplayerDeploy}
-                loading={loading}
-                isAlertActive={isAlertActive}
-                isDeployed={isDeployed} 
-                attackLogs={attackLogs}
-            />
-        );
-    }
+    // الإغلاق النهائي للأوفرلاي والتحويل للجولة التالية
+    const handleOverlayClose = () => {
+        setShowOverlay(false);
+        
+        // التحقق لو قلوبه قضت تماماً عند الخسارة
+        const finalStatus = overlayData.isWinner ? 'Win' : 'Loss';
+        const finalScore = overlayData.isWinner ? overlayData.xpGained : 0;
+        
+        onFinish({
+            status: finalStatus,
+            score: finalScore,
+            duration: 60 - timeLeft
+        });
+
+        if (typeof navigate === 'function') {
+            navigate('/games');
+        } else {
+            window.location.href = '/games';
+        }
+    };
 
     return (
-        <MakerSingleLayout
-            password={password} setPassword={setPassword}
-            strength={strength} isVulnerable={strength < 5}
-            handleKeyPress={handleKeyPress}
-            isAlertActive={isAlertActive} isAiAnalyzing={isAiAnalyzing}
-            displayedText={displayedText} aiRecommendation={aiRecommendation}
-            loading={loading} timeLeft={timeLeft} lives={lives}
-            initialLevel={initialLevel} handleMakerSubmit={handleMakerSubmit}
-            handleReset={() => setPassword('')}
-        />
+        <>
+            {mode === 'multiplayer' ? (
+                <MakerMultiLayout
+                    targetName={targetName} setTargetName={setTargetName}
+                    birthYear={birthYear} setBirthYear={setBirthYear}
+                    city={city} setCity={setCity}
+                    pet={pet} setPet={setPet}
+                    hint={hint} setHint={setHint}
+                    handleKeyPress={handleKeyPress}
+                    password={password} setPassword={setPassword}
+                    handleDeploy={handleMultiplayerDeploy}
+                    loading={loading}
+                    isAlertActive={isAlertActive}
+                    isDeployed={isDeployed}
+                    attackLogs={attackLogs}
+                />
+            ) : (
+                <MakerSingleLayout
+                    password={password} setPassword={setPassword}
+                    strength={strength} isVulnerable={strength < 5}
+                    handleKeyPress={handleKeyPress}
+                    isAlertActive={isAlertActive} isAiAnalyzing={isAiAnalyzing}
+                    displayedText={displayedText} aiRecommendation={aiRecommendation}
+                    loading={loading} timeLeft={timeLeft} lives={lives}
+                    initialLevel={initialLevel} handleMakerSubmit={handleMakerSubmit}
+                    handleReset={() => setPassword('')}
+                    showProceedBtn={showProceedBtn}
+                    onMainAcknowledge={handleMainAcknowledge}
+                    gameStatus={gameStatus}
+                />
+            )}
+
+            {/* 🚨 إضافة الأوفرلاي هنا ليظهر في كائن الـ DOM بشكل منبثق فخم */}
+            {showOverlay && (
+                <GameOverOverlay
+                    isWinner={overlayData.isWinner}
+                    title={overlayData.title}
+                    message={overlayData.message}
+                    xpGained={overlayData.xpGained}
+                    role="maker"
+                    onClose={handleOverlayClose}
+                />
+            )}
+        </>
     );
 };
 

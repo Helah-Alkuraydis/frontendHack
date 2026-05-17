@@ -48,7 +48,6 @@ const PasswordMakerBreaker: React.FC<PasswordProps> = (props) => {
         );
     }
 
-    // التوجيه الذكي للمتحكمات (Controllers)
     if (gameMode === 'maker') {
         return <MakerController {...props} />;
     }

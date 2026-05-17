@@ -1,5 +1,8 @@
 import React from 'react';
-import { Lock, ChevronRight, Loader2, Timer, Heart, Key, ShieldAlert } from "lucide-react";
+import {
+    Lock, ChevronRight, Loader2, Timer, Heart, Key, HelpCircle
+} from "lucide-react";
+import Swal from 'sweetalert2';
 
 interface BreakerLayoutProps {
     scenario: any;
@@ -22,6 +25,32 @@ const BreakerLayout: React.FC<BreakerLayoutProps> = ({
     breakerInput, setBreakerInput, isChecking, isAnswered,
     onGuess, displayedAnalysis, handleKeyPress, isAlertActive
 }) => {
+
+     const handleShowHint = () => {
+        // نجيب نص اللغز من السscenario الحالي
+        const hintText = scenario.hint || "No hints available for this level.";
+
+        Swal.fire({
+            title: '<div style="color:#ff88cc; font-family:monospace; font-size: 1.4rem; font-weight:  black; tracking-spacing:2px;">💡 DECRYPTION_ASSISTANCE</div>',
+            html: `
+        <div style="color: #a0aec0; font-family: monospace; text-align: left; padding: 10px; line-height: 1.6;">
+          <p style="color: #ff88cc; font-size: 0.8rem; text-transform: uppercase; margin-bottom: 8px; font-weight: bold;">Intercepted Intelligence:</p>
+          <div style="background: rgba(255,136,204,0.05); border: 1px solid #ff88cc30; padding: 15px; border-radius: 15px; color: #fff; font-style: italic;">
+            "${hintText}"
+          </div>
+        </div>
+      `,
+            background: "#080c14",
+            confirmButtonText: "RETURN TO CRACKING",
+            confirmButtonColor: "#ff88cc",
+            customClass: {
+                popup: "border border-[#ff88cc30] rounded-[2rem]",
+                confirmButton: "rounded-xl px-6 py-2.5 font-bold uppercase tracking-wider text-black font-mono",
+            },
+            allowOutsideClick: true
+        });
+    };
+
     return ( 
         <div className={`max-w-7xl mx-auto w-full flex flex-col gap-4 md:gap-10 animate-in slide-in-from-bottom-12 font-mono relative p-4 md:p-6 mb-wrapper transition-all duration-1000 
             ${isAlertActive ? 'animate-shake bg-red-900/20 backdrop-blur-sm' : ''} 
@@ -41,6 +70,16 @@ const BreakerLayout: React.FC<BreakerLayoutProps> = ({
                     <div className="flex gap-1.5 border-l border-white/10 pl-6">
                         {[...Array(3)].map((_, i) => <Heart key={i} size={18} fill={i < lives ? "#ef4444" : "none"} color="#ef4444" className={i < lives ? "animate-pulse" : "opacity-10"} />)}
                     </div>
+
+                    <div className="flex items-center">
+                        <button
+                            onClick={handleShowHint}
+                            className="text-gray-400 hover:text-pink-400 hover:bg-pink-500/5 hover:border-pink-500/30 transition-all font-black uppercase tracking-wider flex items-center gap-1.5 bg-white/5 px-4 py-1 rounded-full border border-white/5"
+                        >
+                            <HelpCircle size={13} className="text-pink-400 animate-pulse" /> Request Hint
+                        </button>
+                    </div>
+
                 </div>
             </div>
 

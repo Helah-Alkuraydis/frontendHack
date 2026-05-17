@@ -17,13 +17,16 @@ interface MakerSingleLayoutProps {
     initialLevel: number;
     handleMakerSubmit: () => void;
     handleReset: () => void;
+    showProceedBtn: boolean;
+    onMainAcknowledge: () => void;
+    gameStatus: 'Win' | 'Loss' | null;
 }
 
 const MakerSingleLayout: React.FC<MakerSingleLayoutProps> = ({
     password, setPassword, strength, isVulnerable, isAlertActive,
     isAiAnalyzing, displayedText, aiRecommendation, loading,
     timeLeft, lives, initialLevel, handleMakerSubmit, handleReset,
-    handleKeyPress
+    handleKeyPress ,showProceedBtn,onMainAcknowledge,gameStatus
 }) => {
     
     const rules = [
@@ -50,7 +53,15 @@ const MakerSingleLayout: React.FC<MakerSingleLayoutProps> = ({
                         </span>
                     </div>
                     <div className="flex gap-1.5 border-l border-white/10 pl-6">
-                        {[...Array(3)].map((_, i) => <Heart key={i} size={18} fill={i < lives ? "#ef4444" : "none"} color="#ef4444" className={i < lives ? "animate-pulse" : "opacity-10"} />)}
+                        {[...Array(3)].map((_, i) => (
+                            <Heart 
+                                key={i} 
+                                size={18} 
+                                fill={i < lives ? "#ef4444" : "none"} 
+                                color="#ef4444" 
+                                className={i < lives ? "animate-pulse" : "opacity-10"} 
+                            />
+                        ))}
                     </div>
                 </div>
             </div>
@@ -60,15 +71,15 @@ const MakerSingleLayout: React.FC<MakerSingleLayoutProps> = ({
                 <div className="flex justify-between p-1 md:p-2 border-b border-emerald-500/10 text-[8px] md:text-[9px] font-mono shrink-0">
                     <div className="flex gap-4">
                         <span className="flex items-center gap-1">
-                            <span className={`w-1.5 h-1.5 rounded-full ${isVulnerable || isAlertActive ? 'bg-red-500 animate-ping ' : 'bg-emerald-500'}`}></span>
+                            <span className={`w-1.5 h-1.5 rounded-full ${isAlertActive ? 'bg-red-500 animate-ping' : isVulnerable ? 'bg-amber-500 animate-pulse' : 'bg-emerald-500'}`}></span>
                             SYSTEM: {isAlertActive ? 'BREACHED' : isVulnerable ? 'VULNERABLE' : 'OPTIMAL'}
                         </span>
                         <span className="opacity-30">|</span>
-                        <span className={isVulnerable ? 'text-red-500' : 'text-emerald-500'}>
+                        <span className={isVulnerable ? 'text-amber-500' : 'text-emerald-500'}>
                             THREAT_LEVEL: {isVulnerable ? 'HIGH' : 'LOW'}
                         </span>
                     </div>
-                    <div className="text-emerald-500/40 italic">HACKHERO_SIMULATOR_v1.0</div>
+                    <div className="text-emerald-500/40 italic">HACKHERO_SECURITY_CORE_v2.0</div>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 items-stretch flex-1 min-h-0 ms-grid-panel">
@@ -97,6 +108,7 @@ const MakerSingleLayout: React.FC<MakerSingleLayoutProps> = ({
                                 <span className="absolute left-0 top-1/2 -translate-y-1/2 text-emerald-500 text-xl font-bold opacity-30">$</span>
                                 <input
                                     type="text"
+                                    disabled={loading}
                                     onKeyDown={(e) => {
                                         handleKeyPress();
                                         if (e.key === 'Enter') {
@@ -124,22 +136,46 @@ const MakerSingleLayout: React.FC<MakerSingleLayoutProps> = ({
                             {/* Strength Bar */}
                             <div className="flex gap-1.5 md:gap-2 h-1.5 px-1 shrink-0 mb-4">
                                 {[...Array(5)].map((_, i) => (
-                                    <div key={i} className={`flex-1 rounded-full transition-all duration-1000 ${i < strength ? (strength <= 2 ? 'bg-red-600 shadow-[0_0_15px_#ef4444]' : strength <= 4 ? 'bg-amber-500 shadow-[0_0_15px_#f59e0b]' : 'bg-emerald-500 shadow-[0_0_15px_#10b981]') : 'bg-white/5'}`} />
+                                    <div 
+                                        key={i} 
+                                        className={`flex-1 rounded-full transition-all duration-700 ${i < strength ? (strength <= 2 ? 'bg-red-500 shadow-[0_0_10px_#ef4444]' : strength <= 4 ? 'bg-amber-500 shadow-[0_0_10px_#f59e0b]' : 'bg-emerald-500 shadow-[0_0_10px_#10b981]') : 'bg-white/5'}`} 
+                                    />
                                 ))}
                             </div>
 
-                            {/* AI Copilot Box */}
+                            {/* شاشة كوابيلوت استشاري الأمن السيبراني المحاكي */}
                             <div className="p-3 md:p-4 bg-emerald-500/5 border border-emerald-500/20 rounded-xl relative overflow-hidden min-h-[70px] md:min-h-[80px] flex-1 flex flex-col justify-center ms-ai-box">
                                 <div className="flex items-center gap-2 mb-1 md:mb-2 relative z-10 shrink-0">
-                                    {isAiAnalyzing ? <Loader2 size={12} className="text-emerald-400 animate-spin" /> : <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />}
+                                    <div className="flex items-center gap-2">
+                                        {isAiAnalyzing ? <Loader2 size={14} className="text-emerald-400 animate-spin" /> :
+                                    <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />}
                                     <span className="text-[9px] md:text-[10px] font-black text-emerald-400 uppercase tracking-widest">
-                                        {isAiAnalyzing ? "AI_DECRYPTING_PATTERNS..." : "AI_CO_PILOT_ADVISORY"}
-                                    </span>
+                                            {isAiAnalyzing ? "SIMULATING_BRUTE_FORCE_ATTACK..." : "MAIN_ADVISORY_CORE"}
+                                        </span>
+                                    </div>
+                                    
+                                    {/* 🚨 الزر المستقبلي اللي بوسط الكونسول يظهر هنا فوراً بجانب العنوان والنص بعد انتهاء الفحص */}
+                                    {showProceedBtn && (
+                                        <button 
+                                            onClick={onMainAcknowledge}
+                                            className={`animate-in zoom-in duration-300 px-3 py-1.5 md:py-1 text-[8px] md:text-[10px] font-mono font-black rounded-md border tracking-widest uppercase cursor-pointer transition-all active:scale-95 text-center
+                                                w-full sm:w-auto shrink-0 order-last sm:order-none mt-1 sm:mt-0
+                                                ${gameStatus === "Win" 
+                                                    ? 'bg-emerald-500/10 border-emerald-500 text-emerald-400 hover:bg-emerald-500 hover:text-black shadow-[0_0_15px_rgba(16,185,129,0.2)]' 
+                                                    : 'bg-red-500/10 border-red-500 text-red-400 hover:bg-red-500 hover:text-black shadow-[0_0_15px_rgba(239,68,68,0.2)]'
+                                                }`}
+                                        >
+                                            [ Acknowledge_Report ] 
+                                        </button>
+                                    )}
                                 </div>
+
                                 <div className="relative z-10 overflow-y-auto custom-scrollbar">
-                                    <p className="text-[11px] md:text-xs text-gray-300 font-mono leading-relaxed">
+                                    <p className="text-[11px] md:text-xs text-gray-300 font-mono leading-relaxed">                                      
                                         {isAiAnalyzing ? (
-                                            <span className="opacity-50 italic">Analyzing entropy and keyboard sequence correlations...</span>
+                                            <span className="opacity-60 italic text-amber-400 animate-pulse">
+                                                🚨 Hacker Payload Injected. Calculating dictionary correlation matrices and key entropy resistance...
+                                            </span>
                                         ) : (
                                             <>
                                                 <span className="text-emerald-500 mr-2 font-bold">&gt;</span>
@@ -150,8 +186,10 @@ const MakerSingleLayout: React.FC<MakerSingleLayoutProps> = ({
                                     </p>
                                 </div>
                             </div>
+
                         </div>
                     </div>
+
                 </div>
             </div>
 
