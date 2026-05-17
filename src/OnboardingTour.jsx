@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { 
   X, Rocket, CheckCircle, Gamepad2, Swords, 
   Trophy, LayoutDashboard, Users, User 
@@ -8,9 +8,7 @@ const OnboardingTour = ({ onComplete, onStepChange }) => {
   const [step, setStep] = useState(0);
   const [coords, setCoords] = useState(null);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
-  const cardRef = useRef<HTMLDivElement>(null);
 
-  // تحديث حالة الشاشة عند التكبير والتصغير لضمان عزل حقيقي
   useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth < 768);
     window.addEventListener('resize', handleResize);
@@ -34,7 +32,7 @@ const OnboardingTour = ({ onComplete, onStepChange }) => {
       btnSkip: "Skip",
       showAvatar: true,
       avatar: "/game-icon.png",
-      icon: <Gamepad2 size={24} className="text-blue-400" />, // أيقونة احتياطية
+      icon: <Gamepad2 size={24} className="text-blue-400" />,
       role: "guide_small",
       hasArrow: true
     },
@@ -54,7 +52,7 @@ const OnboardingTour = ({ onComplete, onStepChange }) => {
       title: "Get achievements !",
       content: "Legendary status awaits! Review your collection of rare badges. Every trophy tells the story of your rise to the top",
       position: "achievements",
-      avatar: "/achievement.png", // 🟢 صورة أساسية
+      avatar: "/achievement.png", 
       btnNext: "Next",
       btnBack: "Back",
       showAvatar: true,
@@ -66,7 +64,7 @@ const OnboardingTour = ({ onComplete, onStepChange }) => {
       content: "Real-time intel at your fingertips. Monitor your tactical efficiency, win rates, and XP progression to stay ahead of the competition",
       position: "dashboard",
       avatar: "/dashboard-icon.png",
-      icon: <LayoutDashboard size={24} className="text-blue-400" />, // أيقونة احتياطية
+      icon: <LayoutDashboard size={24} className="text-blue-400" />, 
       btnNext: "Next",
       btnBack: "Back",
       showAvatar: true,
@@ -78,7 +76,7 @@ const OnboardingTour = ({ onComplete, onStepChange }) => {
       content: "Cybersecurity is better together! Connect with friends, build your team, and see who's online.",
       position: "friends",
       avatar: "/friends-icon.png",
-      icon: <Users size={24} className="text-blue-400" />, // أيقونة احتياطية
+      icon: <Users size={24} className="text-blue-400" />, 
       btnNext: "Next",
       btnBack: "Back",
       showAvatar: true,
@@ -89,7 +87,7 @@ const OnboardingTour = ({ onComplete, onStepChange }) => {
       title: "Profile",
       content: "This is your personal command center. Here you can change your tactical avatar, update your bio, and manage your account security. It’s where you define how the global community sees your legend",
       position: "profile",
-      avatar: "/Avatar.png", // 🟢 صورة أساسية
+      avatar: "/Avatar.png", 
       btnNext: "Next",
       btnBack: "Back",
       showAvatar: true,
@@ -109,7 +107,6 @@ const OnboardingTour = ({ onComplete, onStepChange }) => {
   const currentStep = steps[step];
 
   const updatePosition = useCallback(() => {
-    // تنظيف كلاسات التوهج للجوال
     document.querySelectorAll('.active-tour-glow').forEach(el => el.classList.remove('active-tour-glow'));
 
     if (currentStep.position === "center") {
@@ -125,37 +122,49 @@ const OnboardingTour = ({ onComplete, onStepChange }) => {
     if (currentStep.position === "friends") elementId = "friends-step"; 
     if (currentStep.position === "profile") elementId = "profile-step"; 
 
-    if (isMobile) {
-      // 📱 [بيئة الجوال المعزولة تماماً]: نبحث فقط عن الأيقونة النشطة داخل الـ MobileNav السفلي (مدخل من الـ md:hidden)
-      const elements = document.querySelectorAll(`#${elementId}`);
-      const element = Array.from(elements).find(el => el.closest('nav')) || document.getElementById(elementId);
+    const elements = document.querySelectorAll(`#${elementId}`);
+    
+    const element = Array.from(elements).find(el => {
+      const isMobileNavInstance = el.closest('nav')?.classList.contains('md:hidden');
+      return isMobile ? isMobileNavInstance : !isMobileNavInstance;
+    }) || document.getElementById(elementId);
+
+    if (element) {
+      const rect = element.getBoundingClientRect();
       
-      if (element) {
-        const rect = element.getBoundingClientRect();
+      if (isMobile) {
         element.classList.add('active-tour-glow');
         setCoords({
           top: rect.top,
           left: rect.left + rect.width / 2,
-          isMobile: true // وسم لتأكيد تفعيل استثناء الجوال
+          isMobile: true
         });
       } else {
-        setCoords(null);
+        // 💻 [بيئة اللابتوب]: حساب التمركز العمودي مع التثبيت الديناميكي لمنع الخروج عن الشاشة
+        let topPos = rect.top + rect.height / 2;
+        const leftPos = rect.right + 25;
+        
+        // الارتفاع التقريبي لكرت التور باللابتوب حوالي 220px (نصفه 110px)
+        const cardHalfHeight = 110; 
+        const margin = 25;
+        let clampedOffset = 0;
+
+        // إذا كان الكرت سيتجاوز أسفل شاشة اللابتوب (مثل خطوة البروفايل)، يتم كبحه وتثبيته فوراً
+        if (topPos + cardHalfHeight > window.innerHeight - margin) {
+          const originalTop = topPos;
+          topPos = window.innerHeight - cardHalfHeight - margin;
+          clampedOffset = topPos - originalTop; // فرق الإزاحة لموازنة السهم
+        }
+
+        setCoords({
+          top: topPos,
+          left: leftPos,
+          isMobile: false,
+          clampedOffset: clampedOffset
+        });
       }
     } else {
-      // 💻 [بيئة اللابتوب المعزولة والمحمية 100%]: الكود والعمليات الحسابية الأصلية حقتكم بدون لمس أي حرف
-      const element = document.getElementById(elementId);
-      if (element) {
-        const rect = element.getBoundingClientRect();
-        
-        setCoords({
-          top: rect.top + rect.height / 2, // centers the card vertically on target
-          left: rect.right + 25, 
-          isMobile: false,
-          rawTargetTop: rect.top + rect.height / 2 // حفظ مركز الأيقونة الأصلي لموازنة السهم الحين
-        });
-      } else {
-        setCoords(null);
-      }
+      setCoords(null);
     }
   }, [currentStep.position, isMobile]);
 
@@ -173,47 +182,21 @@ const OnboardingTour = ({ onComplete, onStepChange }) => {
     };
   }, [updatePosition]);
 
-  // لإعادة حساب التثبيت بعد رسم الكرت على الشاشة
-  useEffect(() => {
-    if (step && coords && !isMobile && cardRef.current) {
-        const cardHeight = cardRef.current.offsetHeight;
-        const targetTop = coords.rawTargetTop;
-        const estHalfHeight = cardHeight / 2;
-        const margin = 20;
-  
-        // ⚡ [قاعدة التثبيت الجديدة باللابتوب]: منع الكرت من النزول تحت حافة الشاشة السفلية بسبب أيقونة البروفايل
-        if (targetTop + estHalfHeight > window.innerHeight - margin) {
-          const finalTopClamped = window.innerHeight - estHalfHeight - margin;
-          
-          // تحديث الإحداثيات بالإحداثي "المثبت"
-          setCoords({
-            top: finalTopClamped,
-            left: coords.left,
-            isMobile: false,
-            rawTargetTop: targetTop,
-            clampedOffset: finalTopClamped - targetTop // فرق المسافة لموازنة السهم
-          });
-        }
-    }
-  }, [step, isMobile, step]); // يشتغل فقط عند تغيير الخطوة
-
-
   const handleNext = () => step < steps.length - 1 ? setStep(step + 1) : onComplete();
   const handleSkip = () => onComplete();
 
   if (currentStep.layout === 'astra') {
     return (
-      <div className="fixed inset-0 z-[10000] flex items-center justify-center pt-24">
+      <div className="fixed inset-0 z-[10000] flex items-center justify-center p-4">
         <div className="absolute inset-0 bg-[#050810]/85 backdrop-blur-sm transition-opacity duration-500"></div>
-        {/* 🟢 [تضييق الجوال]: تم تصغير عرض كرت الترحيب في الجوال وتضييق البادينج ليكون ملموماً وأنيقاً جداً دون لمس اللابتوب */}
-        <div key={step} className="relative w-[75%] sm:w-[85%] max-w-[280px] sm:max-w-[340px] bg-gradient-to-b from-[#2a324b]/90 to-[#161b2e]/95 backdrop-blur-xl border border-blue-500/20 rounded-[1.8rem] sm:rounded-[2.5rem] p-4 sm:p-5 shadow-2xl animate-in zoom-in fade-in duration-500 text-white">
+        <div key={step} className="relative w-[75%] sm:w-[85%] max-w-[280px] sm:max-w-[340px] bg-gradient-to-b from-[#2a324b]/90 to-[#161b2e]/95 backdrop-blur-xl border border-blue-500/20 rounded-[1.8rem] sm:rounded-[2.5rem] p-4 sm:p-5 shadow-2xl text-white pt-20">
           <div className="absolute -top-[90px] sm:-top-[110px] left-1/2 -translate-x-1/2 w-[160px] sm:w-[200px] z-20 pointer-events-none">
             <img src="/Astra.png" alt="Astra Guide" className="w-full h-full object-contain drop-shadow-2xl" />
           </div>
           <div className="flex flex-col items-center text-center mt-[70px] sm:mt-[85px] relative z-10">
             <h2 className="text-xl sm:text-2xl font-extrabold mb-2 sm:mb-3 bg-clip-text text-transparent bg-gradient-to-r from-white to-blue-200">{currentStep.title}</h2>
             <p className="text-blue-100/80 text-xs sm:text-sm leading-relaxed mb-5 sm:mb-6 font-medium">{currentStep.content}</p>
-            <button onClick={handleNext} className="w-full py-2.5 sm:py-3 rounded-xl font-semibold bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 shadow-lg shadow-blue-500/25 transition-all flex items-center justify-center gap-1 sm:gap-2 text-xs sm:text-base">
+            <button onClick={handleNext} className="w-full py-2.5 sm:py-3 rounded-xl font-semibold bg-gradient-to-r from-blue-600 to-indigo-600 shadow-lg shadow-blue-500/25 transition-all flex items-center justify-center gap-1 sm:gap-2 text-xs sm:text-base">
               {currentStep.btnIcon} {currentStep.btnNext}
             </button>
           </div>
@@ -224,63 +207,50 @@ const OnboardingTour = ({ onComplete, onStepChange }) => {
 
   return (
     <div className="fixed inset-0 z-[10000]">
-      {/* ستايل التوهج السيبراني للأيقونة في الجوال فقط ولا يظهر في اللابتوب */}
-      <style>{`
-        .active-tour-glow {
-          position: relative;
-          z-index: 100005;
-          background: rgba(6, 182, 212, 0.2) !important;
-          box-shadow: 0 0 15px 5px rgba(6, 182, 212, 0.5) !important;
-          border-radius: 30% !important;
-          transition: all 0.3s ease-in-out;
-        }
-      `}</style>
       <div className="absolute inset-0 bg-black/80 backdrop-blur-sm transition-opacity duration-500"></div>
 
       <div
-        style={(coords && !coords.isMobile) ? {
-          // 💻 قواعد اللابتوب الأصلية الناجحة والقديمة حقتكم رجعت تماماً بمكانها الطبيعي، وسيتم تحديثها بالصيانة الـ clamped إذا لزم الأمر
+        style={(!isMobile && coords) ? {
           position: "fixed",
           top: `${coords.top}px`,
           left: `${coords.left}px`,
           transform: "translateY(-50%)",
           zIndex: 10001
-        } : (coords && coords.isMobile) ? {
-          // 📱 قواعد الجوال الخاصة: يطير فوق الأيقونة السفلية النشطة بالضبط
+        } : (isMobile && coords) ? {
           position: "fixed",
-          bottom: `${window.innerHeight - coords.top + 12}px`, 
-          left: `${coords.left}px`,
-          transform: "translateX(-50%)",
+          bottom: "90px", 
+          left: "16px",
+          right: "16px",
           zIndex: 10001
         } : {
           position: "fixed", top: "50%", left: "50%", transform: "translate(-50%, -50%)", zIndex: 10001
         }}
         className="transition-all duration-300 ease-out"
       >
-        {/* 🟢 عزل الحجم التام للجوال: يظل كما هو لِيش ذي التعديلات خاصة بالجوال و ما تلمس اللابتوب */}
         <div 
           key={step} 
-          ref={cardRef}
           className={`relative bg-[#1e2330]/95 backdrop-blur-xl border border-gray-600/30 rounded-[1.5rem] shadow-2xl text-white animate-in zoom-in duration-300 mx-auto
-            ${coords?.isMobile ? 'w-[280px] p-4' : 'w-[380px] p-6'}`}
+            ${isMobile ? 'w-full p-4' : 'w-[380px] p-6'}`}
         >
           
-          {/* سهم اللابتوب الأصلي (يشير لليسار باتجاه السايد بار الجانبي) */}
-          {!coords?.isMobile && currentStep.hasArrow && coords && (
+          {/* سهم اللابتوب الذكي: موازن ميكانيكياً ليتبع إزاحة الكرت ويشير للبروفايل بدقة */}
+          {!isMobile && currentStep.hasArrow && coords && (
             <div 
               className="absolute w-4 h-4 bg-[#1e2330] border-l border-b border-gray-600/30 rotate-45 transition-all duration-300"
               style={{
-                // ⚡ [موازنة السهم الجديدة باللابتوب]: السهم يتبع الأيقونة "المثبتة" حتى لو الكرت وقف عند حافة الشاشة
-                top: `calc(50% ${coords.clampedOffset ? '- ' + coords.clampedOffset + 'px' : ''})`,
+                top: `calc(50% + ${Math.abs(coords.clampedOffset || 0)}px)`,
                 left: '-8px',
                 transform: 'translateY(-50%)'
               }}
             ></div>
           )}
 
-          {/* سهم الجوال المستثنى (يشير للأسفل باتجاه الناف بار السفلي) */}
-          {coords?.isMobile && currentStep.hasArrow && coords && (
-            <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-4 h-4 bg-[#1e2330] border-r border-b border-gray-600/30 rotate-45"></div>
+          {/* سهم الجوال المتنقل */}
+          {isMobile && currentStep.hasArrow && coords && (
+            <div 
+              style={{ left: `${coords.left - 16}px` }}
+              className="absolute -bottom-2 w-4 h-4 bg-[#1e2330] border-r border-b border-gray-600/30 rotate-45 transition-all duration-300 -translate-x-1/2"
+            ></div>
           )}
 
           <button onClick={handleSkip} className="absolute top-5 right-5 text-gray-400 hover:text-white bg-white/5 rounded-full p-1 transition-colors">
@@ -296,7 +266,7 @@ const OnboardingTour = ({ onComplete, onStepChange }) => {
           <div className="flex flex-col items-start relative z-10 w-full">
             {currentStep.showAvatar ? (
               <div className="flex items-center gap-3 mb-4">
-                <div className="w-10 h-10 rounded-full border border-blue-500 p-[2px] bg-[#121620] flex items-center justify-center overflow-hidden shrink-0 shadow-lg">
+                <div className="w-10 h-10 rounded-full border border-blue-500 p-[2px] bg-[#121620] flex items-center justify-center overflow-hidden">
                   { (currentStep.position === 'profile' || currentStep.position === 'achievements') ? (
                     <img src={currentStep.avatar} className="w-full h-full object-cover rounded-full" alt="Avatar" />
                   ) : (
@@ -309,8 +279,7 @@ const OnboardingTour = ({ onComplete, onStepChange }) => {
               <h2 className="text-2xl font-bold mb-4 whitespace-nowrap">{currentStep.title}</h2>
             )}
 
-            {/* عزل مقاسات النصوص والهوامش الداخلية لتصغر فقط في شاشة الجوال */}
-            <p className={`text-gray-300 leading-relaxed font-medium whitespace-pre-line ${coords?.isMobile ? 'text-xs mb-4' : 'text-sm mb-6'}`}>
+            <p className={`text-gray-300 leading-relaxed font-medium whitespace-pre-line ${isMobile ? 'text-xs mb-4' : 'text-sm mb-6'}`}>
               {currentStep.content}
             </p>
 
