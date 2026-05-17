@@ -21,22 +21,12 @@ interface BreakerLayoutProps {
 }
 
 const BreakerLayout: React.FC<BreakerLayoutProps> = ({
-    scenario,
-    timeLeft,
-    lives,
-    points_pool,
-    initialLevel,
-    breakerInput,
-    setBreakerInput,
-    isChecking,
-    isAnswered,
-    onGuess,
-    displayedAnalysis,
-    handleKeyPress,
-    isAlertActive
+    scenario, timeLeft, lives, points_pool, initialLevel,
+    breakerInput, setBreakerInput, isChecking, isAnswered,
+    onGuess, displayedAnalysis, handleKeyPress, isAlertActive
 }) => {
 
-    const handleShowHint = () => {
+     const handleShowHint = () => {
         // نجيب نص اللغز من السscenario الحالي
         const hintText = scenario.hint || "No hints available for this level.";
 
@@ -61,19 +51,19 @@ const BreakerLayout: React.FC<BreakerLayoutProps> = ({
         });
     };
 
-    return (
-        <div className={`max-w-7xl mx-auto w-full flex flex-col gap-10 animate-in slide-in-from-bottom-12  font-mono relative p-6 transition-all duration-1000 
+    return ( 
+        <div className={`max-w-7xl mx-auto w-full flex flex-col gap-4 md:gap-10 animate-in slide-in-from-bottom-12 font-mono relative p-4 md:p-6 mb-wrapper transition-all duration-1000 
             ${isAlertActive ? 'animate-shake bg-red-900/20 backdrop-blur-sm' : ''} 
         `}>
-            {/* 1. العداد والقلوب العلوي */}
-            <div className="flex justify-center mb-8">
-                <div className="flex items-center gap-8 bg-[#1c2438]/60 px-6 py-2 rounded-full border border-white/5 backdrop-blur-xl shadow-xl">
-                    <div className="flex items-center gap-2 text-amber-500 font-bold border-r border-white/10 pr-5 text-sm">
+            {/* COUNTER AND LIVES */}
+            <div className="flex justify-center mb-2 md:mb-8 mb-header">
+                <div className="flex items-center gap-4 md:gap-8 bg-[#1c2438]/60 px-6 py-2 rounded-full border border-white/5 backdrop-blur-xl shadow-xl">
+                    <div className="flex items-center gap-2 text-amber-500 font-bold border-r border-white/10 pr-5 text-xs md:text-sm">
                         <Key size={14} fill="currentColor" /> <span>LEVEL {initialLevel}</span>
                     </div>
                     <div className="flex items-center gap-3">
                         <Timer size={16} className={timeLeft < 60 ? "text-red-500 animate-pulse" : "text-blue-400"} />
-                        <span className={`text-lg font-mono font-black ${timeLeft < 60 ? "text-red-500" : "text-white"}`}>
+                        <span className={`text-base md:text-lg font-mono font-black ${timeLeft < 60 ? "text-red-500" : "text-white"}`}>
                             {Math.floor(timeLeft / 60)}:{(timeLeft % 60).toString().padStart(2, '0')}
                         </span>
                     </div>
@@ -93,110 +83,110 @@ const BreakerLayout: React.FC<BreakerLayoutProps> = ({
                 </div>
             </div>
 
-            {/* 2. ملف الهدف (Target Dossier) */}
-            <div className="bg-[#0a0000] border-2 border-red-500/20 rounded-[2.5rem] p-10 shadow-[0_0_50px_rgba(239,68,68,0.05)] relative overflow-hidden group">
-                <div className="flex justify-between items-start mb-10 pb-6 border-b border-red-500/10">
-                    <div>
-                        <h3 className="text-red-500 text-xs font-black uppercase tracking-[0.3em]">Investigation_Dossier</h3>
-                        <p className="text-sm text-red-100/90 font-bold border-b border-red-500/20 pb-1 mb-1">
-                            TARGET_ID: {scenario.userData?.name?.toUpperCase() || "UNKNOWN_SUBJECT"}
-                        </p>
-                        <p className="text-[10px] text-red-500/40">Correlation Index: {Math.floor(Math.random() * 20 + 70)}% / VULNERABLE</p>
-
-                    </div>
-                    <div className="text-red-600 text-[9px] font-black px-3 py-1.5 rounded border-2 border-red-600 rotate-[-15deg] animate-pulse">CLASSIFIED</div>
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-x-10 gap-y-6">
-                    {/* بيانات الـ OSINT */}
-                    <div className="space-y-4">
-                        <h4 className="text-red-500/60 text-[10px] uppercase tracking-widest border-b border-white/5 pb-1">Primary_Data</h4>
-                        <div className="space-y-2">
-                            <div className="flex justify-between text-xs"><span className="text-gray-500">Birth_Year:</span><span className="text-white/80 font-bold">{scenario.userData?.birthYear || "----"}</span></div>
-                            <div className="flex justify-between text-xs"><span className="text-gray-500">Home_Sector:</span><span className="text-white/80 font-bold">{scenario.userData?.city || "UNKNOWN"}</span></div>
-                            <div className="flex justify-between text-xs"><span className="text-gray-500">Unit_Pet:</span><span className="text-white/80 font-bold">{scenario.userData?.pet || "NONE"}</span></div>
-                            <div className="flex justify-between text-xs"><span className="text-gray-500">Hobby:</span><span className="text-white/80 font-bold">{scenario.userData?.hobby || "UNDEFINED"}</span></div>
+            <div className="flex flex-col md:grid md:grid-cols-12 gap-4 md:gap-6 flex-1 min-h-0 mb-grid-content">
+                {/* Target Dossier Panel */}
+                <div className="bg-[#0a0000] border-2 border-red-500/20 rounded-[2rem] md:rounded-[2.5rem] p-4 md:p-10 shadow-[0_0_50px_rgba(239,68,68,0.05)] relative overflow-hidden group md:col-span-5 flex flex-col justify-center mb-panel-dossier">
+                    <div className="flex justify-between items-start mb-4 md:mb-10 pb-4 border-b border-red-500/10 shrink-0">
+                        <div>
+                            <h3 className="text-red-500 text-[9px] md:text-xs font-black uppercase tracking-[0.3em]">Investigation_Dossier</h3>
+                            <p className="text-xs md:text-sm text-red-100/90 font-bold border-b border-red-500/20 pb-0.5 mb-1 truncate max-w-[150px] md:max-w-none">
+                                TARGET_ID: {scenario.userData?.name?.toUpperCase() || "UNKNOWN_SUBJECT"}
+                            </p>
                         </div>
+                        <div className="text-red-600 text-[8px] md:text-[9px] font-black px-2 py-1 rounded border border-red-600 rotate-[-15deg] shrink-0">CLASSIFIED</div>
                     </div>
 
-                    <div className="space-y-4">
-                        <h4 className="text-red-500/60 text-[10px] uppercase tracking-widest border-b border-white/5 pb-1">Digital_Trace</h4>
-                        <div className="text-[10px] text-gray-500 leading-relaxed italic">
-                            Subject's metadata indicates a predictable pattern. Behavioral analysis suggests high correlation between personal landmarks and security sequences.
+                    <div className="space-y-4 flex-1 overflow-y-auto custom-scrollbar">
+                        <div className="space-y-1.5">
+                            <div className="flex justify-between text-[11px]"><span className="text-gray-500">Birth_Year:</span><span className="text-white/80 font-bold">{scenario.userData?.birthYear || "----"}</span></div>
+                            <div className="flex justify-between text-[11px]"><span className="text-gray-500">Home_Sector:</span><span className="text-white/80 font-bold">{scenario.userData?.city || "UNKNOWN"}</span></div>
+                            <div className="flex justify-between text-[11px]"><span className="text-gray-500">Unit_Pet:</span><span className="text-white/80 font-bold">{scenario.userData?.pet || "NONE"}</span></div>
+                            <div className="flex justify-between text-[11px]"><span className="text-gray-500">Hobby:</span><span className="text-white/80 font-bold">{scenario.userData?.hobby || "UNDEFINED"}</span></div>
                         </div>
-                    </div>
-
-                    {/* التقرير الاستخباراتي مع تأثير الكتابة */}
-                    <div className="bg-red-500/5 rounded-xl p-5 font-mono italic relative overflow-hidden border border-red-500/10">
-                        <div className="absolute left-2 top-4 bottom-4 w-0.5 bg-red-600/90"></div>
-                        <div className="absolute -right-10 top-5 bg-red-500/80 text-white text-[8px] font-black px-10 py-1 rotate-45 shadow-lg">Agent Analysis</div>
-                        <p className="text-xs text-red-100/70 leading-relaxed pt-2">
+                        
+                        {/* Dossier Hint Analysis */}
+                        <div className="bg-red-500/5 rounded-xl p-3 font-mono italic border border-red-500/10 text-[11px] text-red-100/70 leading-relaxed">
                             {displayedAnalysis || "Decrypting field intelligence..."}
-                        </p>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Cracking Console Terminal */}
+                <div className="flex flex-col gap-3 md:gap-6 md:col-span-7 justify-between mb-panel-terminal">
+                    <div className="bg-[#080808] border-2 border-red-500/20 rounded-[2rem] p-5 md:p-10 relative group shadow-2xl focus-within:border-red-500/50 flex-1 flex flex-col justify-between">
+                        <div className="absolute inset-0 opacity-5 pointer-events-none bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')]"></div>
+
+                        <div className="flex justify-between items-center mb-4 shrink-0">
+                            <label className="text-red-500/40 text-[8px] md:text-[9px] uppercase tracking-[0.5em]">_Brute_Force_Terminal_</label>
+                            <div className="w-1.5 h-1.5 rounded-full bg-red-600 animate-pulse"></div>
+                        </div>
+
+                        <form onSubmit={onGuess} className="relative mb-4 flex items-center shrink-0">
+                            <span className="absolute left-0 top-1/2 -translate-y-1/2 text-red-500 text-xl font-bold opacity-30">$</span>
+                            <input
+                                type="text"
+                                value={breakerInput}
+                                onChange={(e) => setBreakerInput(e.target.value)}
+                                onKeyDown={(e) => {
+                                    handleKeyPress();
+                                    if (e.key === 'Enter') {
+                                        e.preventDefault();
+                                        onGuess();
+                                    }
+                                }}
+                                disabled={isChecking || isAnswered}
+                                className="w-full bg-transparent border-none pl-6 pr-12 text-xl md:text-3xl text-red-400 placeholder:text-red-900/10 focus:ring-0 font-mono tracking-[0.15em] outline-none"
+                                placeholder="GUESS_PASSWORD_"
+                                autoFocus
+                            />
+                            <button type="submit" disabled={isChecking || isAnswered || !breakerInput} className="absolute right-0 top-1/2 -translate-y-1/2 p-2 rounded-xl text-red-500/40 hover:text-red-400">
+                                {isChecking ? <Loader2 size={20} className="animate-spin" /> : <ChevronRight size={24} />}
+                            </button>
+                        </form>
+
+                        {/* Progress Bar Status */}
+                        <div className="flex gap-2 h-1 px-1 shrink-0">
+                            {[...Array(4)].map((_, i) => (
+                                <div key={i} className={`flex-1 rounded-full ${isChecking ? 'bg-red-600 animate-pulse' : 'bg-white/5'}`}></div>
+                            ))}
+                        </div>
+                    </div>
+
+                    {/* Footer Status Bar */}
+                    <div className="flex justify-between items-center px-4 py-2.5 md:px-8 md:py-3 bg-red-500/5 rounded-full border border-red-500/10 shrink-0">
+                        <div className="flex gap-4 items-center">
+                            <div className="flex items-center gap-1.5">
+                                <span className="bg-red-500/20 text-red-400 text-[8px] px-1.5 py-0.5 rounded border border-red-500/20 font-bold font-mono">ENTER</span>
+                                <span className="text-[9px] text-red-500/40 uppercase tracking-widest font-mono">Execute Crack</span>
+                            </div>
+                        </div>
+                        <div className="text-[8px] text-red-500/40 italic flex items-center gap-1"><Lock size={10} /> LAYER: 128-bit</div>
                     </div>
                 </div>
             </div>
 
-
-
-            {/* 3. كونسول الاختراق (Cracking Console) */}
-            <div className="flex flex-col gap-6">
-                <div className="bg-[#080808] border-2 border-red-500/20 rounded-[2.5rem] p-10 relative group shadow-2xl transition-all duration-300 focus-within:border-red-500/50">
-                    <div className="absolute inset-0 opacity-5 pointer-events-none bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')]"></div>
-
-                    <div className="flex justify-between items-center mb-8">
-                        <label className="text-red-500/40 text-[9px] uppercase tracking-[0.5em]">_Brute_Force_Terminal_</label>
-                        <div className="flex gap-2">
-                            <div className="w-2 h-2 rounded-full bg-red-600 animate-pulse"></div>
-                        </div>
-                    </div>
-
-                    <form onSubmit={onGuess} className="relative mb-8 flex items-center">
-                        <span className="absolute left-0 top-1/2 -translate-y-1/2 text-red-500 text-2xl font-bold opacity-30">$</span>
-                        <input
-                            type="text"
-                            value={breakerInput}
-                            onChange={(e) => setBreakerInput(e.target.value)}
-                            onKeyDown={(e) => {
-                                handleKeyPress();
-                                if (e.key === 'Enter') {
-                                    e.preventDefault();
-                                    onGuess();
-                                }
-                            }}
-                            disabled={isChecking || isAnswered}
-                            className="w-full bg-transparent border-none pl-8 pr-12 text-3xl text-red-400 placeholder:text-red-900/10 focus:ring-0 font-mono tracking-[0.2em] outline-none"
-                            placeholder="GUESS_PASSWORD_"
-                            autoFocus
-                        />
-                        <button type="submit" disabled={isChecking || isAnswered || !breakerInput} className="absolute right-0 top-1/2 -translate-y-1/2 p-3 hover:bg-red-500 hover:text-black rounded-xl transition-all text-red-500/30">
-                            {isChecking ? <Loader2 className="animate-spin" /> : <ChevronRight size={28} />}
-                        </button>
-                    </form>
-
-                    {/* بار الحالة */}
-                    <div className="flex gap-2 h-1 px-1">
-                        {[...Array(4)].map((_, i) => (
-                            <div key={i} className={`flex-1 rounded-full ${isChecking ? 'bg-red-600 animate-pulse' : 'bg-white/5'}`}></div>
-                        ))}
-                    </div>
-                </div>
-
-                {/* شريط الاختصارات السفلي */}
-                <div className="flex justify-between items-center px-8 py-3 bg-red-500/5 rounded-full border border-red-500/10">
-                    <div className="flex gap-6 items-center">
-                        <div className="flex items-center gap-2">
-                            <span className="bg-red-500/20 text-red-400 text-[8px] px-1.5 py-0.5 rounded border border-red-500/20 font-bold font-mono">ENTER</span>
-                            <span className="text-[9px] text-red-500/40 uppercase tracking-widest font-mono">Execute Crack</span>
-                        </div>
-                        {/* <div className="flex items-center gap-2">
-                            <span className="bg-red-500/20 text-red-400  text-[8px] px-1.5 py-0.5 rounded border border-red-500/20 font-bold font-mono">ESC</span>
-                            <span className="text-[9px] text-red-500/40 uppercase tracking-widest font-mono">Reboot</span>
-                        </div> */}
-                    </div>
-                    <div className="text-[8px] text-red-500/40 italic flex items-center gap-2"><Lock size={10} /> LAYER: 128-bit_ENCRYPTION_ACTIVE_</div>
-                </div>
-            </div>
+            {/* سحر ببجي المخصص لـ Breaker في الجوال */}
+            <style>{`
+                .custom-scrollbar::-webkit-scrollbar { width: 2px; }
+                .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(239, 68, 68, 0.2); border-radius: 4px; }
+                
+                @media (max-width: 930px) and (orientation: landscape) {
+                    .mb-wrapper { padding: 4px !important; height: 100dvh !important; overflow: hidden !important; gap: 0 !important;}
+                    .mb-header { display: none !important; }
+                    .mb-grid-content { 
+                        display: flex !important; 
+                        flex-direction: row !important; 
+                        gap: 10px !important; 
+                        height: 100dvh !important;
+                        max-height: 100dvh !important;
+                        margin: 0 !important;
+                        padding: 8px 16px !important;
+                    }
+                    .mb-panel-dossier { width: 45% !important; height: 100% !important; border-radius: 1.5rem !important; padding: 12px 16px !important;}
+                    .mb-panel-terminal { width: 55% !important; height: 100% !important; gap: 4px !important;}
+                    .mb-panel-terminal > div:first-child { border-radius: 1.5rem !important; padding: 12px 16px !important; }
+                }
+            `}</style>
         </div>
     );
 };
