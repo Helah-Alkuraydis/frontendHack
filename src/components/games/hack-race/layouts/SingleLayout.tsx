@@ -76,7 +76,7 @@ const SingleLayout: React.FC<SingleLayoutProps> = ({
                         <div className="h-[2px] bg-gradient-to-r from-transparent via-emerald-500 to-transparent"></div>
                     </div>
 
-                    {/* PLAYER (مسار علوي) */}
+                    {/* PLAYER */}
                     <div
                         className="absolute top-1 md:top-4 transition-all duration-700 flex flex-col items-center z-20 animate-[wiggle_0.6s_ease-in-out_infinite]"
                         style={{ left: `calc(${Math.min(playerProgress, FINISH_POSITION)}% - 25px)` }}
@@ -85,14 +85,14 @@ const SingleLayout: React.FC<SingleLayoutProps> = ({
                             <div className="w-12 h-12 md:w-20 md:h-20 rounded-full bg-emerald-500/20 border-2 border-emerald-500 shadow-[0_0_30px_rgba(16,185,129,0.5)] flex items-center justify-center overflow-hidden hr-avatar-container">
                                 <img src={`/${userData?.characterStyle || "Women3.png"}`} className="w-full h-full object-contain" alt="Player" />
                             </div>
-                            <div className="absolute -top-1 -right-1 bg-white rounded-full p-0.5 md:p-1 shadow-lg border border-emerald-500 animate-bounce">
+                            <div className="absolute -top-1 -right-1 bg-white rounded-full p-0.5 md:p-1 shadow-lg border border-emerald-500 animate-bounce hr-zap">
                                 <Zap size={10} className="md:w-3 md:h-3 text-emerald-500 fill-emerald-500" />
                             </div>
                         </div>
                         <span className="text-[8px] md:text-xs font-black mt-0.5 md:mt-2 text-white bg-emerald-900/80 px-2 md:px-3 py-0.5 md:py-1 rounded-full border border-emerald-500/30 hr-avatar-badge">YOU</span>
                     </div>
 
-                    {/* AI / Hacker (مسار سفلي) */}
+                    {/* AI / Hacker */}
                     <div
                         className="absolute bottom-1 md:bottom-4 transition-all duration-700 flex flex-col items-center animate-[wiggle_0.6s_ease-in-out_infinite]"
                         style={{ left: `calc(${Math.min(aiProgress, FINISH_POSITION)}% - 25px)` }}
@@ -104,7 +104,7 @@ const SingleLayout: React.FC<SingleLayoutProps> = ({
                     </div>
 
                     {/* FINISH LINE */}
-                    <div className="absolute right-4 top-0 bottom-0 w-6 md:w-10 flex flex-col border-l-4 border-emerald-400 animate-pulse shadow-[0_0_25px_rgba(16,185,129,0.9)] pointer-events-none">
+                    <div className="absolute right-4 top-0 bottom-0 w-6 md:w-10 flex flex-col border-l-4 border-emerald-400 animate-pulse shadow-[0_0_25px_rgba(16,185,129,0.9)] pointer-events-none hr-finish-line">
                         <div className="grid grid-cols-2 flex-1">
                             <div className="bg-white"></div><div className="bg-black"></div><div className="bg-black"></div><div className="bg-white"></div>
                             <div className="bg-white"></div><div className="bg-black"></div><div className="bg-black"></div><div className="bg-white"></div>
@@ -117,12 +117,13 @@ const SingleLayout: React.FC<SingleLayoutProps> = ({
             </div>
 
             <div className="w-full flex flex-col items-center hr-right-panel max-w-5xl">
-                {/* QUESTION CARD */}
+                {/* QUESTION CARD - شلنا كلاس التمطيط من هنا عشان اللابتوب */}
                 <div className="w-full bg-[#1c2438]/70 p-5 md:p-10 rounded-3xl md:rounded-[2rem] border border-emerald-500/10 shadow-2xl hr-card">
                     <div className="flex justify-between items-center mb-3 md:mb-6 text-[11px] md:text-sm text-emerald-300 font-bold hr-card-header">
                         <span>Questions {currentScenarioIndex + 1} / {TOTAL_STEPS}</span>
                     </div>
                     <h2 className="text-[15px] md:text-2xl font-semibold mb-4 md:mb-10 leading-snug">{scenario.question}</h2>
+                    {/* OPTIONS GRID - شلنا كلاس التمطيط من هنا عشان اللابتوب */}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-6 hr-options-grid">
                         {scenario.options?.map((opt: any, idx: number) => {
                             const optionText = typeof opt === 'object' ? opt.text : opt;
@@ -209,60 +210,75 @@ const SingleLayout: React.FC<SingleLayoutProps> = ({
                 
                 @media (max-width: 930px) and (orientation: landscape) {
                     .hr-wrapper { 
-                        padding: 5px !important; 
+                        padding: 4px !important; 
                         height: 100dvh !important; 
                         overflow: hidden !important; 
                         display: flex !important;
-                        flex-direction: row !important; 
-                        gap: 10px !important; 
-                        align-items: stretch !important;
+                        flex-direction: column !important; 
+                        gap: 4px !important; 
+                        justify-content: flex-start !important;
                     }
-                    .hr-left-panel {
-                        width: 40% !important;
+                    .hr-left-panel, .hr-right-panel {
+                        width: 100% !important;
+                        max-width: 100% !important;
                         display: flex !important;
                         flex-direction: column !important;
-                        gap: 5px !important;
-                        height: 100% !important;
+                        gap: 4px !important;
                     }
-                    .hr-right-panel {
-                        width: 60% !important;
-                        display: flex !important;
-                        flex-direction: column !important;
-                        height: 100% !important;
-                        justify-content: center !important;
-                    }
+                    .hr-right-panel { flex: 1 !important; overflow: hidden !important; }
+                    
                     .hr-header { 
                         margin-bottom: 0 !important; 
-                        padding: 5px 10px !important; 
+                        padding: 2px 10px !important; 
                         width: 100% !important;
                     }
                     .hr-header > div { padding-right: 5px !important; padding-left: 5px !important; gap: 4px !important;}
-                    .hr-header svg { width: 14px !important; height: 14px !important; }
-                    .hr-header span { font-size: 11px !important; }
+                    .hr-header svg { width: 12px !important; height: 12px !important; }
+                    .hr-header span { font-size: 10px !important; }
                     
                     .hr-track { 
-                        flex: 1 !important; 
-                        height: auto !important; 
+                        flex: none !important; 
+                        height: 70px !important; 
+                        min-height: 70px !important; 
                         margin-bottom: 0 !important; 
-                        padding: 10px !important; 
-                        border-radius: 1.5rem !important; 
+                        padding: 4px 10px !important; 
+                        border-radius: 1rem !important; 
                     }
-                    .hr-avatar-container { width: 35px !important; height: 35px !important; border-width: 2px !important;}
-                    .hr-avatar-badge { font-size: 7px !important; padding: 2px 6px !important; margin-top: 2px !important;}
+                    .hr-avatar-container { width: 22px !important; height: 22px !important; border-width: 1px !important;}
+                    .hr-avatar-badge { font-size: 6px !important; padding: 1px 4px !important; margin-top: 1px !important;}
+                    .hr-zap { display: none !important; }
+                    .hr-finish-line { width: 15px !important; border-left-width: 2px !important; }
                     
                     .hr-card { 
-                        padding: 10px 15px !important; 
+                        padding: 8px 12px !important; 
                         margin-bottom: 0 !important; 
-                        border-radius: 1.5rem !important; 
+                        border-radius: 1rem !important; 
                         height: 100% !important; 
+                        flex: 1 !important;
                         display: flex !important; 
                         flex-direction: column !important; 
+                        justify-content: space-evenly !important;
+                        min-height: 0 !important;
                     }
-                    .hr-card-header { margin-bottom: 5px !important; font-size: 10px !important; }
-                    .hr-card h2 { font-size: 12px !important; margin-bottom: 8px !important; line-height: 1.3 !important; }
+                    .hr-card-header { margin-bottom: 2px !important; font-size: 9px !important; }
+                    .hr-card h2 { font-size: 11px !important; margin-bottom: 4px !important; line-height: 1.2 !important; }
                     
-                    .hr-options-grid { gap: 5px !important; display: grid !important; grid-template-columns: 1fr 1fr !important; flex: 1; align-items: center; }
-                    .hr-option-btn { padding: 6px 10px !important; font-size: 10px !important; border-radius: 0.75rem !important; line-height: 1.2 !important; display: flex !important; align-items: center !important; height: 100% !important;}
+                    .hr-options-grid { 
+                        gap: 4px !important; 
+                        display: grid !important; 
+                        grid-template-columns: 1fr 1fr !important; 
+                        flex: 1 !important; 
+                        align-content: stretch !important; 
+                    }
+                    .hr-option-btn { 
+                        padding: 4px 8px !important; 
+                        font-size: 9px !important; 
+                        border-radius: 0.5rem !important; 
+                        line-height: 1.1 !important; 
+                        display: flex !important; 
+                        align-items: center !important; 
+                        height: 100% !important;
+                    }
                 }
             `}</style>
         </div>
