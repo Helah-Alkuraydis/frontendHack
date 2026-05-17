@@ -200,7 +200,7 @@ const EscapeChallengeModal = ({ isOpen, onClose, formData, setFormData, onSubmit
                     </div>
                     
                     <div className="space-y-3">
-                      {/* ✅ تنظيف شامل: تيلويند نقي يضمن نزول الزر تحت الحقل في الموبايل */}
+                      {/* ✅ تيلويند صافي تماماً ومرن بدون قيود جافاسكريبت */}
                       <div className="flex flex-col sm:flex-row gap-2">
                         <input 
                           id="logInput"
