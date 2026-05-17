@@ -75,7 +75,7 @@ const MultiLayout: React.FC<MultiLayoutProps> = ({
                 {/* 🔥 المضمار المشترك 🔥 */}
                 <div className={`relative w-full max-w-6xl ${trackHeightClass} bg-gradient-to-r from-emerald-950/20 to-black rounded-[1.5rem] md:rounded-[2.5rem] border border-emerald-500/20 mb-4 md:mb-10 p-3 md:p-6 overflow-hidden shadow-2xl transition-all duration-500 hr-track`}>
                     
-                    <div className="absolute inset-0 flex flex-col justify-around px-10 opacity-20 pointer-events-none py-10">
+                    <div className="absolute inset-0 flex flex-col justify-around px-10 opacity-20 pointer-events-none py-10 hr-track-lines">
                         {playersList.map((_, i) => (
                             <div key={`line-${i}`} className="h-[2px] w-full bg-emerald-500 border-dashed border-b border-emerald-500/50"></div>
                         ))}
@@ -104,11 +104,11 @@ const MultiLayout: React.FC<MultiLayoutProps> = ({
                             <div 
                                 key={playerId} 
                                 className="absolute transition-all duration-700 ease-out z-20"
-                                style={{ left: `calc(${progressVal}% + 15px)`, top: `${topPos}%`, transform: 'translateY(-50%)' }}
+                                style={{ left: `calc(${progressVal}% + 10px)`, top: `${topPos}%`, transform: 'translateY(-50%)' }}
                             >
                                 <div className="relative flex flex-col items-center">
                                     <div className={`w-10 h-10 md:w-16 md:h-16 rounded-full border-2 md:border-4 flex items-center justify-center shadow-[0_0_15px_rgba(0,0,0,0.5)] overflow-hidden bg-[#0a0f1a] hr-avatar-container ${isMe ? 'border-emerald-500' : 'border-blue-500'} ${pState.eliminated ? 'grayscale opacity-50 border-gray-500' : ''}`}>
-                                        {pState.eliminated ? <Skull size={20} className="md:w-[30px] md:h-[30px] text-gray-400"/> : 
+                                        {pState.eliminated ? <Skull size={20} className="md:w-[30px] md:h-[30px] text-gray-400 hr-skull"/> : 
                                         <img 
                                             src={`/${playerAvatar}`}
                                             className="w-full h-full object-contain" 
@@ -127,7 +127,7 @@ const MultiLayout: React.FC<MultiLayoutProps> = ({
                     })}
 
                     {/* خط النهاية */}
-                    <div className="absolute right-4 md:right-6 top-0 bottom-0 w-6 md:w-12 flex flex-col border-l-2 md:border-l-4 border-emerald-400 shadow-[0_0_25px_rgba(16,185,129,0.5)] opacity-80 pointer-events-none">
+                    <div className="absolute right-4 md:right-6 top-0 bottom-0 w-6 md:w-12 flex flex-col border-l-2 md:border-l-4 border-emerald-400 shadow-[0_0_25px_rgba(16,185,129,0.5)] opacity-80 pointer-events-none hr-finish-line">
                         <div className="grid grid-cols-2 flex-1">
                             <div className="bg-white"></div><div className="bg-black"></div>
                             <div className="bg-black"></div><div className="bg-white"></div>
@@ -140,19 +140,19 @@ const MultiLayout: React.FC<MultiLayoutProps> = ({
 
             <div className="w-full flex flex-col items-center hr-right-panel max-w-6xl">
                 {/* QUESTION CARD */}
-                <div className={`w-full bg-[#1c2438]/70 p-5 md:p-10 rounded-3xl md:rounded-[2rem] border ${isMeEliminated ? 'border-red-500/30' : 'border-emerald-500/10'} shadow-2xl transition-all hr-card`}>
+                <div className={`w-full bg-[#1c2438]/70 p-5 md:p-10 rounded-3xl md:rounded-[2rem] border ${isMeEliminated ? 'border-red-500/30' : 'border-emerald-500/10'} shadow-2xl transition-all hr-card flex flex-col`}>
                     {isMeEliminated ? (
                         <div className="text-center py-6 md:py-10">
-                            <Skull className="text-red-500 mx-auto mb-4 animate-bounce w-12 h-12 md:w-16 md:h-16" />
-                            <h2 className="text-xl md:text-3xl font-black text-red-500 uppercase tracking-widest">SYSTEM ELIMINATED</h2>
+                            <Skull className="text-red-500 mx-auto mb-4 animate-bounce w-12 h-12 md:w-16 md:h-16 hr-skull-big" />
+                            <h2 className="text-xl md:text-3xl font-black text-red-500 uppercase tracking-widest hr-eliminated-text">SYSTEM ELIMINATED</h2>
                             <p className="text-xs md:text-base text-gray-400 mt-2">You have lost all lives. Spectating the rest of the race...</p>
                         </div>
                     ) : (
                         <>
-                            <div className="flex justify-between items-center mb-3 md:mb-6 text-[11px] md:text-sm text-emerald-300 font-bold hr-card-header">
+                            <div className="flex justify-between items-center mb-3 md:mb-6 text-[11px] md:text-sm text-emerald-300 font-bold hr-card-header shrink-0">
                                 <span>Questions {currentScenarioIndex + 1} / {TOTAL_STEPS}</span>
                             </div>
-                            <h2 className="text-[15px] md:text-2xl font-semibold mb-4 md:mb-10 leading-snug">{scenario.question}</h2>
+                            <h2 className="text-[15px] md:text-2xl font-semibold mb-4 md:mb-10 leading-snug shrink-0">{scenario.question}</h2>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-6 hr-options-grid">
                                 {scenario.options?.map((opt: any, idx: number) => {
                                     const optionText = typeof opt === 'object' ? opt.text : opt;
@@ -228,68 +228,85 @@ const MultiLayout: React.FC<MultiLayoutProps> = ({
                 </div>
             )}
 
-            {/* سحر ببجي المخصص لشاشات الجوال المقلوبة فقط 🎮 */}
+            {/* سحر ببجي - التخطيط الأصلي العمودي المضغوط ليتناسب مع الجوال بالعرض */}
             <style>{`
                 .custom-scrollbar::-webkit-scrollbar { width: 3px; }
                 .custom-scrollbar::-webkit-scrollbar-thumb { background: #10b981; border-radius: 10px; }
                 
                 @media (max-width: 930px) and (orientation: landscape) {
                     .hr-wrapper { 
-                        padding: 5px !important; 
+                        padding: 4px !important; 
                         height: 100dvh !important; 
                         overflow: hidden !important; 
                         display: flex !important;
-                        flex-direction: row !important; 
-                        gap: 10px !important; 
-                        align-items: stretch !important;
+                        flex-direction: column !important; 
+                        gap: 4px !important; 
+                        justify-content: flex-start !important;
                     }
-                    .hr-left-panel {
-                        width: 40% !important;
+                    .hr-left-panel, .hr-right-panel {
+                        width: 100% !important;
+                        max-width: 100% !important;
                         display: flex !important;
                         flex-direction: column !important;
-                        gap: 5px !important;
-                        height: 100% !important;
+                        gap: 4px !important;
                     }
-                    .hr-right-panel {
-                        width: 60% !important;
-                        display: flex !important;
-                        flex-direction: column !important;
-                        height: 100% !important;
-                        justify-content: center !important;
-                    }
+                    .hr-right-panel { flex: 1 !important; overflow: hidden !important; }
+                    
                     .hr-header { 
                         margin-bottom: 0 !important; 
-                        padding: 5px 10px !important; 
+                        padding: 2px 10px !important; 
                         width: 100% !important;
                     }
                     .hr-header > div { padding-right: 5px !important; padding-left: 5px !important; gap: 4px !important;}
-                    .hr-header svg { width: 14px !important; height: 14px !important; }
-                    .hr-header span { font-size: 11px !important; }
+                    .hr-header svg { width: 12px !important; height: 12px !important; }
+                    .hr-header span { font-size: 10px !important; }
                     
                     .hr-track { 
-                        flex: 1 !important; 
-                        height: auto !important; 
+                        flex: none !important; 
+                        height: 90px !important; 
+                        min-height: 90px !important; 
                         margin-bottom: 0 !important; 
-                        padding: 10px !important; 
-                        border-radius: 1.5rem !important; 
+                        padding: 4px 10px !important; 
+                        border-radius: 1rem !important; 
                     }
-                    .hr-avatar-container { width: 30px !important; height: 30px !important; border-width: 2px !important;}
-                    .hr-multi-badge-container { bottom: -12px !important; }
-                    .hr-avatar-badge-multi { font-size: 6px !important; padding: 1px 4px !important; margin-top: 1px !important;}
+                    .hr-track-lines { padding-top: 10px !important; padding-bottom: 10px !important; }
+                    .hr-avatar-container { width: 22px !important; height: 22px !important; border-width: 1px !important;}
+                    .hr-skull { width: 12px !important; height: 12px !important; }
+                    .hr-multi-badge-container { bottom: -8px !important; }
+                    .hr-avatar-badge-multi { font-size: 5px !important; padding: 1px 3px !important; margin-top: 1px !important;}
+                    .hr-finish-line { width: 15px !important; border-left-width: 2px !important; }
                     
                     .hr-card { 
-                        padding: 10px 15px !important; 
+                        padding: 8px 12px !important; 
                         margin-bottom: 0 !important; 
-                        border-radius: 1.5rem !important; 
-                        height: 100% !important; 
+                        border-radius: 1rem !important; 
+                        flex: 1 !important;
                         display: flex !important; 
                         flex-direction: column !important; 
+                        justify-content: space-evenly !important;
+                        min-height: 0 !important;
                     }
-                    .hr-card-header { margin-bottom: 5px !important; font-size: 10px !important; }
-                    .hr-card h2 { font-size: 12px !important; margin-bottom: 8px !important; line-height: 1.3 !important; }
+                    .hr-card-header { margin-bottom: 2px !important; font-size: 9px !important; }
+                    .hr-card h2 { font-size: 11px !important; margin-bottom: 4px !important; line-height: 1.2 !important; }
+                    .hr-skull-big { width: 24px !important; height: 24px !important; margin-bottom: 4px !important; }
+                    .hr-eliminated-text { font-size: 14px !important; }
                     
-                    .hr-options-grid { gap: 5px !important; display: grid !important; grid-template-columns: 1fr 1fr !important; flex: 1; align-items: center; }
-                    .hr-option-btn { padding: 6px 10px !important; font-size: 10px !important; border-radius: 0.75rem !important; line-height: 1.2 !important; display: flex !important; align-items: center !important; height: 100% !important;}
+                    .hr-options-grid { 
+                        gap: 4px !important; 
+                        display: grid !important; 
+                        grid-template-columns: 1fr 1fr !important; 
+                        flex: 1 !important; 
+                        align-content: stretch !important; 
+                    }
+                    .hr-option-btn { 
+                        padding: 4px 8px !important; 
+                        font-size: 9px !important; 
+                        border-radius: 0.5rem !important; 
+                        line-height: 1.1 !important; 
+                        display: flex !important; 
+                        align-items: center !important; 
+                        height: 100% !important;
+                    }
                 }
             `}</style>
         </div>
