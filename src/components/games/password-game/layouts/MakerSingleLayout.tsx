@@ -158,7 +158,8 @@ const MakerSingleLayout: React.FC<MakerSingleLayoutProps> = ({
                                     {showProceedBtn && (
                                         <button 
                                             onClick={onMainAcknowledge}
-                                            className={`animate-in zoom-in duration-300 px-3 py-1 text-[10px] font-mono font-black rounded-md border tracking-widest uppercase cursor-pointer transition-all active:scale-95
+                                            className={`animate-in zoom-in duration-300 px-3 py-1.5 md:py-1 text-[8px] md:text-[10px] font-mono font-black rounded-md border tracking-widest uppercase cursor-pointer transition-all active:scale-95 text-center
+                                                w-full sm:w-auto shrink-0 order-last sm:order-none mt-1 sm:mt-0
                                                 ${gameStatus === "Win" 
                                                     ? 'bg-emerald-500/10 border-emerald-500 text-emerald-400 hover:bg-emerald-500 hover:text-black shadow-[0_0_15px_rgba(16,185,129,0.2)]' 
                                                     : 'bg-red-500/10 border-red-500 text-red-400 hover:bg-red-500 hover:text-black shadow-[0_0_15px_rgba(239,68,68,0.2)]'
