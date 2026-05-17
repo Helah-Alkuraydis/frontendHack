@@ -4,6 +4,7 @@ import { FiPlus, FiSend, FiClock, FiX } from 'react-icons/fi';
 import AdminLayout from '../AdminLayout'; 
 import '../../styles/AdminStyles.css';
 import Swal from 'sweetalert2'; 
+import { BASE_URL } from '../../api/auth.js';
 
 const Notifications = () => {
     const [notifications, setNotifications] = useState([]);
