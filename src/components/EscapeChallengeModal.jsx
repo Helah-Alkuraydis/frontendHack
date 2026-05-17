@@ -74,8 +74,8 @@ const EscapeChallengeModal = ({ isOpen, onClose, formData, setFormData, onSubmit
   };
 
   return (
-    <div className="fixed inset-0 z-[2000] flex items-start md:items-center justify-center p-2 bg-black/95 backdrop-blur-xl overflow-y-auto font-mono text-left custom-scrollbar">
-      <div className="bg-[#080c14] border border-white/10 w-full max-w-4xl rounded-[1.5rem] md:rounded-[3rem] p-4 sm:p-6 md:p-10 shadow-2xl relative my-4 md:my-auto flex flex-col justify-between min-h-fit">
+    <div className="fixed inset-0 z-[2000] flex items-start sm:items-center justify-center p-2 bg-black/95 backdrop-blur-xl overflow-y-auto font-mono text-left custom-scrollbar">
+      <div className="bg-[#080c14] border border-white/10 w-full max-w-4xl rounded-[1.5rem] md:rounded-[3rem] p-4 sm:p-6 md:p-10 shadow-2xl relative my-4 sm:my-auto flex flex-col justify-between min-h-fit">
         
         <button onClick={onClose} className="absolute top-4 right-4 md:top-8 md:right-8 text-white/20 hover:text-white transition-colors z-[10]">
           <X size={24} />
@@ -200,7 +200,7 @@ const EscapeChallengeModal = ({ isOpen, onClose, formData, setFormData, onSubmit
                     </div>
                     
                     <div className="space-y-3">
-                      {/* ✅ تيلويند صافي تماماً ومرن بدون قيود جافاسكريبت */}
+                      {/* ✅ إصلاح حاسم: تيلويند صافي يجبر الحقل والزر على النزول لسطر جديد في الجوال تلقائياً */}
                       <div className="flex flex-col sm:flex-row gap-2">
                         <input 
                           id="logInput"
@@ -220,7 +220,7 @@ const EscapeChallengeModal = ({ isOpen, onClose, formData, setFormData, onSubmit
                               document.getElementById('logInput').value = '';
                             }
                           }}
-                          className="w-full sm:w-auto bg-blue-600 py-3 px-5 rounded-xl text-[10px] font-black text-white tracking-wider uppercase text-center min-w-[100px]"
+                          className="w-full sm:w-auto bg-blue-600 py-3 px-5 rounded-xl text-[10px] font-black text-white tracking-wider uppercase text-center min-w-[100px] whitespace-nowrap"
                         >
                           ADD_LOG
                         </button>
@@ -263,9 +263,10 @@ const EscapeChallengeModal = ({ isOpen, onClose, formData, setFormData, onSubmit
                                 document.getElementById('nodeIpInput').value = '';
                             }
                           }
-                        }} className="w-full sm:w-auto bg-emerald-600 py-3 px-5 rounded-xl text-[10px] font-black text-white tracking-wider uppercase text-center">DEPLOY</button>
+                        }} className="w-full sm:w-auto bg-emerald-600 py-3 px-5 rounded-xl text-[10px] font-black text-white tracking-wider uppercase text-center whitespace-nowrap">DEPLOY</button>
                     </div>
 
+                    {/* ✅ التوزيع المرن للأجهزة: 2 في السطر بالجوال لمنع الضغط والتشوه النصي لـ IPs */}
                     <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2 w-full">
                       {(formData.scenarioData?.rooms?.[1]?.options || []).map((opt, optIdx) => (
                         <div key={optIdx} onClick={() => updateRoom(1, { answer: opt })} className={`p-2 border-2 rounded-xl flex flex-col items-center justify-center cursor-pointer transition-all ${opt === formData.scenarioData?.rooms?.[1]?.answer ? 'border-emerald-500 bg-emerald-500/10' : 'border-white/5 bg-white/5 opacity-70'}`}>
@@ -286,7 +287,7 @@ const EscapeChallengeModal = ({ isOpen, onClose, formData, setFormData, onSubmit
                    <div className="bg-[#0a1020] border-l-4 border-emerald-500 p-4 rounded-2xl text-left shadow-inner">
                       <label className="text-[10px] text-emerald-500 font-black uppercase mb-2 block tracking-widest">Boolean Equation</label>
                       <textarea 
-                        className="w-full bg-transparent text-sm font-mono text-white outline-none h-16 resize-none" 
+                        className="w-full bg-transparent text-sm font-mono text-white outline-none h-16 resize-none font-sans" 
                         value={formData.scenarioData?.rooms?.[2]?.puzzle_data || ""} 
                         placeholder="Solve: (!FALSE && TRUE)..." 
                         onChange={(e) => updateRoom(2, { puzzle_data: e.target.value })} 
@@ -350,7 +351,7 @@ const EscapeChallengeModal = ({ isOpen, onClose, formData, setFormData, onSubmit
                     <div className="p-4 bg-pink-500/5 border-2 border-pink-500/20 rounded-[1.5rem] text-left relative overflow-hidden">
                       <div className="absolute top-2 right-4 text-[7px] font-black text-pink-500/30 uppercase italic">Layer_01</div>
                       <label className="text-[10px] text-pink-400 font-black uppercase mb-2 block tracking-tighter">Player's Initial Packet (Base64)</label>
-                      <div className="bg-black/60 rounded-xl p-3 font-mono text-[10px] text-pink-400 break-all min-h-[50px] flex items-center justify-center border border-pink-500/10 text-center">
+                      <div className="bg-black/60 rounded-xl p-3 font-mono text-[10px] md:text-xs text-pink-400 break-all min-h-[50px] flex items-center justify-center border border-pink-500/10 text-center">
                         {formData.scenarioData?.rooms?.[3]?.room4?.layer1 || "WAITING_FOR_DATA..."}
                       </div>
                     </div>
@@ -358,7 +359,7 @@ const EscapeChallengeModal = ({ isOpen, onClose, formData, setFormData, onSubmit
                     <div className="p-4 bg-purple-500/5 border-2 border-purple-500/20 rounded-[1.5rem] text-left relative overflow-hidden">
                       <div className="absolute top-2 right-4 text-[7px] font-black text-purple-500/30 uppercase italic">Layer_02</div>
                       <label className="text-[10px] text-purple-400 font-black uppercase mb-2 block tracking-tighter">Result after Base64 Decode</label>
-                      <div className="bg-black/60 rounded-xl p-3 font-mono text-[10px] text-purple-300 break-all min-h-[50px] flex items-center justify-center border border-purple-500/10 text-center">
+                      <div className="bg-black/60 rounded-xl p-3 font-mono text-[10px] md:text-xs text-purple-300 break-all min-h-[50px] flex items-center justify-center border border-purple-500/10 text-center">
                         {getEncryptionPreview(formData.scenarioData?.rooms?.[3]?.room4?.masterKey, formData.scenarioData?.rooms?.[3]?.room4?.vKey).ciphertext || "LOCKED"}
                       </div>
                     </div>

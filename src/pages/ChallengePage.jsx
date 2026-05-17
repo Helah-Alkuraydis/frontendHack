@@ -840,21 +840,36 @@ const getGameIcon = (gameName) => {
       )}
 
       {/* --- مودال إنشاء التحدي --- */} 
-        <ChallengeModal
-          isOpen={showModal}
-          onClose={() => {
-            setShowModal(false);
-            resetForm();
-          }}
-          formData={formData}
-          setFormData={setFormData}
-          onSubmit={handleCreate}
-          step={step}
-          setStep={setStep}
-          games={games}
-          userLevels={userLevels}
-          editingId={editingId}
-        />
+{games.find((g) => g._id === formData.gameId)?.gameName === "Cyber Escape Room" ? (
+  <EscapeChallengeModal
+    isOpen={showModal}
+    onClose={() => {
+      setShowModal(false);
+      resetForm();
+    }}
+    formData={formData}
+    setFormData={setFormData}
+    onSubmit={handleCreate}
+    step={step}
+    setStep={setStep}
+  />
+) : (
+  <ChallengeModal
+    isOpen={showModal}
+    onClose={() => {
+      setShowModal(false);
+      resetForm();
+    }}
+    formData={formData}
+    setFormData={setFormData}
+    onSubmit={handleCreate}
+    step={step}
+    setStep={setStep}
+    games={games}
+    userLevels={userLevels}
+    editingId={editingId}
+  />
+)}
       
     </MainLayout>
   );
