@@ -41,7 +41,7 @@ const SingleLayout: React.FC<SingleLayoutProps> = ({
     }
 
     return (
-        <div className="flex flex-col items-center p-4 md:p-8 text-white hr-wrapper">
+        <div className="flex flex-col items-center p-3 md:p-8 text-white hr-wrapper">
             
             <div className="w-full flex flex-col items-center hr-left-panel max-w-5xl">
                 {/* HEADER */}
@@ -69,38 +69,38 @@ const SingleLayout: React.FC<SingleLayoutProps> = ({
                 </div>
 
                 {/* RACE TRACK */}
-                <div className="relative w-full max-w-5xl h-32 md:h-40 bg-gradient-to-r from-emerald-950/30 to-black rounded-3xl md:rounded-[2.5rem] border border-emerald-500/20 mb-6 md:mb-10 p-4 md:p-6 overflow-hidden shadow-2xl hr-track">
+                <div className="relative w-full max-w-5xl h-[120px] md:h-40 bg-gradient-to-r from-emerald-950/30 to-black rounded-3xl md:rounded-[2.5rem] border border-emerald-500/20 mb-4 md:mb-10 p-3 md:p-6 overflow-hidden shadow-2xl hr-track">
                     <div className="absolute inset-0 flex flex-col justify-around px-10 opacity-20 pointer-events-none">
                         <div className="h-[2px] bg-gradient-to-r from-transparent via-emerald-500 to-transparent"></div>
                         <div className="h-[2px] bg-gradient-to-r from-transparent via-emerald-400 to-transparent"></div>
                         <div className="h-[2px] bg-gradient-to-r from-transparent via-emerald-500 to-transparent"></div>
                     </div>
 
-                    {/* PLAYER */}
+                    {/* PLAYER (مسار علوي) */}
                     <div
-                        className="absolute top-2 md:top-4 transition-all duration-700 flex flex-col items-center z-20 animate-[wiggle_0.6s_ease-in-out_infinite]"
-                        style={{ left: `calc(${Math.min(playerProgress, FINISH_POSITION)}% - 30px)` }}
+                        className="absolute top-1 md:top-4 transition-all duration-700 flex flex-col items-center z-20 animate-[wiggle_0.6s_ease-in-out_infinite]"
+                        style={{ left: `calc(${Math.min(playerProgress, FINISH_POSITION)}% - 25px)` }}
                     >
                         <div className="relative">
-                            <div className="w-14 h-14 md:w-20 md:h-20 rounded-full bg-emerald-500/20 border-2 border-emerald-500 shadow-[0_0_30px_rgba(16,185,129,0.5)] flex items-center justify-center overflow-hidden hr-avatar-container">
+                            <div className="w-12 h-12 md:w-20 md:h-20 rounded-full bg-emerald-500/20 border-2 border-emerald-500 shadow-[0_0_30px_rgba(16,185,129,0.5)] flex items-center justify-center overflow-hidden hr-avatar-container">
                                 <img src={`/${userData?.characterStyle || "Women3.png"}`} className="w-full h-full object-contain" alt="Player" />
                             </div>
                             <div className="absolute -top-1 -right-1 bg-white rounded-full p-0.5 md:p-1 shadow-lg border border-emerald-500 animate-bounce">
                                 <Zap size={10} className="md:w-3 md:h-3 text-emerald-500 fill-emerald-500" />
                             </div>
                         </div>
-                        <span className="text-[9px] md:text-xs font-black mt-1 md:mt-2 text-white bg-emerald-900/80 px-2 md:px-3 py-0.5 md:py-1 rounded-full border border-emerald-500/30 hr-avatar-badge">YOU</span>
+                        <span className="text-[8px] md:text-xs font-black mt-0.5 md:mt-2 text-white bg-emerald-900/80 px-2 md:px-3 py-0.5 md:py-1 rounded-full border border-emerald-500/30 hr-avatar-badge">YOU</span>
                     </div>
 
-                    {/* AI / Hacker */}
+                    {/* AI / Hacker (مسار سفلي) */}
                     <div
-                        className="absolute top-2 md:top-4 transition-all duration-700 flex flex-col items-center animate-[wiggle_0.6s_ease-in-out_infinite]"
-                        style={{ left: `calc(${Math.min(aiProgress, FINISH_POSITION)}% - 30px)` }}
+                        className="absolute bottom-1 md:bottom-4 transition-all duration-700 flex flex-col items-center animate-[wiggle_0.6s_ease-in-out_infinite]"
+                        style={{ left: `calc(${Math.min(aiProgress, FINISH_POSITION)}% - 25px)` }}
                     >
-                        <div className="w-14 h-14 md:w-20 md:h-20 rounded-full bg-red-500/20 border-2 border-red-500 shadow-[0_0_20px_rgba(239,68,68,0.3)] flex items-center justify-center overflow-hidden hr-avatar-container">
+                        <div className="w-12 h-12 md:w-20 md:h-20 rounded-full bg-red-500/20 border-2 border-red-500 shadow-[0_0_20px_rgba(239,68,68,0.3)] flex items-center justify-center overflow-hidden hr-avatar-container">
                             <img src="/Hacker1.png" className="w-full h-full object-contain" alt="Hacker" />
                         </div>
-                        <span className="text-[9px] md:text-xs font-black mt-1 md:mt-2 text-red-400 bg-black/70 px-2 md:px-3 py-0.5 md:py-1 rounded-full border border-red-500/20 hr-avatar-badge">Hacker</span>
+                        <span className="text-[8px] md:text-xs font-black mt-0.5 md:mt-2 text-red-400 bg-black/70 px-2 md:px-3 py-0.5 md:py-1 rounded-full border border-red-500/20 hr-avatar-badge">Hacker</span>
                     </div>
 
                     {/* FINISH LINE */}
@@ -118,21 +118,21 @@ const SingleLayout: React.FC<SingleLayoutProps> = ({
 
             <div className="w-full flex flex-col items-center hr-right-panel max-w-5xl">
                 {/* QUESTION CARD */}
-                <div className="w-full bg-[#1c2438]/70 p-6 md:p-10 rounded-[2rem] border border-emerald-500/10 shadow-2xl hr-card">
-                    <div className="flex justify-between items-center mb-4 md:mb-6 text-xs md:text-sm text-emerald-300 font-bold hr-card-header">
+                <div className="w-full bg-[#1c2438]/70 p-5 md:p-10 rounded-3xl md:rounded-[2rem] border border-emerald-500/10 shadow-2xl hr-card">
+                    <div className="flex justify-between items-center mb-3 md:mb-6 text-[11px] md:text-sm text-emerald-300 font-bold hr-card-header">
                         <span>Questions {currentScenarioIndex + 1} / {TOTAL_STEPS}</span>
                     </div>
-                    <h2 className="text-lg md:text-2xl font-semibold mb-6 md:mb-10 leading-snug">{scenario.question}</h2>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-6 hr-options-grid">
+                    <h2 className="text-[15px] md:text-2xl font-semibold mb-4 md:mb-10 leading-snug">{scenario.question}</h2>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-6 hr-options-grid">
                         {scenario.options?.map((opt: any, idx: number) => {
                             const optionText = typeof opt === 'object' ? opt.text : opt;
-                            let style = "hr-option-btn p-4 md:p-6 rounded-xl md:rounded-2xl border border-emerald-500/20 bg-[#0f172a] hover:bg-emerald-950/40 transition text-left text-sm md:text-lg";
+                            let style = "hr-option-btn p-3 md:p-6 rounded-xl md:rounded-2xl border border-emerald-500/20 bg-[#0f172a] hover:bg-emerald-950/40 transition text-left text-xs md:text-lg";
 
                             if (isAnswered) {
                                 const isCorrectOption = typeof opt === "object" ? (opt.isCorrect ?? opt.text === scenario.correctAnswer) : opt === scenario.correctAnswer;
-                                if (isCorrectOption) style = "hr-option-btn p-4 md:p-6 rounded-xl md:rounded-2xl border-2 border-emerald-400 bg-emerald-900 animate-pulse w-full text-left text-sm md:text-lg";
-                                else if (idx === selectedOptionIndex) style = "hr-option-btn p-4 md:p-6 rounded-xl md:rounded-2xl border-2 border-red-400 bg-red-900 w-full text-left text-sm md:text-lg";
-                                else style = "hr-option-btn p-4 md:p-6 rounded-xl md:rounded-2xl border border-gray-700 bg-gray-800 text-gray-400 w-full text-left text-sm md:text-lg";
+                                if (isCorrectOption) style = "hr-option-btn p-3 md:p-6 rounded-xl md:rounded-2xl border-2 border-emerald-400 bg-emerald-900 animate-pulse w-full text-left text-xs md:text-lg";
+                                else if (idx === selectedOptionIndex) style = "hr-option-btn p-3 md:p-6 rounded-xl md:rounded-2xl border-2 border-red-400 bg-red-900 w-full text-left text-xs md:text-lg";
+                                else style = "hr-option-btn p-3 md:p-6 rounded-xl md:rounded-2xl border border-gray-700 bg-gray-800 text-gray-400 w-full text-left text-xs md:text-lg";
                             }
 
                             return (

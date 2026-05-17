@@ -41,31 +41,30 @@ const MultiLayout: React.FC<MultiLayoutProps> = ({
     const playersList = Object.entries(raceState.players);
     const isMeEliminated = myPlayerState?.eliminated;
     
-    // رفعنا الارتفاع شوي لـ 240 عشان الاسم ياخذ راحته تحت
-    const trackHeightClass = playersList.length > 2 ? 'h-[280px] md:h-[320px]' : 'h-[200px] md:h-[240px]';
+    const trackHeightClass = playersList.length > 2 ? 'h-[240px] md:h-[320px]' : 'h-[160px] md:h-[240px]';
 
     return (
-        <div className="flex flex-col items-center p-4 md:p-8 text-white relative hr-wrapper">
+        <div className="flex flex-col items-center p-3 md:p-8 text-white relative hr-wrapper">
             
             <div className="w-full flex flex-col items-center hr-left-panel max-w-6xl">
                 {/* HEADER */}
-                <div className="flex justify-between items-center w-full mb-4 md:mb-6 bg-[#1c2438]/80 px-4 md:px-8 py-2.5 md:py-4 rounded-full border border-emerald-500/30 shadow-[0_0_20px_rgba(16,185,129,0.1)] hr-header">
+                <div className="flex justify-between items-center w-full mb-3 md:mb-6 bg-[#1c2438]/80 px-4 md:px-8 py-2 md:py-4 rounded-full border border-emerald-500/30 shadow-[0_0_20px_rgba(16,185,129,0.1)] hr-header">
                     <div className="flex items-center gap-1 md:gap-2 text-emerald-400 font-black tracking-widest border-r border-white/10 pr-2 md:pr-6 shrink-0">
                         <Zap size={16} className="md:w-5 md:h-5" /> <span className="hidden sm:inline">LEVEL</span> {initialLevel}
                     </div>
                     
                     <div className="flex items-center gap-1.5 md:gap-3 text-yellow-500 shrink-0">
                         <Timer size={18} className="md:w-5 md:h-5" />
-                        <span className="font-mono text-lg md:text-2xl font-bold">
+                        <span className="font-mono text-sm md:text-2xl font-bold">
                             {Math.floor(timeLeft / 60)}:{(timeLeft % 60).toString().padStart(2, "0")}
                         </span>
                     </div>
 
                     <div className="flex items-center gap-1 md:gap-2 pl-2 md:pl-6 border-l border-white/10 shrink-0">
-                        <span className="text-[10px] md:text-xs text-gray-400 mr-1 md:mr-2 hidden sm:inline">INTEGRITY:</span>
+                        <span className="text-[9px] md:text-xs text-gray-400 mr-1 md:mr-2 hidden sm:inline">INTEGRITY:</span>
                         {[...Array(3)].map((_, i) => (
                             <Heart 
-                                key={i} className="w-4 h-4 md:w-5 md:h-5" 
+                                key={i} className="w-3 h-3 md:w-5 md:h-5" 
                                 fill={i < (myPlayerState?.lives || 0) ? "#ef4444" : "none"} 
                                 color={i < (myPlayerState?.lives || 0) ? "#ef4444" : "#4b5563"} 
                             />
@@ -74,7 +73,7 @@ const MultiLayout: React.FC<MultiLayoutProps> = ({
                 </div>
 
                 {/* 🔥 المضمار المشترك 🔥 */}
-                <div className={`relative w-full max-w-6xl ${trackHeightClass} bg-gradient-to-r from-emerald-950/20 to-black rounded-3xl md:rounded-[2.5rem] border border-emerald-500/20 mb-6 md:mb-10 p-4 md:p-6 overflow-hidden shadow-2xl transition-all duration-500 hr-track`}>
+                <div className={`relative w-full max-w-6xl ${trackHeightClass} bg-gradient-to-r from-emerald-950/20 to-black rounded-[1.5rem] md:rounded-[2.5rem] border border-emerald-500/20 mb-4 md:mb-10 p-3 md:p-6 overflow-hidden shadow-2xl transition-all duration-500 hr-track`}>
                     
                     <div className="absolute inset-0 flex flex-col justify-around px-10 opacity-20 pointer-events-none py-10">
                         {playersList.map((_, i) => (
@@ -86,7 +85,6 @@ const MultiLayout: React.FC<MultiLayoutProps> = ({
                         const isMe = playerId === myUserId;
                         const progressVal = Math.min(pState.progress, 90); 
                         
-                        // مسافات التوسيط
                         let topPos = 50;
                         if (playersList.length === 2) {
                             topPos = index === 0 ? 30 : 70; 
@@ -106,12 +104,11 @@ const MultiLayout: React.FC<MultiLayoutProps> = ({
                             <div 
                                 key={playerId} 
                                 className="absolute transition-all duration-700 ease-out z-20"
-                                style={{ left: `calc(${progressVal}% + 20px)`, top: `${topPos}%`, transform: 'translateY(-50%)' }}
+                                style={{ left: `calc(${progressVal}% + 15px)`, top: `${topPos}%`, transform: 'translateY(-50%)' }}
                             >
                                 <div className="relative flex flex-col items-center">
-                                    {/* صورة اللاعب */}
-                                    <div className={`w-12 h-12 md:w-16 md:h-16 rounded-full border-2 md:border-4 flex items-center justify-center shadow-[0_0_15px_rgba(0,0,0,0.5)] overflow-hidden bg-[#0a0f1a] hr-avatar-container ${isMe ? 'border-emerald-500' : 'border-blue-500'} ${pState.eliminated ? 'grayscale opacity-50 border-gray-500' : ''}`}>
-                                        {pState.eliminated ? <Skull size={24} className="md:w-[30px] md:h-[30px] text-gray-400"/> : 
+                                    <div className={`w-10 h-10 md:w-16 md:h-16 rounded-full border-2 md:border-4 flex items-center justify-center shadow-[0_0_15px_rgba(0,0,0,0.5)] overflow-hidden bg-[#0a0f1a] hr-avatar-container ${isMe ? 'border-emerald-500' : 'border-blue-500'} ${pState.eliminated ? 'grayscale opacity-50 border-gray-500' : ''}`}>
+                                        {pState.eliminated ? <Skull size={20} className="md:w-[30px] md:h-[30px] text-gray-400"/> : 
                                         <img 
                                             src={`/${playerAvatar}`}
                                             className="w-full h-full object-contain" 
@@ -119,9 +116,8 @@ const MultiLayout: React.FC<MultiLayoutProps> = ({
                                         />}
                                     </div>
                                     
-                                    {/* 🔥 الاسم الإجباري */}
-                                    <div className="absolute -bottom-6 md:-bottom-8 flex justify-center w-max hr-multi-badge-container">
-                                        <span className={`text-[8px] md:text-[11px] font-black px-2 md:px-3 py-0.5 md:py-1 rounded-full border shadow-lg hr-avatar-badge-multi ${isMe ? 'bg-emerald-900/90 text-emerald-300 border-emerald-500/50' : 'bg-blue-900/90 text-blue-300 border-blue-500/50'}`}>
+                                    <div className="absolute -bottom-5 md:-bottom-8 flex justify-center w-max hr-multi-badge-container">
+                                        <span className={`text-[7px] md:text-[11px] font-black px-1.5 md:px-3 py-0.5 md:py-1 rounded-full border shadow-lg hr-avatar-badge-multi ${isMe ? 'bg-emerald-900/90 text-emerald-300 border-emerald-500/50' : 'bg-blue-900/90 text-blue-300 border-blue-500/50'}`}>
                                             {playerName}
                                         </span>
                                     </div>
@@ -131,7 +127,7 @@ const MultiLayout: React.FC<MultiLayoutProps> = ({
                     })}
 
                     {/* خط النهاية */}
-                    <div className="absolute right-4 md:right-6 top-0 bottom-0 w-8 md:w-12 flex flex-col border-l-2 md:border-l-4 border-emerald-400 shadow-[0_0_25px_rgba(16,185,129,0.5)] opacity-80 pointer-events-none">
+                    <div className="absolute right-4 md:right-6 top-0 bottom-0 w-6 md:w-12 flex flex-col border-l-2 md:border-l-4 border-emerald-400 shadow-[0_0_25px_rgba(16,185,129,0.5)] opacity-80 pointer-events-none">
                         <div className="grid grid-cols-2 flex-1">
                             <div className="bg-white"></div><div className="bg-black"></div>
                             <div className="bg-black"></div><div className="bg-white"></div>
@@ -144,7 +140,7 @@ const MultiLayout: React.FC<MultiLayoutProps> = ({
 
             <div className="w-full flex flex-col items-center hr-right-panel max-w-6xl">
                 {/* QUESTION CARD */}
-                <div className={`w-full bg-[#1c2438]/70 p-6 md:p-10 rounded-3xl border ${isMeEliminated ? 'border-red-500/30' : 'border-emerald-500/10'} shadow-2xl transition-all hr-card`}>
+                <div className={`w-full bg-[#1c2438]/70 p-5 md:p-10 rounded-3xl md:rounded-[2rem] border ${isMeEliminated ? 'border-red-500/30' : 'border-emerald-500/10'} shadow-2xl transition-all hr-card`}>
                     {isMeEliminated ? (
                         <div className="text-center py-6 md:py-10">
                             <Skull className="text-red-500 mx-auto mb-4 animate-bounce w-12 h-12 md:w-16 md:h-16" />
@@ -153,20 +149,20 @@ const MultiLayout: React.FC<MultiLayoutProps> = ({
                         </div>
                     ) : (
                         <>
-                            <div className="flex justify-between items-center mb-4 md:mb-6 text-xs md:text-sm text-emerald-300 font-bold hr-card-header">
+                            <div className="flex justify-between items-center mb-3 md:mb-6 text-[11px] md:text-sm text-emerald-300 font-bold hr-card-header">
                                 <span>Questions {currentScenarioIndex + 1} / {TOTAL_STEPS}</span>
                             </div>
-                            <h2 className="text-lg md:text-2xl font-semibold mb-6 md:mb-10 leading-snug">{scenario.question}</h2>
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-6 hr-options-grid">
+                            <h2 className="text-[15px] md:text-2xl font-semibold mb-4 md:mb-10 leading-snug">{scenario.question}</h2>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-6 hr-options-grid">
                                 {scenario.options?.map((opt: any, idx: number) => {
                                     const optionText = typeof opt === 'object' ? opt.text : opt;
-                                    let style = "hr-option-btn p-4 md:p-6 rounded-xl md:rounded-2xl border border-emerald-500/20 bg-[#0f172a] hover:bg-emerald-950/40 transition text-left text-sm md:text-lg";
+                                    let style = "hr-option-btn p-3 md:p-6 rounded-xl md:rounded-2xl border border-emerald-500/20 bg-[#0f172a] hover:bg-emerald-950/40 transition text-left text-xs md:text-lg";
 
                                     if (isAnswered) {
                                         const isCorrectOption = typeof opt === "object" ? (opt.isCorrect ?? opt.text === scenario.correctAnswer) : opt === scenario.correctAnswer;
-                                        if (isCorrectOption) style = "hr-option-btn p-4 md:p-6 rounded-xl md:rounded-2xl border-2 border-emerald-400 bg-emerald-900 animate-pulse w-full text-left text-sm md:text-lg";
-                                        else if (idx === selectedOptionIndex) style = "hr-option-btn p-4 md:p-6 rounded-xl md:rounded-2xl border-2 border-red-400 bg-red-900 w-full text-left text-sm md:text-lg";
-                                        else style = "hr-option-btn p-4 md:p-6 rounded-xl md:rounded-2xl border border-gray-700 bg-gray-800 text-gray-400 w-full text-left text-sm md:text-lg";
+                                        if (isCorrectOption) style = "hr-option-btn p-3 md:p-6 rounded-xl md:rounded-2xl border-2 border-emerald-400 bg-emerald-900 animate-pulse w-full text-left text-xs md:text-lg";
+                                        else if (idx === selectedOptionIndex) style = "hr-option-btn p-3 md:p-6 rounded-xl md:rounded-2xl border-2 border-red-400 bg-red-900 w-full text-left text-xs md:text-lg";
+                                        else style = "hr-option-btn p-3 md:p-6 rounded-xl md:rounded-2xl border border-gray-700 bg-gray-800 text-gray-400 w-full text-left text-xs md:text-lg";
                                     }
 
                                     return (
