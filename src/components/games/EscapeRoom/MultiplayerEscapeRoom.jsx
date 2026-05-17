@@ -341,18 +341,17 @@ const MultiplayerEscapeRoom = ({ sessionId, userData, myRole }) => {
         </button>
       )}
 
-      {/* شريط الشات التكتيكي الجانبي */}
-      <div className={`fixed top-0 right-0 h-full z-[1100] w-full sm:w-auto transition-transform duration-500 ease-in-out transform ${isChatOpen ? 'translate-x-0' : 'translate-x-full'}`}>
-        <button onClick={() => setIsChatOpen(false)} className="absolute top-4 right-4 z-[1110] p-2 text-gray-500 hover:text-white bg-black/40 rounded-full sm:bg-transparent">
-          <X size={20} />
-        </button>
-        
-        <TacticalChat 
-          sessionId={sessionId} 
-          userData={userData} 
-          messages={messages} 
-        />
-      </div>
+<div className={`fixed top-0 right-0 h-full z-[1100] w-[75vw] sm:w-auto transition-transform duration-500 ease-in-out transform ${isChatOpen ? 'translate-x-0' : 'translate-x-full'}`}>
+  <button onClick={() => setIsChatOpen(false)} className="absolute top-4 right-4 z-[1110] p-2 text-gray-400 hover:text-white bg-black/60 rounded-full sm:bg-transparent">
+    <X size={20} />
+  </button>
+  
+  <TacticalChat 
+    sessionId={sessionId} 
+    userData={userData} 
+    messages={messages} 
+  />
+</div>
     </div>
   );
 };
