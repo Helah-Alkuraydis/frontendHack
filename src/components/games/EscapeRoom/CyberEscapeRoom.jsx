@@ -312,64 +312,64 @@ const CyberEscapeRoom = ({ onFinish, gameId, sessionId, initialLevel, mode }) =>
 
   if (screen === 'start') {
     return (
-      <div className="h-screen cyber-bg flex flex-col items-center justify-center p-6 text-center gap-8 font-mono cer-start-wrapper">
+      <div className="h-screen cyber-bg flex flex-col items-center justify-center p-4 md:p-6 text-center gap-6 md:gap-8 font-mono cer-start-wrapper">
         <style>{PUBG_STYLE}</style>
         <div className="space-y-2 animate-in fade-in duration-1000 shrink-0">
-          <h1 className="text-7xl font-black text-[#00ff96] tracking-tighter glitch-text uppercase cer-start-title">Cyber Fortress</h1>
-          <p className="text-[#00ff96] font-black not-italic tracking-[0.6em] text-sm uppercase italic opacity-50 cer-start-sub">Cyber Escape Room • Level {initialLevel?.toString().padStart(2, '0') || "01"}</p>
+          <h1 className="text-4xl md:text-7xl font-black text-[#00ff96] tracking-tighter glitch-text uppercase cer-start-title">Cyber Fortress</h1>
+          <p className="text-[#00ff96] font-black not-italic tracking-[0.2em] md:tracking-[0.6em] text-[10px] md:text-sm uppercase italic opacity-50 cer-start-sub">Cyber Escape Room • Level {initialLevel?.toString().padStart(2, '0') || "01"}</p>
         </div>
-        <div className="w-full max-w-2xl bg-[#0a1020]/80 border-2 border-[#00ff9620] p-12 rounded-[2.5rem] shadow-2xl relative overflow-hidden min-h-[320px] flex flex-col justify-center transition-all duration-500 cer-start-box flex-1">
+        <div className="w-full max-w-2xl bg-[#0a1020]/80 border-2 border-[#00ff9620] p-6 md:p-12 rounded-[2rem] md:rounded-[2.5rem] shadow-2xl relative overflow-hidden min-h-[250px] md:min-h-[320px] flex flex-col justify-center transition-all duration-500 cer-start-box flex-1">
           <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-[#00ff9650] to-transparent animate-pulse"></div>
           {briefingStep === 0 && (
-            <div className="space-y-6 animate-in slide-in-from-right-10 duration-500">
-              <p className="text-[#00ff96] font-black uppercase tracking-[0.4em] text-s">-- Intelligence Report --</p>
-              <h3 className="text-3xl font-black text-white italic">[ SITUATION ]</h3>
-              <p className="text-lg text-gray-400 leading-relaxed font-sans">
+            <div className="space-y-4 md:space-y-6 animate-in slide-in-from-right-10 duration-500">
+              <p className="text-[#00ff96] font-black uppercase tracking-[0.2em] md:tracking-[0.4em] text-[10px] md:text-xs">-- Intelligence Report --</p>
+              <h3 className="text-xl md:text-3xl font-black text-white italic">[ SITUATION ]</h3>
+              <p className="text-sm md:text-lg text-gray-400 leading-relaxed font-sans">
                 An unauthorized brute-force entity has bypassed our primary firewall.
                 The <strong className="text-white border-b border-[#00ff96]">Digital Fortress</strong> is currently in lockdown mode.
               </p>
             </div>
           )}
           {briefingStep === 1 && (
-            <div className="space-y-6 animate-in slide-in-from-right-10 duration-500">
-              <p className="text-[#00ff96] font-black uppercase tracking-[0.4em] text-s">-- Mission Parameters --</p>
-              <h3 className="text-3xl font-black text-white italic">[ OBJECTIVE ]</h3>
-              <div className="text-left max-w-md mx-auto space-y-3">
-                <p className="text-gray-400 text-base font-sans">You must navigate through 4 Room:</p>
-                <ul className="text-sm space-y-2 text-[#00ff96] font-black uppercase tracking-widest italic">
-                    <li className="flex items-center gap-3"><ChevronRight size={14}/> 01. Encoding Room</li>
-                    <li className="flex items-center gap-3"><ChevronRight size={14}/> 02. Infected Device Control Room</li>
-                    <li className="flex items-center gap-3"><ChevronRight size={14}/> 03. Logic Trap Gate Room</li>
-                    <li className="flex items-center gap-3"><ChevronRight size={14}/> 04. The Final Decode Chamber</li>
+            <div className="space-y-4 md:space-y-6 animate-in slide-in-from-right-10 duration-500">
+              <p className="text-[#00ff96] font-black uppercase tracking-[0.2em] md:tracking-[0.4em] text-[10px] md:text-xs">-- Mission Parameters --</p>
+              <h3 className="text-xl md:text-3xl font-black text-white italic">[ OBJECTIVE ]</h3>
+              <div className="text-left max-w-md mx-auto space-y-2 md:space-y-3">
+                <p className="text-gray-400 text-xs md:text-base font-sans">You must navigate through 4 Room:</p>
+                <ul className="text-[11px] md:text-sm space-y-1.5 md:space-y-2 text-[#00ff96] font-black uppercase tracking-wider md:tracking-widest italic">
+                    <li className="flex items-center gap-2 md:gap-3"><ChevronRight size={14}/> 01. Encoding Room</li>
+                    <li className="flex items-center gap-2 md:gap-3"><ChevronRight size={14}/> 02. Infected Device Control Room</li>
+                    <li className="flex items-center gap-2 md:gap-3"><ChevronRight size={14}/> 03. Logic Trap Gate Room</li>
+                    <li className="flex items-center gap-2 md:gap-3"><ChevronRight size={14}/> 04. The Final Decode Chamber</li>
                 </ul>
               </div>
             </div>
           )}
           {briefingStep === 2 && (
-            <div className="space-y-6 animate-in zoom-in duration-500">
-              <h3 className="text-3xl font-black text-red-500 italic">[ WARNING ]</h3>
-              <p className="text-lg text-gray-400 leading-relaxed font-sans">
+            <div className="space-y-4 md:space-y-6 animate-in zoom-in duration-500">
+              <h3 className="text-xl md:text-3xl font-black text-red-500 italic">[ WARNING ]</h3>
+              <p className="text-sm md:text-lg text-gray-400 leading-relaxed font-sans">
                 Every incorrect attempt will trigger a <strong className="text-white">Time Dilation Penalty & Score Deduction</strong> ,
                 accelerating the system wipe-out sequence.
               </p>
-              <div className="pt-6 border-t border-white/5 text-[16px] text-red-400/90 uppercase tracking-[0.2em]">
+              <div className="pt-4 md:pt-6 border-t border-white/5 text-[12px] md:text-[16px] text-red-400/90 uppercase tracking-wider md:tracking-[0.2em]">
                 Byte-loss imminent !! Regain control or face sterilization.
               </div>
             </div>
           )}
         </div>
-        <div className="flex gap-4 items-center shrink-0">
+        <div className="flex gap-4 items-center shrink-0 w-full md:w-auto px-4 md:px-0">
           {briefingStep < 2 ? (
             <button
               onClick={() => setBriefingStep(prev => prev + 1)}
-              className="px-20 py-5 bg-[#00ff96] text-black font-black tracking-[0.3em] uppercase hover:bg-white transition-all shadow-[0_0_30px_rgba(0,255,150,0.3)] active:scale-95 cer-start-btn"
+              className="w-full md:w-auto px-10 py-4 md:px-20 md:py-5 bg-[#00ff96] text-black text-sm md:text-base font-black tracking-[0.2em] md:tracking-[0.3em] uppercase hover:bg-white transition-all shadow-[0_0_30px_rgba(0,255,150,0.3)] active:scale-95 cer-start-btn"
             >
               Next
             </button>
           ) : (
             <button
               onClick={() => setScreen('room')}
-              className="px-20 py-6 bg-gradient-to-r from-red-600 to-orange-600 text-white font-black tracking-[0.4em] uppercase hover:scale-105 transition-all shadow-[0_0_50px_rgba(255,0,0,0.4)] animate-pulse cer-start-btn"
+              className="w-full md:w-auto px-10 py-4 md:px-20 md:py-6 bg-gradient-to-r from-red-600 to-orange-600 text-white text-sm md:text-base font-black tracking-[0.2em] md:tracking-[0.4em] uppercase hover:scale-105 transition-all shadow-[0_0_50px_rgba(255,0,0,0.4)] animate-pulse cer-start-btn"
             >
               Start Mission
             </button>
@@ -386,38 +386,38 @@ const CyberEscapeRoom = ({ onFinish, gameId, sessionId, initialLevel, mode }) =>
 
   if (screen === 'success') {
     return (
-      <div className="h-screen cyber-bg flex flex-col items-center justify-center p-6 text-center animate-in zoom-in duration-1000 cer-success-wrapper">
+      <div className="h-screen cyber-bg flex flex-col items-center justify-center p-4 md:p-6 text-center animate-in zoom-in duration-1000 cer-success-wrapper">
         <style>{PUBG_STYLE}</style>
-        <div className="relative mb-6 cer-success-icon-box shrink-0">
-          <div className="absolute inset-0 bg-[#00ff96] blur-[50px] opacity-20 animate-pulse"></div>
-          <Trophy size={100} className="text-[#00ff96] relative z-10 drop-shadow-[0_0_15px_#00ff96] cer-success-icon" />
+        <div className="relative mb-4 md:mb-6 cer-success-icon-box shrink-0">
+          <div className="absolute inset-0 bg-[#00ff96] blur-[30px] md:blur-[50px] opacity-20 animate-pulse"></div>
+          <Trophy size={80} className="md:w-[100px] md:h-[100px] text-[#00ff96] relative z-10 drop-shadow-[0_0_15px_#00ff96] cer-success-icon" />
         </div>
 
-        <div className="mb-10 shrink-0">
-          <h1 className="text-6xl font-black text-[#00ff96] glitch-text uppercase tracking-tighter cer-success-title">Mission Complete</h1>
-          <p className="text-[#506070] tracking-[0.4em] text-[10px] font-black uppercase mt-2 cer-success-sub">Data Integrity Secured • Command Center Sync</p>
+        <div className="mb-6 md:mb-10 shrink-0">
+          <h1 className="text-4xl md:text-6xl font-black text-[#00ff96] glitch-text uppercase tracking-tighter cer-success-title">Mission Complete</h1>
+          <p className="text-[#506070] tracking-widest md:tracking-[0.4em] text-[8px] md:text-[10px] font-black uppercase mt-1 md:mt-2 cer-success-sub">Data Integrity Secured • Command Center Sync</p>
         </div>
         
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full max-w-xl mb-12 cer-success-grid flex-1">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 w-full max-w-xl mb-8 md:mb-12 cer-success-grid flex-1">
           
-          <div className="bg-[#0a1020] border-2 border-[#00ff96]/20 p-8 rounded-[2.5rem] shadow-2xl transition-all hover:border-[#00ff96]/40 group cer-success-box flex flex-col justify-center">
-            <p className="text-[10px] text-[#506070] uppercase mb-2 font-black tracking-widest group-hover:text-[#00ff96] transition-colors">Total XP Gained</p>
-            <p className="text-5xl font-black text-[#00ff96] drop-shadow-[0_0_10px_#00ff96]">{score}</p>
+          <div className="bg-[#0a1020] border-2 border-[#00ff96]/20 p-6 md:p-8 rounded-[2rem] md:rounded-[2.5rem] shadow-2xl transition-all hover:border-[#00ff96]/40 group cer-success-box flex flex-col justify-center">
+            <p className="text-[9px] md:text-[10px] text-[#506070] uppercase mb-1 md:mb-2 font-black tracking-widest group-hover:text-[#00ff96] transition-colors">Total XP Gained</p>
+            <p className="text-4xl md:text-5xl font-black text-[#00ff96] drop-shadow-[0_0_10px_#00ff96]">{score}</p>
           </div>
 
-          <div className="bg-[#0a1020] border-2 border-white/5 p-8 rounded-[2.5rem] shadow-2xl transition-all hover:border-red-500/20 group cer-success-box flex flex-col justify-center">
-            <p className="text-[10px] text-[#506070] uppercase mb-2 font-black tracking-widest group-hover:text-red-500 transition-colors">Security Alerts</p>
-            <p className={`text-5xl font-black ${mistakes > 0 ? 'text-red-500 drop-shadow-[0_0_10px_rgba(239,68,68,0.3)]' : 'text-white'}`}>
+          <div className="bg-[#0a1020] border-2 border-white/5 p-6 md:p-8 rounded-[2rem] md:rounded-[2.5rem] shadow-2xl transition-all hover:border-red-500/20 group cer-success-box flex flex-col justify-center">
+            <p className="text-[9px] md:text-[10px] text-[#506070] uppercase mb-1 md:mb-2 font-black tracking-widest group-hover:text-red-500 transition-colors">Security Alerts</p>
+            <p className={`text-4xl md:text-5xl font-black ${mistakes > 0 ? 'text-red-500 drop-shadow-[0_0_10px_rgba(239,68,68,0.3)]' : 'text-white'}`}>
               {mistakes}
             </p>
           </div>
         </div>
 
-        <div className="flex flex-col items-center gap-4 shrink-0">
-          <div className="w-64 h-1.5 bg-white/5 rounded-full overflow-hidden border border-white/5">
+        <div className="flex flex-col items-center gap-3 md:gap-4 shrink-0">
+          <div className="w-48 md:w-64 h-1 md:h-1.5 bg-white/5 rounded-full overflow-hidden border border-white/5">
             <div className="h-full bg-[#00ff96] animate-progress-load shadow-[0_0_15px_#00ff96]"></div>
           </div>
-          <p className="text-[9px] text-[#00ff96] font-black uppercase tracking-[0.3em] animate-pulse italic">
+          <p className="text-[8px] md:text-[9px] text-[#00ff96] font-black uppercase tracking-[0.2em] md:tracking-[0.3em] animate-pulse italic">
             Redirecting to HackHero Core...
           </p>
         </div>
@@ -427,25 +427,25 @@ const CyberEscapeRoom = ({ onFinish, gameId, sessionId, initialLevel, mode }) =>
 
   if (screen === 'gameover') {
     return (
-      <div className="h-screen cyber-bg flex flex-col items-center justify-center p-6 text-center animate-in fade-in duration-700 cer-fail-wrapper">
+      <div className="h-screen cyber-bg flex flex-col items-center justify-center p-4 md:p-6 text-center animate-in fade-in duration-700 cer-fail-wrapper">
         <style>{PUBG_STYLE}</style>
-        <div className="mb-8 p-10 bg-red-500/10 rounded-full border border-red-500/20 shadow-[0_0_50px_rgba(220,38,38,0.1)] cer-fail-icon">
-            <ShieldAlert size={80} className="text-red-500 animate-bounce" />
+        <div className="mb-6 md:mb-8 p-6 md:p-10 bg-red-500/10 rounded-full border border-red-500/20 shadow-[0_0_50px_rgba(220,38,38,0.1)] cer-fail-icon">
+            <ShieldAlert size={60} className="md:w-[80px] md:h-[80px] text-red-500 animate-bounce" />
         </div>
-        <h1 className="text-6xl font-black text-red-500 uppercase tracking-tighter mb-4 glitch-text cer-fail-title">System Breach</h1>
-        <p className="text-gray-500 text-sm max-w-md leading-relaxed mb-12 uppercase tracking-widest cer-fail-text">
+        <h1 className="text-4xl md:text-6xl font-black text-red-500 uppercase tracking-tighter mb-2 md:mb-4 glitch-text cer-fail-title">System Breach</h1>
+        <p className="text-gray-500 text-xs md:text-sm max-w-md leading-relaxed mb-8 md:mb-12 uppercase tracking-wider md:tracking-widest cer-fail-text px-4">
           Mission Failed. The encryption sequence reached zero. All data packets have been purged from the system.
         </p>
-        <div className="flex flex-col md:flex-row gap-4 w-full max-w-md">
+        <div className="flex flex-col md:flex-row gap-3 md:gap-4 w-full max-w-md px-4 md:px-0">
           <button
             onClick={restartMission}
-            className="flex-1 px-8 py-5 bg-red-600 text-white font-black uppercase tracking-widest hover:bg-red-500 transition-all shadow-[0_0_30px_rgba(220,38,38,0.3)] active:scale-95 flex items-center justify-center gap-3 cer-fail-btn"
+            className="flex-1 px-6 py-4 md:px-8 md:py-5 bg-red-600 text-white text-xs md:text-base font-black uppercase tracking-widest hover:bg-red-500 transition-all shadow-[0_0_30px_rgba(220,38,38,0.3)] active:scale-95 flex items-center justify-center gap-2 md:gap-3 cer-fail-btn"
           >
-            <Zap size={18} fill="currentColor" /> Retry Mission
+            <Zap size={16} className="md:w-[18px] md:h-[18px]" fill="currentColor" /> Retry Mission
           </button>
           <button
             onClick={() => navigate('/games')}
-            className="flex-1 px-8 py-5 bg-white/5 border border-white/10 text-gray-400 font-black uppercase tracking-widest hover:bg-white hover:text-black transition-all active:scale-95 cer-fail-btn"
+            className="flex-1 px-6 py-4 md:px-8 md:py-5 bg-white/5 border border-white/10 text-gray-400 text-xs md:text-base font-black uppercase tracking-widest hover:bg-white hover:text-black transition-all active:scale-95 cer-fail-btn"
           >
             Abort Mission
           </button>
@@ -461,9 +461,9 @@ const CyberEscapeRoom = ({ onFinish, gameId, sessionId, initialLevel, mode }) =>
   if (!scenario) {
     return (
       <div className="h-screen cyber-bg flex flex-col items-center justify-center gap-6 text-red-500">
-        <h1 className="text-4xl font-black italic">CONNECTION LOST</h1>
-        <p className="font-mono text-sm opacity-70">Could not sync with Command Center.</p>
-        <button onClick={() => window.location.reload()} className="px-8 py-3 bg-red-600 text-white font-black uppercase">
+        <h1 className="text-3xl md:text-4xl font-black italic">CONNECTION LOST</h1>
+        <p className="font-mono text-xs md:text-sm opacity-70">Could not sync with Command Center.</p>
+        <button onClick={() => window.location.reload()} className="px-6 py-3 md:px-8 md:py-3 bg-red-600 text-white font-black uppercase text-sm md:text-base">
           Retry Linkup
         </button>
       </div>
@@ -473,14 +473,14 @@ const CyberEscapeRoom = ({ onFinish, gameId, sessionId, initialLevel, mode }) =>
   return (
     <div className="h-screen cyber-bg flex flex-col overflow-hidden cer-wrapper">
       <style>{PUBG_STYLE}</style>
-      <header className="flex items-center justify-between px-8 py-4 bg-[#080c16] border-b border-[#00ff9610] cer-header shrink-0">
-        <div className="text-xs font-black text-[#00ff96] tracking-[0.3em] uppercase">⬡ Cyber Escape</div>
-        <div className="flex items-center gap-8">
-          <div className="flex items-center gap-3 bg-[#0d1a0d] border border-[#00ff9630] px-5 py-1.5 rounded-sm">
-            <span className="font-mono text-2xl font-bold text-[#00ff96]">{Math.floor(timeLeft / 60)}:{(timeLeft % 60).toString().padStart(2, '0')}</span>
+      <header className="flex items-center justify-between px-4 md:px-8 py-3 md:py-4 bg-[#080c16] border-b border-[#00ff9610] cer-header shrink-0">
+        <div className="text-[10px] md:text-xs font-black text-[#00ff96] tracking-widest md:tracking-[0.3em] uppercase">⬡ Cyber Escape</div>
+        <div className="flex items-center gap-3 md:gap-8">
+          <div className="flex items-center gap-2 md:gap-3 bg-[#0d1a0d] border border-[#00ff9630] px-3 py-1 md:px-5 md:py-1.5 rounded-sm">
+            <span className="font-mono text-lg md:text-2xl font-bold text-[#00ff96]">{Math.floor(timeLeft / 60)}:{(timeLeft % 60).toString().padStart(2, '0')}</span>
           </div>
-          <div className="flex items-center gap-3 bg-[#0d0d1a] border border-[#6060ff30] px-5 py-1.5 rounded-sm">
-            <span className="font-mono text-xl font-bold text-[#8888ff]">{score}</span>
+          <div className="flex items-center gap-2 md:gap-3 bg-[#0d0d1a] border border-[#6060ff30] px-3 py-1 md:px-5 md:py-1.5 rounded-sm">
+            <span className="font-mono text-base md:text-xl font-bold text-[#8888ff]">{score}</span>
           </div>
         </div>
       </header>
@@ -491,22 +491,20 @@ const CyberEscapeRoom = ({ onFinish, gameId, sessionId, initialLevel, mode }) =>
         ))}
       </div>
 
-      <main className="flex-1 p-8 max-w-4xl mx-auto w-full overflow-y-auto cer-main custom-scrollbar">
+      <main className="flex-1 p-4 md:p-8 max-w-4xl mx-auto w-full overflow-y-auto cer-main custom-scrollbar">
      
-      {/* ROOM 1: Cipher Breach */}
               {roomIdx === 0 && (
-                <div className="space-y-6 animate-in slide-in-from-bottom-4 duration-700 relative r1-wrapper">
+                <div className="space-y-4 md:space-y-6 animate-in slide-in-from-bottom-4 duration-700 relative r1-wrapper">
                   
                   {feedback.show && feedback.type === 'err' && (
-                    <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 pointer-events-none animate-in fade-in zoom-in duration-300">
-                      <div className="bg-red-600 text-white px-12 py-6 rounded-2xl shadow-[0_0_50px_rgba(220,38,38,0.5)] border-2 border-white/20 flex items-center gap-4 animate-bounce pointer-events-auto">
-                        <ShieldAlert size={40} className="text-white" />
+                    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 md:p-6 pointer-events-none animate-in fade-in zoom-in duration-300">
+                      <div className="bg-red-600 text-white px-6 py-4 md:px-12 md:py-6 rounded-2xl shadow-[0_0_50px_rgba(220,38,38,0.5)] border-2 border-white/20 flex items-center gap-3 md:gap-4 animate-bounce pointer-events-auto">
+                        <ShieldAlert size={30} className="md:w-[40px] md:h-[40px] text-white" />
                         <div className="text-left">
-                          <h4 className="text-xl font-black uppercase tracking-tighter">Access Denied!</h4>
+                          <h4 className="text-lg md:text-xl font-black uppercase tracking-tighter">Access Denied!</h4>
                           <div className="flex flex-col">
-                            <p className="text-sm font-bold opacity-90">-15 Seconds Time Penalty</p>
-                            
-                            <p className="text-sm font-black text-yellow-300 animate-pulse">-5 Points Security Deduction</p>
+                            <p className="text-xs md:text-sm font-bold opacity-90">-15 Seconds Time Penalty</p>
+                            <p className="text-xs md:text-sm font-black text-yellow-300 animate-pulse">-5 Points Security Deduction</p>
                           </div>
                         </div>
                       </div>
@@ -514,40 +512,39 @@ const CyberEscapeRoom = ({ onFinish, gameId, sessionId, initialLevel, mode }) =>
                   )}
 
                   {feedback.show && feedback.type === 'hint-err' && (
-                    <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 pointer-events-none animate-in fade-in zoom-in duration-300">
-                      <div className="bg-red-600 text-white px-12 py-6 rounded-2xl shadow-[0_0_50px_rgba(220,38,38,0.5)] border-2 border-white/20 flex items-center gap-4 animate-bounce pointer-events-auto">
-                        <ShieldAlert size={40} className="text-white" />
+                    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 md:p-6 pointer-events-none animate-in fade-in zoom-in duration-300">
+                      <div className="bg-red-600 text-white px-6 py-4 md:px-12 md:py-6 rounded-2xl shadow-[0_0_50px_rgba(220,38,38,0.5)] border-2 border-white/20 flex items-center gap-3 md:gap-4 animate-bounce pointer-events-auto">
+                        <ShieldAlert size={30} className="md:w-[40px] md:h-[40px] text-white" />
                         <div className="text-left">
-                          <h4 className="text-xl font-black uppercase tracking-tighter">Hint Activated!</h4>
+                          <h4 className="text-lg md:text-xl font-black uppercase tracking-tighter">Hint Activated!</h4>
                           <div className="flex flex-col">
-                            <p className="text-sm font-black text-yellow-300 animate-pulse">-10 Points Security Deduction</p>
+                            <p className="text-xs md:text-sm font-black text-yellow-300 animate-pulse">-10 Points Security Deduction</p>
                           </div>
                         </div>
                       </div>
                     </div>
                   )}
 
-                  <div className="bg-[#0d131f] border-l-4 border-[#00ff96] p-4 rounded-r-xl shadow-lg relative overflow-hidden text-left r1-header">
-                      <div className="absolute top-0 right-0 p-2 opacity-10"><Shield size={40} /></div>
-                      <div className="flex items-center gap-3 mb-2">
-                          <Zap size={16} className="text-[#00ff96] animate-pulse" />
-                          <span className="text-[12px] font-black uppercase tracking-[0.2em] text-[#00ff96]">ROOM_01: Cipher_Breach</span>
+                  <div className="bg-[#0d131f] border-l-4 border-[#00ff96] p-3 md:p-4 rounded-r-xl shadow-lg relative overflow-hidden text-left r1-header">
+                      <div className="absolute top-0 right-0 p-2 opacity-10"><Shield size={30} className="md:w-[40px] md:h-[40px]"/></div>
+                      <div className="flex items-center gap-2 md:gap-3 mb-1 md:mb-2">
+                          <Zap size={14} className="md:w-[16px] md:h-[16px] text-[#00ff96] animate-pulse" />
+                          <span className="text-[10px] md:text-[12px] font-black uppercase tracking-widest md:tracking-[0.2em] text-[#00ff96]">ROOM_01: Cipher_Breach</span>
                       </div>
-                     <p className="text-s text-gray-400 font-sans leading-relaxed pr-8">
+                     <p className="text-xs md:text-sm text-gray-400 font-sans leading-relaxed pr-6 md:pr-8">
                             An encrypted data packet has been intercepted. System identifies the protocol as 
                             <span className="text-white underline ml-1">Caesar Cipher</span>  
                            , Analyze the sequence to regain access.
-      
                           </p>
                   </div>
 
-                  <div className="bg-[#060e08] border border-[#00ff9620] rounded-xl p-10 font-mono text-center shadow-2xl relative r1-box">
-                      <div className="text-4xl text-[#ff88cc] font-black tracking-[0.4em] drop-shadow-[0_0_15px_rgba(255,136,204,0.3)] glitch-text">
+                  <div className="bg-[#060e08] border border-[#00ff9620] rounded-xl p-6 md:p-10 font-mono text-center shadow-2xl relative r1-box">
+                      <div className="text-2xl md:text-4xl text-[#ff88cc] font-black tracking-widest md:tracking-[0.4em] drop-shadow-[0_0_15px_rgba(255,136,204,0.3)] glitch-text break-all">
                         {scenario?.room1?.encoded}
                       </div>
                   </div>
 
-                  <div className="grid grid-cols-3 gap-3 r1-tools">
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 md:gap-3 r1-tools">
                         {[
                           { id: 'scan', label: 'DEEP SCAN', icon: <Search size={14}/> },
                           { id: 'map', label: 'SHIFT MAP', icon: <Globe size={14}/> },
@@ -558,19 +555,19 @@ const CyberEscapeRoom = ({ onFinish, gameId, sessionId, initialLevel, mode }) =>
                             <button 
                               key={tool.id}
                               onClick={() => handleToolClick(tool.id)} 
-                              className={`flex flex-col items-center gap-2 p-4 rounded-xl border transition-all relative
+                              className={`flex flex-row sm:flex-col items-center justify-center gap-2 p-3 md:p-4 rounded-xl border transition-all relative
                                 ${activeTool === tool.id 
                                   ? 'bg-[#00ff96]/10 border-[#00ff96] text-[#00ff96] shadow-[0_0_15px_rgba(0,255,150,0.2)]' 
                                   : 'bg-[#0a1020] border-white/5 text-gray-500 hover:border-white/20'}`}
                             >
                               {!isUsed && (
-                                <span className="absolute -top-2 -right-1 bg-red-500 text-white text-[10px] font-black px-1.5 py-0.5 rounded-full shadow-lg animate-pulse">
+                                <span className="absolute -top-2 -right-1 bg-red-500 text-white text-[8px] md:text-[10px] font-black px-1.5 py-0.5 rounded-full shadow-lg animate-pulse">
                                   -10s
                                 </span>
                               )}
                               
                               {tool.icon}
-                              <span className="text-[12px] font-black tracking-widest uppercase">{tool.label}</span>
+                              <span className="text-[10px] md:text-[12px] font-black tracking-widest uppercase">{tool.label}</span>
                               
                               {isUsed && <div className="absolute top-1 left-1 w-1 h-1 bg-[#00ff96] rounded-full shadow-[0_0_5px_#00ff96]"></div>}
                             </button>
@@ -579,30 +576,29 @@ const CyberEscapeRoom = ({ onFinish, gameId, sessionId, initialLevel, mode }) =>
                       </div>
 
                   {activeTool && (
-                      <div className="bg-[#080c14] border border-blue-500/30 p-5 rounded-xl animate-in slide-in-from-top-2 text-left relative overflow-hidden">
-                        <div className="absolute top-0 right-0 bg-red-500/10 px-3 py-1 text-[10px] font-bold text-red-400 uppercase tracking-tighter">
+                      <div className="bg-[#080c14] border border-blue-500/30 p-4 md:p-5 rounded-xl animate-in slide-in-from-top-2 text-left relative overflow-hidden">
+                        <div className="absolute top-0 right-0 bg-red-500/10 px-2 py-1 text-[8px] md:text-[10px] font-bold text-red-400 uppercase tracking-tighter">
                           Hint Mode Active
                         </div>
 
-                        <div className="flex items-center gap-2 mb-3 border-b border-white/5 pb-2">
+                        <div className="flex items-center gap-2 mb-2 md:mb-3 border-b border-white/5 pb-2">
                             <Cpu size={12} className="text-blue-400" />
-                            <span className="text-[12px] font-black text-blue-400 uppercase tracking-widest">Workstation Output</span>
+                            <span className="text-[10px] md:text-[12px] font-black text-blue-400 uppercase tracking-widest">Workstation Output</span>
                         </div>
                       
-                      <div className="text-s font-mono text-gray-300 leading-relaxed">
+                      <div className="text-xs md:text-sm font-mono text-gray-300 leading-relaxed">
                         {activeTool === 'scan' && (
                           <p>Scan complete: <span className="text-[#00ff96]">Partial match.</span> Identified prefix: 
-                          <span className="text-white font-bold bg-white/10 px-2 ml-2 italic">
+                          <span className="text-white font-bold bg-white/10 px-2 ml-1 md:ml-2 italic">
                             "{scenario?.room1?.answer?.substring(0, 2)}..."
                           </span></p>
                         )}
 
                         {activeTool === 'map' && (
-                          <div className="grid grid-cols-2 gap-2 text-[15px] text-emerald-500/70">
+                          <div className="grid grid-cols-2 gap-2 text-[12px] md:text-[15px] text-emerald-500/70">
                             <div>
                               [{scenario?.room1?.encoded?.slice(-2, -1)}] → {scenario?.room1?.answer?.slice(-2, -1)}
                             </div>
-                            
                             <div>
                               [{scenario?.room1?.encoded?.slice(-1)}] → {scenario?.room1?.answer?.slice(-1)}
                             </div>
@@ -617,18 +613,18 @@ const CyberEscapeRoom = ({ onFinish, gameId, sessionId, initialLevel, mode }) =>
                   )}
 
                   <div className="relative">
-                    <div className="flex gap-3 p-2 bg-black/40 border border-[#304050] rounded-2xl focus-within:border-[#00ff9660] transition-all shadow-inner r1-input-area">
-                      <div className="pl-4 flex items-center text-[#304050] font-black text-sm">$</div>
+                    <div className="flex flex-col md:flex-row gap-2 md:gap-3 p-2 bg-black/40 border border-[#304050] rounded-2xl focus-within:border-[#00ff9660] transition-all shadow-inner r1-input-area">
+                      <div className="hidden md:flex pl-4 items-center text-[#304050] font-black text-sm">$</div>
                       <input 
                         value={ansInput} 
                         onChange={e => setAnsInput(e.target.value)} 
                         onKeyDown={e => e.key === 'Enter' && checkRoom1()} 
                         placeholder="ENTER DECRYPTED KEY..." 
-                        className="flex-1 bg-transparent p-4 text-[#00ff96] font-bold tracking-[0.3em] uppercase outline-none placeholder:text-[#1a2331] r1-input" 
+                        className="flex-1 bg-transparent p-3 md:p-4 text-center md:text-left text-[#00ff96] text-base md:text-xl font-bold tracking-widest md:tracking-[0.3em] uppercase outline-none placeholder:text-[#1a2331] r1-input" 
                       />
                       <button 
                         onClick={checkRoom1} 
-                        className="bg-[#00ff96] text-black px-12 py-4 rounded-xl font-black uppercase italic tracking-widest hover:shadow-[0_0_30px_#00ff96] transition-all r1-btn"
+                        className="bg-[#00ff96] text-black px-6 py-3 md:px-12 md:py-4 rounded-xl font-black uppercase italic tracking-widest hover:shadow-[0_0_30px_#00ff96] transition-all r1-btn w-full md:w-auto text-xs md:text-base"
                       >
                         BREACH
                       </button>
@@ -636,28 +632,27 @@ const CyberEscapeRoom = ({ onFinish, gameId, sessionId, initialLevel, mode }) =>
                   </div>
 
                     {feedback.show && feedback.type === 'ok' && (
-                <div className="mt-8 p-8 rounded-[2.5rem] bg-emerald-500/10 border-2 border-emerald-500/30 text-emerald-400 text-center font-black animate-in slide-in-from-bottom-4 shadow-xl flex items-center justify-center gap-4">
-                  <ShieldCheck size={30} />
-                  <span className="text-xl italic uppercase tracking-widest">{feedback.msg}</span>
+                <div className="mt-4 md:mt-8 p-4 md:p-8 rounded-[1.5rem] md:rounded-[2.5rem] bg-emerald-500/10 border-2 border-emerald-500/30 text-emerald-400 text-center font-black animate-in slide-in-from-bottom-4 shadow-xl flex items-center justify-center gap-3 md:gap-4">
+                  <ShieldCheck size={24} className="md:w-[30px] md:h-[30px]" />
+                  <span className="text-sm md:text-xl italic uppercase tracking-widest">{feedback.msg}</span>
                 </div>
               )}
                 </div>
               )}
 
-        {/* ROOM 2*/}
             {roomIdx === 1 && (
-              <div className="space-y-8 animate-in slide-in-from-right-4 duration-700 font-mono relative r2-wrapper">
+              <div className="space-y-6 md:space-y-8 animate-in slide-in-from-right-4 duration-700 font-mono relative r2-wrapper">
                 
                 {feedback.show && feedback.type === 'err' && (
-                  <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 pointer-events-none animate-in fade-in zoom-in duration-300">
-                    <div className="bg-red-600 text-white px-12 py-6 rounded-2xl shadow-[0_0_60px_rgba(220,38,38,0.5)] border-2 border-white/20 flex items-center gap-4 animate-bounce pointer-events-auto">
-                      <ShieldAlert size={40} className="text-white" />
+                  <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 md:p-6 pointer-events-none animate-in fade-in zoom-in duration-300">
+                    <div className="bg-red-600 text-white px-6 py-4 md:px-12 md:py-6 rounded-2xl shadow-[0_0_60px_rgba(220,38,38,0.5)] border-2 border-white/20 flex items-center gap-3 md:gap-4 animate-bounce pointer-events-auto">
+                      <ShieldAlert size={30} className="md:w-[40px] md:h-[40px] text-white" />
                       <div className="text-left">
-                        <h4 className="text-xl font-black uppercase tracking-tighter">Security Breach!</h4>
+                        <h4 className="text-lg md:text-xl font-black uppercase tracking-tighter">Security Breach!</h4>
                         <div className="flex flex-col">
-                          <p className="text-sm font-bold opacity-90">-15 Seconds Time Penalty</p>
-                          <p className="text-sm font-black text-yellow-300 animate-pulse">-15 Points Security Deduction</p>
-                          <span className="text-[10px] uppercase mt-1 opacity-70 tracking-widest italic">System Status: Clean Node Selected</span>
+                          <p className="text-xs md:text-sm font-bold opacity-90">-15 Seconds Time Penalty</p>
+                          <p className="text-xs md:text-sm font-black text-yellow-300 animate-pulse">-15 Points Security Deduction</p>
+                          <span className="text-[8px] md:text-[10px] uppercase mt-1 opacity-70 tracking-widest italic">System Status: Clean Node Selected</span>
                         </div>
                       </div>
                     </div>
@@ -665,45 +660,45 @@ const CyberEscapeRoom = ({ onFinish, gameId, sessionId, initialLevel, mode }) =>
                 )}
 
                 {feedback.show && feedback.type === 'hint-err' && (
-                    <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 pointer-events-none animate-in fade-in zoom-in duration-300">
-                      <div className="bg-red-600 text-white px-12 py-6 rounded-2xl shadow-[0_0_50px_rgba(220,38,38,0.5)] border-2 border-white/20 flex items-center gap-4 animate-bounce pointer-events-auto">
-                        <ShieldAlert size={40} className="text-white" />
+                    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 md:p-6 pointer-events-none animate-in fade-in zoom-in duration-300">
+                      <div className="bg-red-600 text-white px-6 py-4 md:px-12 md:py-6 rounded-2xl shadow-[0_0_50px_rgba(220,38,38,0.5)] border-2 border-white/20 flex items-center gap-3 md:gap-4 animate-bounce pointer-events-auto">
+                        <ShieldAlert size={30} className="md:w-[40px] md:h-[40px] text-white" />
                         <div className="text-left">
-                          <h4 className="text-xl font-black uppercase tracking-tighter">Hint Activated!</h4>
+                          <h4 className="text-lg md:text-xl font-black uppercase tracking-tighter">Hint Activated!</h4>
                           <div className="flex flex-col">
-                            <p className="text-sm font-black text-yellow-300 animate-pulse">-30 Points Security Deduction</p>
+                            <p className="text-xs md:text-sm font-black text-yellow-300 animate-pulse">-30 Points Security Deduction</p>
                           </div>
                         </div>
                       </div>
                     </div>
                   )}
 
-                <div className="bg-[#0a1020] border-2 border-blue-500/20 p-6 rounded-[2rem] shadow-2xl relative overflow-hidden text-left r2-header">
-                  <div className="absolute top-0 right-0 p-4 opacity-5"><Search size={80} /></div>
-                  <div className="flex items-center gap-3 mb-3">
-                    <div className="p-2 bg-blue-500/20 rounded-lg text-blue-400"><Search size={20} /></div>
-                    <span className="text-s font-black uppercase tracking-[0.3em] text-blue-400">ROOM_02: Security Audit Required</span>
+                <div className="bg-[#0a1020] border-2 border-blue-500/20 p-4 md:p-6 rounded-[1.5rem] md:rounded-[2rem] shadow-2xl relative overflow-hidden text-left r2-header">
+                  <div className="absolute top-0 right-0 p-4 opacity-5"><Search size={60} className="md:w-[80px] md:h-[80px]"/></div>
+                  <div className="flex items-center gap-2 md:gap-3 mb-2 md:mb-3">
+                    <div className="p-1.5 md:p-2 bg-blue-500/20 rounded-lg text-blue-400"><Search size={16} className="md:w-[20px] md:h-[20px]"/></div>
+                    <span className="text-[10px] md:text-sm font-black uppercase tracking-widest md:tracking-[0.3em] text-blue-400">ROOM_02: Security Audit Required</span>
                   </div>
-                  <p className="text-m text-gray-300 leading-relaxed max-w-2xl">
+                  <p className="text-xs md:text-base text-gray-300 leading-relaxed max-w-2xl">
                     <strong className="text-white uppercase">[ MISSION ]:</strong> Multiple unauthorized data packets detected. 
                     Analyze the <span className="text-blue-400 underline decoration-dotted">Live Network Stream</span> below and identify which terminal has been compromised.
                   </p>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-5 gap-6 r2-grid">
+                <div className="grid grid-cols-2 md:grid-cols-5 gap-3 md:gap-6 r2-grid">
                   {deviceList.map((dev) => (
                     <div 
                       key={dev.id} 
                       onClick={() => selectDevice(dev)} 
-                      className="group relative bg-[#060e08] border-2 border-white/5 p-8 rounded-[2.5rem] text-center cursor-pointer transition-all duration-500 hover:border-blue-500/50 hover:bg-blue-500/5 hover:-translate-y-2 active:scale-95 shadow-xl"
+                      className="group relative bg-[#060e08] border-2 border-white/5 p-4 md:p-8 rounded-[1.5rem] md:rounded-[2.5rem] text-center cursor-pointer transition-all duration-500 hover:border-blue-500/50 hover:bg-blue-500/5 hover:-translate-y-1 md:hover:-translate-y-2 active:scale-95 shadow-xl"
                     >
                       <div className="absolute inset-x-0 top-0 h-[2px] bg-blue-400 shadow-[0_0_15px_#60a5fa] opacity-0 group-hover:opacity-100 group-hover:animate-bounce transition-opacity"></div>
-                      <div className="text-5xl mb-4 group-hover:scale-110 transition-transform filter drop-shadow-[0_0_10px_rgba(255,255,255,0.1)]">
+                      <div className="text-3xl md:text-5xl mb-2 md:mb-4 group-hover:scale-110 transition-transform filter drop-shadow-[0_0_10px_rgba(255,255,255,0.1)]">
                         {dev.icon}
                       </div>
                       <div className="space-y-1">
-                        <h3 className="text-[13px] font-black text-white uppercase tracking-tighter opacity-80">{dev.name}</h3>
-                        <p className="text-[14px] font-bold text-blue-500/60 group-hover:text-blue-400 transition-colors">{dev.ip}</p>
+                        <h3 className="text-[9px] md:text-[13px] font-black text-white uppercase tracking-tighter opacity-80">{dev.name}</h3>
+                        <p className="text-[10px] md:text-[14px] font-bold text-blue-500/60 group-hover:text-blue-400 transition-colors">{dev.ip}</p>
                       </div>
                     </div>
                   ))}
@@ -711,51 +706,51 @@ const CyberEscapeRoom = ({ onFinish, gameId, sessionId, initialLevel, mode }) =>
 
                 <div className="relative group text-left">
                   <div className="absolute -inset-1 bg-blue-500/10 rounded-3xl blur opacity-20 group-hover:opacity-40 transition duration-1000"></div>
-                  <div className="relative bg-[#050810] border-2 border-white/5 rounded-3xl p-8 shadow-inner r2-status">
+                  <div className="relative bg-[#050810] border-2 border-white/5 rounded-2xl md:rounded-3xl p-4 md:p-8 shadow-inner r2-status">
                     
-                    <div className="flex justify-between items-center mb-6 border-b border-white/5 pb-4">
+                    <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-4 md:mb-6 border-b border-white/5 pb-3 md:pb-4">
                         <div className="flex items-center gap-2">
                             <div className={`w-2 h-2 rounded-full ${usedHints.includes('unmask') ? 'bg-red-500 animate-pulse' : 'bg-gray-600'}`}></div>
-                            <span className="text-[12px] font-black text-[#607060] uppercase tracking-[0.4em]">Live_Packet_Intercept_Stream</span>
+                            <span className="text-[10px] md:text-[12px] font-black text-[#607060] uppercase tracking-widest md:tracking-[0.4em]">Live_Packet_Stream</span>
                         </div>
                         
                         {!usedHints.includes('unmask') ? (
                           <button 
                             onClick={() => triggerHint('unmask', 30)} 
-                            className="text-[13px] bg-orange-500/10 border border-orange-500/30 text-orange-400 px-4 py-1.5 rounded-full font-black hover:bg-orange-500 hover:text-black transition-all animate-pulse flex items-center gap-2"
+                            className="text-[10px] md:text-[13px] bg-orange-500/10 border border-orange-500/30 text-orange-400 px-3 py-1 md:px-4 md:py-1.5 rounded-full font-black hover:bg-orange-500 hover:text-black transition-all animate-pulse flex items-center gap-1.5 md:gap-2 w-full sm:w-auto justify-center"
                           >
-                            <Zap size={10} /> Hints of THREATS (-30 XP)
+                            <Zap size={10} className="md:w-[12px] md:h-[12px]"/> Hints of THREATS (-30 XP)
                           </button>
                         ) : (
-                          <div className="flex items-center gap-2 text-[15px] text-orange-500 font-black italic tracking-widest bg-orange-500/5 px-3 py-1 rounded-lg border border-orange-500/20">
-                            <Cpu size={12} className="animate-spin-slow" />     Hints Mode Active
-
+                          <div className="flex items-center justify-center gap-2 text-[12px] md:text-[15px] text-orange-500 font-black italic tracking-widest bg-orange-500/5 px-2 py-1 md:px-3 rounded-lg border border-orange-500/20 w-full sm:w-auto">
+                            <Cpu size={12} className="animate-spin-slow md:w-[14px] md:h-[14px]" /> Hints Mode Active
                           </div>
                         )}
                     </div>
 
-                    <div className="space-y-3 max-h-[250px] overflow-y-auto pr-4 custom-scrollbar r2-status-list">
+                    <div className="space-y-2 md:space-y-3 max-h-[200px] md:max-h-[250px] overflow-y-auto pr-2 md:pr-4 custom-scrollbar r2-status-list">
                       {scenario.room2.logs.map((log, i) => {
                         const isRevealed = log.status === 'malicious' && usedHints.includes('unmask');
                         
                         return (
-                          <div key={i} className={`flex items-start gap-6 py-2 px-4 rounded-lg border-l-2 transition-all duration-500
+                          <div key={i} className={`flex flex-col sm:flex-row items-start sm:items-center gap-1 sm:gap-6 py-1.5 px-3 md:py-2 md:px-4 rounded-lg border-l-2 transition-all duration-500
                             ${isRevealed ? 'border-orange-600 bg-orange-600/10 shadow-[inner_0_0_10px_rgba(234,88,12,0.1)]' : 'border-transparent hover:bg-white/5'}`}>
                             
-                            <span className="text-[#506070] text-[14px] whitespace-nowrap mt-0.5">[{log.ts}]</span>
-                            
-                            <span className={`text-s font-black tracking-widest w-32 transition-colors
-                              ${isRevealed ? 'text-orange-400' : 'text-blue-400/80'}`}>
-                              {log.ip}
-                            </span>
+                            <div className="flex items-center gap-2 w-full sm:w-auto">
+                              <span className="text-[#506070] text-[10px] md:text-[14px] whitespace-nowrap">[{log.ts}]</span>
+                              <span className={`text-[11px] md:text-sm font-black tracking-widest transition-colors
+                                ${isRevealed ? 'text-orange-400' : 'text-blue-400/80'}`}>
+                                {log.ip}
+                              </span>
+                            </div>
 
-                            <span className={`text-s flex-1 transition-all
+                            <span className={`text-[10px] md:text-sm flex-1 transition-all
                               ${isRevealed ? 'text-orange-500 font-black italic animate-pulse' : 'text-emerald-500/70'}`}>
                               {log.msg}
                             </span>
 
                             {isRevealed && (
-                              <span className="text-[10px] bg-orange-600 text-white px-2 py-0.5 rounded font-black uppercase tracking-tighter animate-in zoom-in">
+                              <span className="text-[8px] md:text-[10px] bg-orange-600 text-white px-2 py-0.5 rounded font-black uppercase tracking-tighter animate-in zoom-in self-start sm:self-auto">
                                 Threat Detected
                               </span>
                             )}
@@ -767,35 +762,33 @@ const CyberEscapeRoom = ({ onFinish, gameId, sessionId, initialLevel, mode }) =>
                 </div>
 
                 {feedback.show && feedback.type === 'ok' && (
-                  <div className="p-8 rounded-[2.5rem] bg-emerald-500/10 border-2 border-emerald-500/30 text-emerald-400 text-center font-black animate-in slide-in-from-bottom-4 shadow-xl flex items-center justify-center gap-4">
-                    <ShieldCheck size={30} />
-                    <span className="text-xl italic uppercase tracking-widest">{feedback.msg}</span>
+                  <div className="mt-4 md:mt-8 p-4 md:p-8 rounded-[1.5rem] md:rounded-[2.5rem] bg-emerald-500/10 border-2 border-emerald-500/30 text-emerald-400 text-center font-black animate-in slide-in-from-bottom-4 shadow-xl flex items-center justify-center gap-3 md:gap-4">
+                    <ShieldCheck size={24} className="md:w-[30px] md:h-[30px]" />
+                    <span className="text-sm md:text-xl italic uppercase tracking-widest">{feedback.msg}</span>
                   </div>
                 )}
 
               </div>
             )}
 
-
-            {/* ROOM 3 */}
                   {roomIdx === 2 && (
-                    <div className="space-y-8 animate-in zoom-in duration-700 font-mono relative min-h-[600px] lg:min-h-0 r3-wrapper">
+                    <div className="space-y-6 md:space-y-8 animate-in zoom-in duration-700 font-mono relative min-h-[400px] md:min-h-[600px] r3-wrapper">
                       
                       {feedback.show && (feedback.type === 'err' || feedback.type === 'hint-err') && (
-                        <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 pointer-events-none animate-in fade-in zoom-in duration-300">
-                          <div className="bg-red-600 text-white px-12 py-6 rounded-2xl shadow-[0_0_50px_rgba(220,38,38,0.5)] border-2 border-white/20 flex items-center gap-4 animate-bounce pointer-events-auto">
-                            <ShieldAlert size={40} className="text-white" />
+                        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 md:p-6 pointer-events-none animate-in fade-in zoom-in duration-300">
+                          <div className="bg-red-600 text-white px-6 py-4 md:px-12 md:py-6 rounded-2xl shadow-[0_0_50px_rgba(220,38,38,0.5)] border-2 border-white/20 flex items-center gap-3 md:gap-4 animate-bounce pointer-events-auto">
+                            <ShieldAlert size={30} className="md:w-[40px] md:h-[40px] text-white" />
                             <div className="text-left">
-                              <h4 className="text-xl font-black uppercase tracking-tighter">
+                              <h4 className="text-lg md:text-xl font-black uppercase tracking-tighter">
                                 {feedback.type === 'hint-err' ? 'System Override!' : 'Trap Activated!'}
                               </h4>
                               <div className="flex flex-col">
                                 {feedback.type === 'hint-err' ? (
-                                  <p className="text-sm font-black text-yellow-300 animate-pulse">-10 Points: Target Identified</p>
+                                  <p className="text-xs md:text-sm font-black text-yellow-300 animate-pulse">-10 Points: Target Identified</p>
                                 ) : (
                                   <>
-                                    <p className="text-sm font-bold opacity-90">-15 Seconds Time Penalty</p>
-                                    <p className="text-sm font-black text-yellow-300 animate-pulse">-10 Points Security Deduction</p>
+                                    <p className="text-xs md:text-sm font-bold opacity-90">-15 Seconds Time Penalty</p>
+                                    <p className="text-xs md:text-sm font-black text-yellow-300 animate-pulse">-10 Points Security Deduction</p>
                                   </>
                                 )}
                               </div>
@@ -804,24 +797,24 @@ const CyberEscapeRoom = ({ onFinish, gameId, sessionId, initialLevel, mode }) =>
                         </div>
                       )}
 
-                      <div className="bg-[#0a1020] border-2 border-[#00ff96]/20 p-6 rounded-[2rem] shadow-2xl relative overflow-hidden text-left r3-header">
-                        <div className="absolute top-0 right-0 p-4 opacity-5"><Cpu size={80} /></div>
-                        <div className="flex items-center gap-3 mb-3">
-                          <div className="p-2 bg-[#00ff96]/20 rounded-lg text-[#00ff96]"><Cpu size={20} /></div>
-                          <span className="text-s font-black uppercase tracking-[0.3em] text-[#00ff96]">ROOM_03: Logic Sequence Verification</span>
+                      <div className="bg-[#0a1020] border-2 border-[#00ff96]/20 p-4 md:p-6 rounded-[1.5rem] md:rounded-[2rem] shadow-2xl relative overflow-hidden text-left r3-header">
+                        <div className="absolute top-0 right-0 p-4 opacity-5"><Cpu size={60} className="md:w-[80px] md:h-[80px]"/></div>
+                        <div className="flex items-center gap-2 md:gap-3 mb-2 md:mb-3">
+                          <div className="p-1.5 md:p-2 bg-[#00ff96]/20 rounded-lg text-[#00ff96]"><Cpu size={16} className="md:w-[20px] md:h-[20px]"/></div>
+                          <span className="text-[10px] md:text-sm font-black uppercase tracking-widest md:tracking-[0.3em] text-[#00ff96]">ROOM_03: Logic Verification</span>
                         </div>
-                        <p className="text-base text-gray-300 leading-relaxed font-sans">
+                        <p className="text-xs md:text-base text-gray-300 leading-relaxed font-sans">
                           <strong className="text-white uppercase">[ DIRECTIVE ] : </strong> The security gate is locked by a Boolean logic trap. 
-                          Select only the <span className="text-[#00ff96] font-black underline decoration-double text-lg italic">TAUTOLOGIES</span> <span className="text-[#00ff96] font-black text-m italic"> -Always TRUE-</span> to bypass the sector.
+                          Select only the <span className="text-[#00ff96] font-black underline decoration-double text-sm md:text-lg italic">TAUTOLOGIES</span> <span className="text-[#00ff96] font-black text-xs md:text-base italic"> -Always TRUE-</span> to bypass the sector.
                         </p>
                       </div>
 
-                      <div className="flex justify-between items-center mb-4 px-2">
+                      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 px-1 md:px-2">
                         <div className="flex items-center gap-2">
                           <div className={`w-2 h-2 rounded-full ${revealedHints.length > 0 ? 'bg-cyan-400 animate-pulse' : 'bg-gray-700'}`}></div>
-                          <div className="flex items-center gap-2 bg-blue-500/5 px-3 py-1.5 rounded-md border border-blue-500/10">
-                            <span className="text-[12px] text-cyan-400 font-bold uppercase tracking-tighter">Scanner_State</span>
-                           <span className="text-[12px] text-red-400 font-mono font-black tracking-widest">
+                          <div className="flex items-center gap-1.5 md:gap-2 bg-blue-500/5 px-2 py-1 md:px-3 md:py-1.5 rounded-md border border-blue-500/10">
+                            <span className="text-[9px] md:text-[12px] text-cyan-400 font-bold uppercase tracking-tighter">Scanner_State</span>
+                           <span className="text-[9px] md:text-[12px] text-red-400 font-mono font-black tracking-widest">
                                 [ {selectedPath.length + revealedHints.length} TARGETS_UNLOCKED ]
                               </span>
                           </div>
@@ -841,14 +834,14 @@ const CyberEscapeRoom = ({ onFinish, gameId, sessionId, initialLevel, mode }) =>
                                 setTimeout(() => setFeedback({ show: false }), 1500);
                               }
                             }} 
-                            className="text-[11px] bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 px-4 py-1.5 rounded-full font-black hover:bg-cyan-500 hover:text-black transition-all animate-pulse flex items-center gap-2"
+                            className="text-[9px] md:text-[11px] bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 px-3 py-1 md:px-4 md:py-1.5 rounded-full font-black hover:bg-cyan-500 hover:text-black transition-all animate-pulse flex items-center gap-1.5 md:gap-2 w-full sm:w-auto justify-center"
                           >
-                            <Zap size={10} /> REVEAL Hint (-10 pts)
+                            <Zap size={10} className="md:w-[12px] md:h-[12px]"/> REVEAL Hint (-10 pts)
                           </button>
                         )}
                       </div>
 
-                      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 r3-grid">
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-6 r3-grid">
                         {scenario.room3.tiles.map((tile, i) => {
                           const isSelected = selectedPath.includes(i);
                           
@@ -863,35 +856,35 @@ const CyberEscapeRoom = ({ onFinish, gameId, sessionId, initialLevel, mode }) =>
                                   setRevealedHints(prev => prev.filter(h => h !== i));
                                 }
                               }} 
-                              className={`group relative h-44 flex flex-col rounded-[2.5rem] border-2 transition-all duration-500 cursor-pointer shadow-lg overflow-hidden
+                              className={`group relative h-24 md:h-44 flex flex-col rounded-xl md:rounded-[2.5rem] border-2 transition-all duration-500 cursor-pointer shadow-lg overflow-hidden
                                 ${isSelected 
-                                  ? 'bg-[#001a10] border-[#00ff96] shadow-[0_0_40px_rgba(0,255,150,0.2)] scale-105' 
+                                  ? 'bg-[#001a10] border-[#00ff96] shadow-[0_0_40px_rgba(0,255,150,0.2)] md:scale-105' 
                                   : isHinted 
                                     ? 'bg-[#00151a] border-cyan-400/50 shadow-[0_0_20px_rgba(34,211,238,0.2)]'
                                     : 'bg-[#060e08] border-white/5 hover:border-[#00ff96]/40 hover:bg-[#00ff96]/5 hover:-translate-y-1'
                                 }`}
                             >
                               {isHinted && !isSelected && (
-                                <div className="absolute top-4 right-6 text-cyan-400 animate-pulse flex items-center gap-1">
-                                  <span className="text-[8px] font-black uppercase tracking-tighter">Verified</span>
-                                  <ShieldCheck size={12} />
+                                <div className="absolute top-2 right-3 md:top-4 md:right-6 text-cyan-400 animate-pulse flex items-center gap-1">
+                                  <span className="text-[6px] md:text-[8px] font-black uppercase tracking-tighter">Verified</span>
+                                  <ShieldCheck size={10} className="md:w-[12px] md:h-[12px]"/>
                                 </div>
                               )}
 
-                              <div className={`absolute top-5 left-6 text-[11px] font-black tracking-widest 
+                              <div className={`absolute top-2 left-3 md:top-5 md:left-6 text-[8px] md:text-[11px] font-black tracking-widest 
                                 ${isSelected ? 'text-[#00ff96]' : isHinted ? 'text-cyan-400' : 'text-gray-700'}`}>
                                 BLOCK_0{i + 1}
                               </div>
 
-                              <div className="flex-1 flex items-center justify-center px-6">
-                                <span className={`text-2xl md:text-2xl font-black tracking-tighter text-center transition-all duration-500
-                                  ${isSelected ? 'text-[#00ff96] drop-shadow-[0_0_10px_#00ff96] scale-110' : isHinted ? 'text-cyan-400' : 'text-gray-500 group-hover:text-white'}
+                              <div className="flex-1 flex items-center justify-center px-4 md:px-6">
+                                <span className={`text-base md:text-2xl font-black tracking-tighter text-center transition-all duration-500
+                                  ${isSelected ? 'text-[#00ff96] drop-shadow-[0_0_10px_#00ff96] md:scale-110' : isHinted ? 'text-cyan-400' : 'text-gray-500 group-hover:text-white'}
                                 `}>
                                   {tile}
                                 </span>
                               </div>
 
-                              <div className={`h-1.5 w-full transition-all duration-500 
+                              <div className={`h-1 md:h-1.5 w-full transition-all duration-500 
                                 ${isSelected ? 'bg-[#00ff96]' : isHinted ? 'bg-cyan-400' : 'bg-transparent group-hover:bg-white/10'}`}>
                               </div>
                             </div>
@@ -899,54 +892,52 @@ const CyberEscapeRoom = ({ onFinish, gameId, sessionId, initialLevel, mode }) =>
                         })}
                       </div>
 
-                      <div className="bg-black/40 border border-white/5 p-5 rounded-[1.5rem] flex items-center justify-between shadow-inner r3-status">
-                        <div className="flex items-center gap-4">
-                          <span className="text-[13px] font-black text-[#506070] uppercase tracking-[0.4em]">Validation Status:</span>
-                          <div className="flex gap-2">
+                      <div className="bg-black/40 border border-white/5 p-4 md:p-5 rounded-2xl md:rounded-[1.5rem] flex items-center justify-between shadow-inner r3-status">
+                        <div className="flex items-center gap-2 md:gap-4">
+                          <span className="text-[9px] md:text-[13px] font-black text-[#506070] uppercase tracking-widest md:tracking-[0.4em]">Validation:</span>
+                          <div className="flex gap-1 md:gap-2">
                             {Array(scenario.room3.correctIndices.length).fill(0).map((_, idx) => (
                               <div 
                                 key={idx} 
-                                className={`w-10 h-1.5 rounded-full transition-all duration-1000 ${idx < selectedPath.length ? 'bg-[#00ff96] shadow-[0_0_15px_#00ff96]' : 'bg-white/5'}`}
+                                className={`w-6 md:w-10 h-1 md:h-1.5 rounded-full transition-all duration-1000 ${idx < selectedPath.length ? 'bg-[#00ff96] shadow-[0_0_15px_#00ff96]' : 'bg-white/5'}`}
                               ></div>
                             ))}
                           </div>
                         </div>
                         <div className="flex flex-col items-end leading-none">
-                          <span className="text-xl font-black text-[#00ff96] italic tracking-tighter">
-                              {selectedPath.length}<span className="text-white/20 text-sm mx-1">/</span>{scenario.room3.correctIndices.length}
+                          <span className="text-base md:text-xl font-black text-[#00ff96] italic tracking-tighter">
+                              {selectedPath.length}<span className="text-white/20 text-xs md:text-sm mx-0.5 md:mx-1">/</span>{scenario.room3.correctIndices.length}
                           </span>
-                          <span className="text-[10px] font-bold text-[#00ff96]/40 uppercase tracking-widest mt-1 text-right">Keys Found</span>
+                          <span className="text-[7px] md:text-[10px] font-bold text-[#00ff96]/40 uppercase tracking-widest mt-0.5 md:mt-1 text-right">Keys Found</span>
                         </div>
                       </div>
 
                       {feedback.show && feedback.type === 'ok' && (
-                        <div className="mt-8 p-8 rounded-[2.5rem] bg-emerald-500/10 border-2 border-emerald-500/30 text-emerald-400 text-center font-black animate-in slide-in-from-bottom-4 shadow-xl flex items-center justify-center gap-4">
-                          <ShieldCheck size={30} />
-                          <span className="text-xl italic uppercase tracking-widest">{feedback.msg}</span>
+                        <div className="mt-4 md:mt-8 p-4 md:p-8 rounded-[1.5rem] md:rounded-[2.5rem] bg-emerald-500/10 border-2 border-emerald-500/30 text-emerald-400 text-center font-black animate-in slide-in-from-bottom-4 shadow-xl flex items-center justify-center gap-3 md:gap-4">
+                          <ShieldCheck size={24} className="md:w-[30px] md:h-[30px]" />
+                          <span className="text-sm md:text-xl italic uppercase tracking-widest">{feedback.msg}</span>
                         </div>
                       )}
 
                     </div>
                   )}
 
-
-        {/* ROOM 4 */}
             {roomIdx === 3 && (
-              <div className="space-y-8 animate-in slide-in-from-top-4 duration-1000 font-mono relative r4-wrapper">
+              <div className="space-y-6 md:space-y-8 animate-in slide-in-from-top-4 duration-1000 font-mono relative r4-wrapper">
                 
                 {feedback.show && (feedback.type === 'err' || feedback.type === 'hint-err') && (
-                  <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 pointer-events-none animate-in fade-in zoom-in duration-300">
-                    <div className="bg-red-600 text-white px-12 py-6 rounded-2xl shadow-[0_0_60px_rgba(220,38,38,0.6)] border-2 border-white/20 flex items-center gap-4 animate-bounce pointer-events-auto">
-                      <ShieldAlert size={40} className="text-white" />
+                  <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 md:p-6 pointer-events-none animate-in fade-in zoom-in duration-300">
+                    <div className="bg-red-600 text-white px-6 py-4 md:px-12 md:py-6 rounded-2xl shadow-[0_0_60px_rgba(220,38,38,0.6)] border-2 border-white/20 flex items-center gap-3 md:gap-4 animate-bounce pointer-events-auto">
+                      <ShieldAlert size={30} className="md:w-[40px] md:h-[40px] text-white" />
                       <div className="text-left">
-                        <h4 className="text-xl font-black uppercase tracking-tighter">
+                        <h4 className="text-lg md:text-xl font-black uppercase tracking-tighter">
                           {feedback.type === 'hint-err' ? 'Decryption Aid' : 'Master Key Denied!'}
                         </h4>
                         <div className="flex flex-col">
                           {feedback.type === 'hint-err' ? (
-                            <p className="text-sm font-black text-yellow-300 animate-pulse">-Points Deducted: Aid Injected</p>
+                            <p className="text-xs md:text-sm font-black text-yellow-300 animate-pulse">-Points Deducted: Aid Injected</p>
                           ) : (
-                            <p className="text-sm font-bold opacity-90">-40 Seconds Penalty • Access Blocked</p>
+                            <p className="text-xs md:text-sm font-bold opacity-90">-40 Seconds Penalty • Access Blocked</p>
                           )}
                         </div>
                       </div>
@@ -954,13 +945,13 @@ const CyberEscapeRoom = ({ onFinish, gameId, sessionId, initialLevel, mode }) =>
                   </div>
                 )}
 
-                <div className="bg-[#0a1020] border-2 border-[#ff0055]/30 p-6 rounded-[2rem] shadow-2xl relative overflow-hidden text-left r4-header">
-                  <div className="absolute top-0 right-0 p-4 opacity-5 text-[#ff0055]"><Lock size={80} /></div>
-                  <div className="flex items-center gap-3 mb-3">
-                    <div className="p-2 bg-[#ff0055]/20 rounded-lg text-[#ff0055]"><Lock size={20} /></div>
-                    <span className="text-s font-black uppercase tracking-[0.3em] text-[#ff0055]">ROOM_04 : Dual-Layer Protocol</span>
+                <div className="bg-[#0a1020] border-2 border-[#ff0055]/30 p-4 md:p-6 rounded-[1.5rem] md:rounded-[2rem] shadow-2xl relative overflow-hidden text-left r4-header">
+                  <div className="absolute top-0 right-0 p-4 opacity-5 text-[#ff0055]"><Lock size={60} className="md:w-[80px] md:h-[80px]" /></div>
+                  <div className="flex items-center gap-2 md:gap-3 mb-2 md:mb-3">
+                    <div className="p-1.5 md:p-2 bg-[#ff0055]/20 rounded-lg text-[#ff0055]"><Lock size={16} className="md:w-[20px] md:h-[20px]" /></div>
+                    <span className="text-[10px] md:text-sm font-black uppercase tracking-widest md:tracking-[0.3em] text-[#ff0055]">ROOM_04 : Dual-Layer Protocol</span>
                   </div>
-                  <p className="text-base text-gray-300 leading-relaxed font-sans">
+                  <p className="text-xs md:text-base text-gray-300 leading-relaxed font-sans">
                     <strong className="text-white uppercase">[ CRITICAL ]: </strong> The central core is protected by <span className="text-[#ff0055] font-black underline">Two-Factor Encryption</span>. 
                     Decrypt the Base64 hash first, then provide the Master Security Key.
                   </p>
@@ -968,35 +959,35 @@ const CyberEscapeRoom = ({ onFinish, gameId, sessionId, initialLevel, mode }) =>
 
                 <div className="relative group">
                   <div className="absolute -inset-1 bg-[#ff88cc]/20 rounded-3xl blur opacity-20 group-hover:opacity-40 transition duration-1000"></div>
-                  <div className="relative bg-[#060e08] border-2 border-[#ff88cc]/30 rounded-[2.5rem] p-12 text-center shadow-2xl overflow-hidden r4-box">
+                  <div className="relative bg-[#060e08] border-2 border-[#ff88cc]/30 rounded-2xl md:rounded-[2.5rem] p-6 md:p-12 text-center shadow-2xl overflow-hidden r4-box">
                     <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-[#ff88cc] to-transparent opacity-30"></div>
                     
-                    <div className="text-3xl md:text-4xl font-black text-[#ff88cc] tracking-[0.3em] drop-shadow-[0_0_20px_rgba(255,136,204,0.4)] break-all px-4">
+                    <div className="text-xl md:text-4xl font-black text-[#ff88cc] tracking-widest md:tracking-[0.3em] drop-shadow-[0_0_20px_rgba(255,136,204,0.4)] break-all px-2 md:px-4">
                       {scenario?.room4?.layer1?.replace(/=/g, '')}
                     </div>
 
-                    <div className="mt-8 flex justify-center gap-6 text-[10px] font-black uppercase tracking-widest text-[#4a5d4a]">
-                      <span className="flex items-center gap-2 text-[14px]"><Zap size={12}/> Algorithm: B64_VIG</span>
-                      <span className="flex items-center gap-2 animate-pulse  text-[14px]"><Lock size={12}/> ACCESS_RESTRICTED</span>
+                    <div className="mt-4 md:mt-8 flex justify-center gap-4 md:gap-6 text-[8px] md:text-[10px] font-black uppercase tracking-widest text-[#4a5d4a]">
+                      <span className="flex items-center gap-1 md:gap-2 text-[10px] md:text-[14px]"><Zap size={10} className="md:w-[12px] md:h-[12px]"/> Algorithm: B64_VIG</span>
+                      <span className="flex items-center gap-1 md:gap-2 animate-pulse text-[10px] md:text-[14px]"><Lock size={10} className="md:w-[12px] md:h-[12px]"/> ACCESS_RESTRICTED</span>
                     </div>
                   </div>
                 </div>
 
-                <div className="grid grid-cols-1 gap-6 r4-grid">
+                <div className="grid grid-cols-1 gap-4 md:gap-6 r4-grid">
                   
-                  <div className={`p-8 rounded-[2rem] border-2 transition-all duration-700 r4-status ${layer1Done ? 'bg-[#001a0a]/40 border-[#00ff96]/40 opacity-60 scale-[0.98]' : 'bg-[#0a1020] border-white/10 shadow-xl'}`}>
-                    <div className="flex items-center justify-between mb-6">
-                      <div className="flex items-center gap-4">
-                        <div className={`w-8 h-8 rounded-full flex items-center justify-center font-black ${layer1Done ? 'bg-[#00ff96] text-black' : 'bg-white/10 text-white'}`}>
+                  <div className={`p-5 md:p-8 rounded-2xl md:rounded-[2rem] border-2 transition-all duration-700 r4-status ${layer1Done ? 'bg-[#001a0a]/40 border-[#00ff96]/40 opacity-60 scale-[0.98]' : 'bg-[#0a1020] border-white/10 shadow-xl'}`}>
+                    <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-4 md:mb-6">
+                      <div className="flex items-center gap-3 md:gap-4">
+                        <div className={`w-6 h-6 md:w-8 md:h-8 rounded-full flex items-center justify-center font-black text-xs md:text-base ${layer1Done ? 'bg-[#00ff96] text-black' : 'bg-white/10 text-white'}`}>
                           {layer1Done ? '✓' : '1'}
                         </div>
-                        <h3 className={`text-s font-black uppercase tracking-[0.2em] ${layer1Done ? 'text-[#00ff96]' : 'text-gray-400'}`}>Layer 01: Base64 Decryption</h3>
+                        <h3 className={`text-[10px] md:text-sm font-black uppercase tracking-widest md:tracking-[0.2em] ${layer1Done ? 'text-[#00ff96]' : 'text-gray-400'}`}>Layer 01: Base64 Decryption</h3>
                       </div>
                       
                       {!layer1Done && (
                         <button 
                           onClick={() => triggerHint('r4-b64', 15)}
-                          className={`text-[12px] px-3 py-1 rounded-full border transition-all font-black
+                          className={`text-[9px] md:text-[12px] px-2 py-1 md:px-3 md:py-1 rounded-full border transition-all font-black w-full sm:w-auto
                             ${usedHints.includes('r4-b64') ?  'border-white/20 text-gray-500 hover:text-white':'border-[#00ff96] text-[#00ff96]'}`}
                         >
                           {usedHints.includes('r4-b64') ? 'DECODER_READY' : 'RUN B64_INTERPRETER (-15 pts)'}
@@ -1005,16 +996,16 @@ const CyberEscapeRoom = ({ onFinish, gameId, sessionId, initialLevel, mode }) =>
                     </div>
                     
                     {!layer1Done && (
-                      <div className="space-y-4 text-left">
-                        <div className="flex gap-4">
-                          <input value={ansInput} onChange={e => setAnsInput(e.target.value)} onKeyDown={e => e.key === 'Enter' && checkLayer1()} placeholder="DECODE_LAYER_01..." className="flex-1 bg-black border border-white/10 p-5 rounded-2xl text-xl font-bold text-[#00ff96] tracking-[0.2em] outline-none focus:border-[#00ff9660] transition-all uppercase cer-room-input" />
-                          <button onClick={checkLayer1} className="bg-[#00ff96] text-black px-10 rounded-2xl font-black uppercase tracking-widest hover:bg-white transition-all active:scale-95 cer-room-btn">Verify</button>
+                      <div className="space-y-3 md:space-y-4 text-left">
+                        <div className="flex flex-col md:flex-row gap-2 md:gap-4">
+                          <input value={ansInput} onChange={e => setAnsInput(e.target.value)} onKeyDown={e => e.key === 'Enter' && checkLayer1()} placeholder="DECODE_LAYER_01..." className="flex-1 bg-black border border-white/10 p-3 md:p-5 rounded-xl md:rounded-2xl text-base md:text-xl font-bold text-[#00ff96] tracking-widest md:tracking-[0.2em] outline-none focus:border-[#00ff9660] transition-all uppercase text-center md:text-left cer-room-input" />
+                          <button onClick={checkLayer1} className="bg-[#00ff96] text-black px-6 py-3 md:px-10 md:py-auto rounded-xl md:rounded-2xl font-black uppercase tracking-widest hover:bg-white transition-all active:scale-95 text-xs md:text-base cer-room-btn">Verify</button>
                         </div>
                   {usedHints.includes('r4-b64') && (
-                    <div className="mt-4 p-4 bg-[#00ff96]/5 border-l-2 border-[#00ff96] rounded-r-xl animate-in fade-in slide-in-from-left-2">
-                      <p className="text-[15px] text-[#00ff96] font-mono leading-relaxed">
+                    <div className="mt-3 md:mt-4 p-3 md:p-4 bg-[#00ff96]/5 border-l-2 border-[#00ff96] rounded-r-xl animate-in fade-in slide-in-from-left-2">
+                      <p className="text-[11px] md:text-[15px] text-[#00ff96] font-mono leading-relaxed">
                         <span className="font-black">[ HINT_INJECTED ]:</span> Analysis shows the decoded sequence starts with 
-                        <span className="text-white font-black bg-[#00ff96]/20 px-2 mx-1 tracking-widest uppercase">
+                        <span className="text-white font-black bg-[#00ff96]/20 px-1 md:px-2 mx-1 tracking-widest uppercase">
                           "{atob(scenario?.room4?.layer1).substring(0, 3)}..."
                         </span> 
                         and consists of 
@@ -1027,14 +1018,14 @@ const CyberEscapeRoom = ({ onFinish, gameId, sessionId, initialLevel, mode }) =>
                       </div>
                     )}
                   </div>
-                    <div className={`p-8 rounded-[2rem] border-2 transition-all duration-700 r4-status ${layer1Done ? 'bg-[#0a1020] border-[#6040ff]/50 shadow-[0_0_40px_rgba(96,64,255,0.15)]' : 'bg-black/20 border-white/5 opacity-20 pointer-events-none'}`}>
+                    <div className={`p-5 md:p-8 rounded-2xl md:rounded-[2rem] border-2 transition-all duration-700 r4-status ${layer1Done ? 'bg-[#0a1020] border-[#6040ff]/50 shadow-[0_0_40px_rgba(96,64,255,0.15)]' : 'bg-black/20 border-white/5 opacity-20 pointer-events-none'}`}>
                       
-                      <div className="flex items-center justify-between mb-6">
-                        <div className="flex items-center gap-4">
-                          <div className="w-8 h-8 rounded-full flex items-center justify-center font-black bg-[#6040ff] text-white shadow-[0_0_15px_#6040ff50]">2</div>
-                          <h3 className="text-sm font-black uppercase tracking-[0.2em] text-white flex items-center gap-3">
+                      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-4 md:mb-6">
+                        <div className="flex items-center gap-3 md:gap-4">
+                          <div className="w-6 h-6 md:w-8 md:h-8 rounded-full flex items-center justify-center font-black bg-[#6040ff] text-white shadow-[0_0_15px_#6040ff50] text-xs md:text-base">2</div>
+                          <h3 className="text-[10px] md:text-sm font-black uppercase tracking-widest md:tracking-[0.2em] text-white flex items-center gap-2 md:gap-3 leading-tight">
                             Layer 02: Vigenère Key : 
-                            <span className="px-4 py-1 bg-red-500/10 border-2  rounded-lg text-[#ff88cc] font-black tracking-[0.3em] drop-shadow-[0_0_10px_rgba(239,68,68,0.8)] animate-pulse inline-block skew-x-[-10deg]">
+                            <span className="px-2 py-0.5 md:px-4 md:py-1 bg-red-500/10 border-2 rounded-lg text-[#ff88cc] font-black tracking-widest md:tracking-[0.3em] drop-shadow-[0_0_10px_rgba(239,68,68,0.8)] animate-pulse inline-block skew-x-[-10deg]">
                               {scenario?.room4?.vKey}
                             </span>
                           </h3>
@@ -1043,7 +1034,7 @@ const CyberEscapeRoom = ({ onFinish, gameId, sessionId, initialLevel, mode }) =>
                         {layer1Done && !usedHints.includes('r4-vig') && (
                           <button 
                             onClick={() => triggerHint('r4-vig', 20)}
-                            className="text-[10px] px-4 py-1.5 rounded-full border border-[#ff88cc] text-[#ff88cc] font-black hover:bg-[#ff88cc] hover:text-black transition-all animate-pulse"
+                            className="text-[8px] md:text-[10px] px-3 py-1 md:px-4 md:py-1.5 rounded-full border border-[#ff88cc] text-[#ff88cc] font-black hover:bg-[#ff88cc] hover:text-black transition-all animate-pulse w-full sm:w-auto"
                           >
                             BRUTE_FORCE_KEY (-20 pts)
                           </button>
@@ -1051,11 +1042,11 @@ const CyberEscapeRoom = ({ onFinish, gameId, sessionId, initialLevel, mode }) =>
                       </div>
 
                       {usedHints.includes('r4-vig') && (
-                        <div className="mb-6 p-4 bg-[#ff88cc]/5 border-l-2 border-[#ff88cc] rounded-r-xl animate-in fade-in slide-in-from-top-2 duration-500">
-                          <p className="text-[13px] text-[#ff88cc] font-mono leading-relaxed">
+                        <div className="mb-4 md:mb-6 p-3 md:p-4 bg-[#ff88cc]/5 border-l-2 border-[#ff88cc] rounded-r-xl animate-in fade-in slide-in-from-top-2 duration-500">
+                          <p className="text-[10px] md:text-[13px] text-[#ff88cc] font-mono leading-relaxed">
                             <span className="font-black">[ SYSTEM_ADVISORY ]:</span> Master Key is a single word. 
                             Partial decryption successful: 
-                            <span className="text-white font-black bg-[#ff88cc]/20 px-2 mx-1 tracking-widest underline">
+                            <span className="text-white font-black bg-[#ff88cc]/20 px-1 md:px-2 mx-1 tracking-widest underline">
                               {scenario?.room4?.masterKey?.substring(0, 2)}...
                             </span>
                             <br/>
@@ -1064,18 +1055,18 @@ const CyberEscapeRoom = ({ onFinish, gameId, sessionId, initialLevel, mode }) =>
                         </div>
                       )}
 
-                      <div className="space-y-4 text-left">
-                        <div className="flex gap-4">
+                      <div className="space-y-3 md:space-y-4 text-left">
+                        <div className="flex flex-col md:flex-row gap-2 md:gap-4">
                           <input 
                             value={finalInput} 
                             onChange={e => setFinalInput(e.target.value)} 
                             onKeyDown={e => e.key === 'Enter' && checkFinalBreach()} 
                             placeholder="INPUT_MASTER_KEY..." 
-                            className="flex-1 bg-black border border-white/10 p-5 rounded-2xl text-xl font-bold text-[#ff88cc] tracking-[0.2em] outline-none focus:border-[#6040ff60] transition-all uppercase shadow-inner cer-room-input" 
+                            className="flex-1 bg-black border border-white/10 p-3 md:p-5 rounded-xl md:rounded-2xl text-base md:text-xl font-bold text-[#ff88cc] tracking-widest md:tracking-[0.2em] outline-none focus:border-[#6040ff60] transition-all uppercase shadow-inner text-center md:text-left cer-room-input" 
                           />
                           <button 
                             onClick={checkFinalBreach} 
-                            className="bg-[#6040ff] text-white px-10 rounded-2xl font-black uppercase tracking-widest hover:bg-[#8060ff] transition-all shadow-[0_0_25px_rgba(96,64,255,0.4)] active:scale-95 cer-room-btn"
+                            className="bg-[#6040ff] text-white px-6 py-3 md:px-10 md:py-auto rounded-xl md:rounded-2xl font-black uppercase tracking-widest hover:bg-[#8060ff] transition-all shadow-[0_0_25px_rgba(96,64,255,0.4)] active:scale-95 text-xs md:text-base cer-room-btn"
                           >
                             Unlock Door
                           </button>
@@ -1085,9 +1076,9 @@ const CyberEscapeRoom = ({ onFinish, gameId, sessionId, initialLevel, mode }) =>
                     </div>
                 </div>
                   {feedback.show && feedback.type === 'ok' && (
-                        <div className="mt-8 p-8 rounded-[2.5rem] bg-emerald-500/10 border-2 border-emerald-500/30 text-emerald-400 text-center font-black animate-in slide-in-from-bottom-4 shadow-xl flex items-center justify-center gap-4">
-                          <ShieldCheck size={30} />
-                          <span className="text-xl italic uppercase tracking-widest">{feedback.msg}</span>
+                        <div className="mt-4 md:mt-8 p-4 md:p-8 rounded-[1.5rem] md:rounded-[2.5rem] bg-emerald-500/10 border-2 border-emerald-500/30 text-emerald-400 text-center font-black animate-in slide-in-from-bottom-4 shadow-xl flex items-center justify-center gap-3 md:gap-4">
+                          <ShieldCheck size={24} className="md:w-[30px] md:h-[30px]" />
+                          <span className="text-sm md:text-xl italic uppercase tracking-widest">{feedback.msg}</span>
                         </div>
                       )}
               </div>
