@@ -66,12 +66,14 @@ const FirewallDefender = ({ initialLevel = 1, timeLimit = 30, onFinish, mode }: 
   const totalTools = availableTools.length; 
   const [mistakesCount, setMistakesCount] = useState(0);
 
+  // 🔥 شغل صديقتك: حالة شاشة التعليمات المبدئية
   const [gameState, setGameState] = useState<'tutorial'|'start'|'playing'|'defeat'|'victory'>(() => {
     const stage = getStageDetails(initialLevel);
     const hasSeenTutorial = localStorage.getItem(`tutorial_seen_${stage.label}`);
     return hasSeenTutorial ? 'start' : 'tutorial';
   }); 
 
+  // 🔥 شغل صديقتك: دالة إنهاء التعليمات
   const markTutorialAsSeen = useCallback(() => {
       const stage = getStageDetails(initialLevel);
       localStorage.setItem(`tutorial_seen_${stage.label}`, 'true');
@@ -80,6 +82,7 @@ const FirewallDefender = ({ initialLevel = 1, timeLimit = 30, onFinish, mode }: 
 
   const isToolFocus = gameState === 'tutorial' && tutPage > 0 && tutPage <= totalTools;
   const currentTool = isToolFocus ? availableTools[tutPage - 1] : null;
+  
   const healthRef = useRef(health);
   const mistakesCountRef = useRef(mistakesCount);
   const processedIdsRef = useRef(new Set()); 
@@ -217,7 +220,7 @@ const FirewallDefender = ({ initialLevel = 1, timeLimit = 30, onFinish, mode }: 
       {damageFlash && <div style={{ position:'absolute', inset:0, background:'rgba(255,0,0,.22)',
         animation:'damage-flash .4s ease', pointerEvents:'none', zIndex:99 }}/>}
 
-      {/* 🔥 HEADER: Compressed p-2 shrink-0 🔥 */}
+      {/* HEADER */}
       <div className="flex justify-between items-center mb-2 md:mb-3 bg-[#0a0505f2] backdrop-blur-md px-3 md:px-6 py-2 rounded-[1rem] md:rounded-[18px] border-b-2 shadow-[0_10px_30px_rgba(0,0,0,0.8)] z-[100] w-full shrink-0 relative" style={{ borderBottomColor: health < 30 ? E.red : '#ff440044' }}>
         <div className="flex items-center gap-2 md:gap-3 shrink">
           <div className="text-sm md:text-xl" style={{ filter: `drop-shadow(0 0 10px ${health < 30 ? E.red : H.bright})`, animation: health < 30 ? 'blink 0.5s ease infinite' : 'hero-pulse 2s ease-in-out infinite' }}>
@@ -252,7 +255,7 @@ const FirewallDefender = ({ initialLevel = 1, timeLimit = 30, onFinish, mode }: 
         </div>
       </div>
 
-      {/* 🔥 ARENA: grow shrink-1 with min-h-150px (Desktop has fixed size logic) 🔥 */}
+      {/* ARENA */}
       <div className="relative w-full grow min-h-[150px] shrink-1 md:grow-0 md:h-[270px] border border-white/5 rounded-[1.5rem] md:rounded-[2rem] bg-[#050505] overflow-hidden mb-2 shadow-[inset_0_0_40px_rgba(0,0,0,0.8)]">
         <div style={{ position:'absolute', inset:0, opacity:.07, backgroundImage:'linear-gradient(#111 1px,transparent 1px),linear-gradient(90deg,#111 1px,transparent 1px)', backgroundSize:'32px 32px', pointerEvents:'none' }}/>
 
@@ -281,6 +284,23 @@ const FirewallDefender = ({ initialLevel = 1, timeLimit = 30, onFinish, mode }: 
           <div key={ex.id} className="w-[40px] h-[40px] md:w-[60px] md:h-[60px]" style={{ position:'absolute', top:'50%', left:`${ex.x}%`, transform:'translate(-50%,-50%)', borderRadius:'50%', border:`2px solid ${ex.color}`, boxShadow:`0 0 20px ${ex.color}`, animation:'explode .6s ease forwards', pointerEvents:'none', zIndex:30 }}/>
         ))}
 
+        {/* 🔥 التصميم اللي كان ناقص لحالة الـ Tutorial الخاصة بصديقتك 🔥 */}
+        {gameState === 'tutorial' && (
+          <div style={{ position:'absolute', inset:0, zIndex:200, background:'rgba(0,0,0,.95)', backdropFilter:'blur(12px)', display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', borderRadius:32, border:'1px solid rgba(255,255,255,.05)' }} className="gap-3 p-6 text-center animate-in fade-in duration-500">
+            <div className="text-4xl md:text-6xl mb-2" style={{ animation:'hero-pulse 2s ease-in-out infinite' }}>📖</div>
+            <div style={{ fontFamily:"'Orbitron', monospace", fontWeight:900, color:H.bright, textShadow:`0 0 20px ${H.bright}` }} className="text-xl md:text-3xl mb-2 uppercase">
+              How to Defend
+            </div>
+            <p className="text-gray-400 text-xs md:text-base max-w-lg mb-6 leading-relaxed font-sans font-bold">
+              Cyber threats will attack your system from the left. 
+              Match the incoming attack with the correct defensive tool from the bottom panel before they breach the Guardian!
+            </p>
+            <button onClick={markTutorialAsSeen} style={{ background:`linear-gradient(135deg, ${H.armor}, ${H.bright})`, border:'none', borderRadius:12, fontFamily:"'Orbitron', monospace", fontWeight:900, letterSpacing:'0.1em', color:'white', cursor:'pointer', boxShadow:`0 0 20px ${H.bright}55` }} className="px-8 py-3.5 md:px-10 md:py-4 text-xs md:text-sm hover:scale-105 transition-transform uppercase">
+              Got it, Proceed
+            </button>
+          </div>
+        )}
+
         {gameState === 'start' && (
           <div style={{ position:'absolute', inset:0, zIndex:50, background:'rgba(0,0,0,.95)', backdropFilter:'blur(12px)', display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', borderRadius:32, border:'1px solid rgba(255,255,255,.05)' }} className="gap-2 md:gap-3 p-4 text-center">
             <div className="text-3xl md:text-5xl" style={{ animation:'hero-pulse 2s ease-in-out infinite' }}>🛡️</div>
@@ -291,8 +311,8 @@ const FirewallDefender = ({ initialLevel = 1, timeLimit = 30, onFinish, mode }: 
               SELECT THE RIGHT TOOL — NEUTRALIZE THE THREAT
             </div>
             <div className="flex flex-col md:flex-row gap-2 md:gap-3 mt-2 md:mt-3">
-              <button onClick={()=>{ setTutPage(0); setGameState('tutorial'); }} style={{ background:'#111', border:`1px solid #333`, borderRadius:10, color:'#666', fontFamily:"'Share Tech Mono', monospace", cursor:'pointer', letterSpacing:'0.1em' }} className="px-4 py-2 md:px-5 md:py-2.5 text-[9px] md:text-[11px] w-full md:w-auto">📖 TUTORIAL</button>
-              <button onClick={() => setGameState('playing')} style={{ background:`linear-gradient(135deg, ${H.armor}, ${H.bright})`, border:'none', borderRadius:12, fontFamily:"'Orbitron', monospace", fontWeight:900, letterSpacing:'0.2em', textTransform:'uppercase', color:'white', cursor:'pointer', boxShadow:`0 0 30px ${H.bright}55, 0 4px 20px rgba(0,0,0,.5)` }} className="px-6 py-3 md:px-9 md:py-3.5 text-[10px] md:text-[13px] w-full md:w-auto">⚡ INITIALIZE MISSION</button>
+              <button onClick={()=>{ setTutPage(0); setGameState('tutorial'); }} style={{ background:'#111', border:`1px solid #333`, borderRadius:10, color:'#666', fontFamily:"'Share Tech Mono', monospace", cursor:'pointer', letterSpacing:'0.1em' }} className="px-4 py-2 md:px-5 md:py-2.5 text-[9px] md:text-[11px] w-full md:w-auto hover:bg-[#222] transition-colors">📖 TUTORIAL</button>
+              <button onClick={() => setGameState('playing')} style={{ background:`linear-gradient(135deg, ${H.armor}, ${H.bright})`, border:'none', borderRadius:12, fontFamily:"'Orbitron', monospace", fontWeight:900, letterSpacing:'0.2em', textTransform:'uppercase', color:'white', cursor:'pointer', boxShadow:`0 0 30px ${H.bright}55, 0 4px 20px rgba(0,0,0,.5)` }} className="px-6 py-3 md:px-9 md:py-3.5 text-[10px] md:text-[13px] w-full md:w-auto hover:scale-105 transition-transform">⚡ INITIALIZE MISSION</button>
             </div>
           </div>
         )}
@@ -329,8 +349,6 @@ const FirewallDefender = ({ initialLevel = 1, timeLimit = 30, onFinish, mode }: 
         )}
       </div>
 
-      {/* ── RESPONSIVE GRID TOOLS: Compressed padding & p-2 shrink-0 🔥 ── */}
-      {/* cols-6 in portrait width, md:cols-12 in landscape width ensures 1 row */}
       <div className="grid grid-cols-6 md:grid-cols-12 gap-1.5 md:gap-3 w-full py-1 md:py-2 shrink-0 z-[100] relative">
         {availableTools.map((tool, index) => {
           const isHov = hoveredTool === tool.id;
@@ -349,12 +367,10 @@ const FirewallDefender = ({ initialLevel = 1, timeLimit = 30, onFinish, mode }: 
                 boxShadow: isHov ? `0 0 18px ${tool.color}` : "none",
               }}
             >
-              {/* Icon is smaller on mobile (scale-75) */}
               <div className="scale-75 md:scale-100 shrink-0" style={{ transition: "0.2s" }}>
                 <ToolIcon id={tool.id} size={42} />
               </div>
               
-              {/* Text is text-[8px] on mobile and text-[12px] on desktop */}
               <span className="text-[8px] md:text-[12px] font-black uppercase leading-tight mt-0.5 md:mt-0" style={{ color: isHov ? tool.color : "#bbb", letterSpacing: "0.05em", wordBreak: 'break-word' }}>
                 {tool.name}
               </span>
