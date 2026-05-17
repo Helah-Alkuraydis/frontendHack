@@ -187,23 +187,6 @@ const EscapeRoomLayout = ({
         .custom-scrollbar::-webkit-scrollbar-thumb { background: #00ff9620; border-radius: 10px; }
       `}</style>
       
-      {/* 1. Header */}
-      {/* <header className="flex items-center justify-between px-8 py-5 bg-[#080c16] border-b border-[#00ff9610] relative z-20 shadow-2xl">
-        <div className="flex items-center gap-4">
-          <div className="w-2.5 h-2.5 bg-[#00ff96] rounded-full animate-pulse shadow-[0_0_10px_#00ff96]"></div>
-          <div className="text-xs font-black text-[#00ff96] tracking-[0.4em] uppercase italic opacity-80">HACKHERO_ESCAPE</div>
-        </div>
-
-        <div className="relative flex items-center gap-6">
-          {showPenalty && <span className="absolute -left-16 font-black text-red-500 text-xl penalty-anim">{penaltyAmount}</span>}
-          <div className={`flex items-center gap-3 bg-[#0d1a0d] border ${timeLeft < 30 ? 'border-red-500 animate-pulse' : 'border-[#00ff9620]'} px-8 py-2 rounded-full shadow-[0_0_20px_rgba(0,255,150,0.05)]`}>
-             <span className={`text-3xl font-black ${timeLeft < 30 ? 'text-red-500' : 'text-[#00ff96]'}`}>{formatTime(timeLeft)}</span>
-          </div>
-        </div>
-      </header> */}
-
-      
-
       {/* 2. Progress Bar */}
       <div className="flex h-1.5 bg-[#1a1a2e] relative z-20">
         {scenario.map((_, idx) => (
@@ -211,36 +194,36 @@ const EscapeRoomLayout = ({
         ))}
       </div>
 
-      <main className="flex-1 p-6 md:p-10 max-w-6xl mx-auto w-full overflow-y-auto z-10 flex flex-col items-center gap-8 custom-scrollbar">
+      <main className="flex-1 p-4 md:p-10 max-w-6xl mx-auto w-full overflow-y-auto z-10 flex flex-col items-center gap-8 custom-scrollbar">
         
         {/* ROOM 1: Cipher */}
         {currentRoomIdx === 0 && (
           <div className="w-full flex flex-col gap-6 animate-in slide-in-from-bottom-4 duration-700 relative">
-            <div className="bg-[#0d131f] border-l-4 border-pink-500 p-6 rounded-r-xl shadow-lg text-left border border-white/5 backdrop-blur-sm">
-                <span className="text-[12px] font-black uppercase text-pink-500">ROOM_01: INTERCEPTED_SIGNAL</span>
-                <p className="text-gray-400 text-sm italic">Analyze the packet stream and recover the plaintext.</p>
+            <div className="bg-[#0d131f] border-l-4 border-pink-500 p-4 md:p-6 rounded-r-xl shadow-lg text-left border border-white/5 backdrop-blur-sm">
+                <span className="text-[10px] md:text-[12px] font-black uppercase text-pink-500">ROOM_01: INTERCEPTED_SIGNAL</span>
+                <p className="text-gray-400 text-xs md:text-sm italic mt-1">Analyze the packet stream and recover the plaintext.</p>
             </div>
-            <div className="bg-[#060e08] border border-pink-500/20 rounded-[2rem] p-12 font-mono text-center shadow-2xl relative overflow-hidden group">
-                <div className="text-4xl md:text-6xl text-[#ff88cc] font-black tracking-[0.4em] glitch-text uppercase relative z-10">
+            <div className="bg-[#060e08] border border-pink-500/20 rounded-[1.5rem] md:rounded-[2rem] p-6 md:p-12 font-mono text-center shadow-2xl relative overflow-hidden group">
+                <div className="text-2xl md:text-6xl text-[#ff88cc] font-black tracking-[0.2em] md:tracking-[0.4em] glitch-text uppercase relative z-10 break-all">
                   {currentRoom?.puzzle_data}
                 </div>
             </div>
             <div className="flex justify-end px-2">
                 <button onClick={() => { if(!activeHint) { triggerPenalty("-10s"); setTimeLeft(p => p - 10); onShowHint(); } }} 
-                  className={`flex items-center gap-3 px-6 py-3 rounded-xl border transition-all font-mono ${activeHint ? 'bg-pink-500/10 border-pink-500 text-pink-500' : 'bg-[#0a1020] border-white/5 text-gray-500 hover:text-white'}`}>
-                  <Lock size={14} /> <span className="text-[11px] font-black uppercase">{activeHint ? `DECRYPTION: ${currentRoom?.hint}` : "REQUEST_HINT (-10S)"}</span>
+                  className={`flex items-center gap-2 md:gap-3 px-4 py-2 md:px-6 md:py-3 rounded-xl border transition-all font-mono ${activeHint ? 'bg-pink-500/10 border-pink-500 text-pink-500' : 'bg-[#0a1020] border-white/5 text-gray-500 hover:text-white'}`}>
+                  <Lock size={12} className="md:w-4 md:h-4" /> <span className="text-[9px] md:text-[11px] font-black uppercase">{activeHint ? `DECRYPTION: ${currentRoom?.hint}` : "REQUEST_HINT (-10S)"}</span>
                 </button>
             </div>
             <div className="relative group">
-              <div className="relative flex gap-3 p-2 bg-black/60 border border-white/10 rounded-2xl focus-within:border-[#00ff9650] backdrop-blur-xl">
+              <div className="relative flex flex-col md:flex-row gap-3 p-2 bg-black/60 border border-white/10 rounded-2xl focus-within:border-[#00ff9650] backdrop-blur-xl">
                 <input 
                   value={answerInput} 
                   onChange={e => setAnswerInput(e.target.value.toUpperCase())} 
                   onKeyDown={e => e.key === 'Enter' && onBreach(answerInput)}
                   placeholder="ENTER DECRYPTED KEY..." 
-                  className="flex-1 bg-transparent p-5 text-[#00ff96] font-bold tracking-[0.3em] outline-none text-xl uppercase" 
+                  className="flex-1 bg-transparent p-4 md:p-5 text-[#00ff96] font-bold tracking-[0.1em] md:tracking-[0.3em] outline-none text-base md:text-xl uppercase text-center md:text-left" 
                 />
-                <button onClick={() => onBreach(answerInput)} className="bg-[#00ff96] text-black px-12 py-4 rounded-xl font-black uppercase italic tracking-widest hover:bg-white transition-all active:scale-95">BREACH</button>
+                <button onClick={() => onBreach(answerInput)} className="bg-[#00ff96] text-black py-3 md:px-12 md:py-4 rounded-xl font-black uppercase italic tracking-widest hover:bg-white transition-all active:scale-95">BREACH</button>
               </div>
             </div>
           </div>
@@ -249,28 +232,28 @@ const EscapeRoomLayout = ({
         {/* ROOM 2: Network Audit */}
         {currentRoomIdx === 1 && (
           <div className="w-full flex flex-col gap-6 animate-in slide-in-from-right-4 duration-700">
-             <div className="bg-[#0a1020] border-l-4 border-blue-500 p-6 rounded-r-xl text-left border border-white/5 shadow-lg">
-                <span className="text-[11px] font-black uppercase text-blue-400 block mb-2 font-mono">SCANNING_LIVE_ROOM...</span>
-                <p className="text-gray-300 text-sm italic">Identify the compromised terminal IP from the logs below.</p>
+             <div className="bg-[#0a1020] border-l-4 border-blue-500 p-4 md:p-6 rounded-r-xl text-left border border-white/5 shadow-lg">
+                <span className="text-[10px] md:text-[11px] font-black uppercase text-blue-400 block mb-1 md:mb-2 font-mono">SCANNING_LIVE_ROOM...</span>
+                <p className="text-gray-300 text-xs md:text-sm italic">Identify the compromised terminal IP from the logs below.</p>
             </div>
-            <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+            <div className="grid grid-cols-2 md:grid-cols-5 gap-3 md:gap-4">
                 {currentRoom?.options?.map((ip, index) => (
                     <div 
                       key={index} 
                       onClick={() => handleInstantBreach(ip)} 
-                      className={`group bg-[#060e08] border-2 p-8 rounded-[2.5rem] text-center cursor-pointer transition-all hover:border-blue-500/50 hover:-translate-y-1
+                      className={`group bg-[#060e08] border-2 p-4 md:p-8 rounded-[1.5rem] md:rounded-[2.5rem] text-center cursor-pointer transition-all hover:border-blue-500/50 hover:-translate-y-1
                         ${answerInput === ip ? 'border-blue-500 bg-blue-500/10 shadow-[0_0_20px_rgba(59,130,246,0.3)]' : 'border-white/5 opacity-70'}`}
                     >
-                      <div className="text-4xl mb-4 group-hover:scale-110 transition-transform">💻</div>
-                      <p className="text-[13px] font-bold text-blue-400 font-mono tracking-tighter">{ip}</p>
+                      <div className="text-3xl md:text-4xl mb-2 md:mb-4 group-hover:scale-110 transition-transform">💻</div>
+                      <p className="text-[11px] md:text-[13px] font-bold text-blue-400 font-mono tracking-tighter">{ip}</p>
                     </div>
                 ))}
             </div>
-            <div className="bg-black/60 border border-white/5 rounded-[2.5rem] p-8 text-left shadow-inner">
-                <div className="space-y-3 max-h-48 overflow-y-auto font-mono text-xs pr-4 custom-scrollbar">
+            <div className="bg-black/60 border border-white/5 rounded-[1.5rem] md:rounded-[2.5rem] p-5 md:p-8 text-left shadow-inner">
+                <div className="space-y-3 max-h-48 overflow-y-auto font-mono text-[10px] md:text-xs pr-4 custom-scrollbar">
                   {currentRoom?.logs?.map((log, i) => (
-                    <div key={i} className="flex gap-4 text-blue-500/80">
-                       <span className="opacity-40">[{log.ts}]</span> <span className="text-gray-400">&gt; {log.msg}</span>
+                    <div key={i} className="flex gap-2 md:gap-4 text-blue-500/80">
+                       <span className="opacity-40 shrink-0">[{log.ts}]</span> <span className="text-gray-400">&gt; {log.msg}</span>
                     </div>
                   ))}
                 </div>
@@ -281,103 +264,96 @@ const EscapeRoomLayout = ({
         {/* ROOM 3: Logic Sequence */}
         {currentRoomIdx === 2 && (
           <div className="w-full flex flex-col gap-6 animate-in zoom-in">
-             <div className="bg-[#060e08] border-2 border-emerald-500/20 p-12 rounded-[3.5rem] text-center shadow-2xl relative overflow-hidden">
-                <div className="text-xl md:text-3xl font-mono text-white bg-white/5 p-8 rounded-3xl mb-10 border border-white/5 shadow-inner">
+             <div className="bg-[#060e08] border-2 border-emerald-500/20 p-6 md:p-12 rounded-[2rem] md:rounded-[3.5rem] text-center shadow-2xl relative overflow-hidden">
+                <div className="text-base md:text-3xl font-mono text-white bg-white/5 p-5 md:p-8 rounded-[1.5rem] md:rounded-3xl mb-6 md:mb-10 border border-white/5 shadow-inner break-words">
                    {currentRoom?.puzzle_data}
                 </div>
-                <div className="grid grid-cols-2 gap-8 max-w-2xl mx-auto">
-                   <button onClick={() => handleInstantBreach("TRUE")} className="py-8 rounded-[2rem] border-2 border-emerald-500/20 text-emerald-500 font-black text-2xl hover:bg-emerald-500/10 transition-all uppercase tracking-widest shadow-lg">TRUE</button>
-                   <button onClick={() => handleInstantBreach("FALSE")} className="py-8 rounded-[2rem] border-2 border-rose-500/20 text-rose-500 font-black text-2xl hover:bg-rose-500/10 transition-all uppercase tracking-widest shadow-lg">FALSE</button>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8 max-w-2xl mx-auto">
+                   <button onClick={() => handleInstantBreach("TRUE")} className="py-5 md:py-8 rounded-[1.5rem] md:rounded-[2rem] border-2 border-emerald-500/20 text-emerald-500 font-black text-xl md:text-2xl hover:bg-emerald-500/10 transition-all uppercase tracking-widest shadow-lg">TRUE</button>
+                   <button onClick={() => handleInstantBreach("FALSE")} className="py-5 md:py-8 rounded-[1.5rem] md:rounded-[2rem] border-2 border-rose-500/20 text-rose-500 font-black text-xl md:text-2xl hover:bg-rose-500/10 transition-all uppercase tracking-widest shadow-lg">FALSE</button>
                 </div>
              </div>
           </div>
         )}
 
-        {/* ROOM 4: Dual-Layer Protocol (المطور بنظام الخطوات) */}
+        {/* ROOM 4: Dual-Layer Protocol */}
         {currentRoomIdx === 3 && (
           <div className="w-full flex flex-col gap-6 animate-in slide-in-from-top-4 duration-1000">
              
-             {/* صندوق تعريف المهمة */}
-             <div className="bg-[#0a1020] border-2 border-[#ff0055]/30 p-6 rounded-[2rem] text-left relative overflow-hidden shadow-2xl">
+             <div className="bg-[#0a1020] border-2 border-[#ff0055]/30 p-5 md:p-6 rounded-[1.5rem] md:rounded-[2rem] text-left relative overflow-hidden shadow-2xl">
                 <div className="absolute top-0 right-0 p-4 opacity-5 text-[#ff0055]"><Lock size={60} /></div>
-                <div className="flex items-center gap-3 mb-2">
-                    <div className="p-2 bg-[#ff0055]/20 rounded-lg text-[#ff0055]"><Shield size={18} /></div>
-                    <span className="text-[11px] font-black uppercase tracking-[0.3em] text-[#ff0055]">ROOM_04: Dual-Layer Protocol</span>
+                <div className="flex items-center gap-2 md:gap-3 mb-2">
+                    <div className="p-1.5 md:p-2 bg-[#ff0055]/20 rounded-lg text-[#ff0055]"><Shield size={16} className="md:w-[18px] md:h-[18px]" /></div>
+                    <span className="text-[10px] md:text-[11px] font-black uppercase tracking-[0.2em] md:tracking-[0.3em] text-[#ff0055]">ROOM_04: Dual-Layer Protocol</span>
                 </div>
-                <p className="text-sm text-gray-300 font-sans">
+                <p className="text-xs md:text-sm text-gray-300 font-sans leading-relaxed">
                   <strong className="text-white uppercase">[ CRITICAL ]: </strong> The central core is protected by <span className="text-[#ff0055] font-black underline">Two-Factor Encryption</span>. 
                   Decode the Base64 hash first, then provide the Master Security Key.
                 </p>
              </div>
 
-             {/* عرض النص المشفر (Puzzle Data) */}
              <div className="relative group">
-                <div className="absolute -inset-1 bg-[#ff88cc]/20 rounded-3xl blur opacity-20 group-hover:opacity-40 transition duration-1000"></div>
-                <div className="relative bg-[#060e08] border-2 border-[#ff88cc]/30 rounded-[2.5rem] p-12 text-center shadow-2xl overflow-hidden">
+                <div className="absolute -inset-1 bg-[#ff88cc]/20 rounded-[1.5rem] md:rounded-3xl blur opacity-20 group-hover:opacity-40 transition duration-1000"></div>
+                <div className="relative bg-[#060e08] border-2 border-[#ff88cc]/30 rounded-[1.5rem] md:rounded-[2.5rem] p-6 md:p-12 text-center shadow-2xl overflow-hidden">
                     <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-[#ff88cc] to-transparent opacity-30"></div>
-                    <div className="text-3xl md:text-5xl font-black text-[#ff88cc] tracking-[0.3em] drop-shadow-[0_0_20px_rgba(255,136,204,0.4)] break-all uppercase">
+                    <div className="text-xl md:text-5xl font-black text-[#ff88cc] tracking-[0.1em] md:tracking-[0.3em] drop-shadow-[0_0_20px_rgba(255,136,204,0.4)] break-all uppercase">
                       {currentRoom?.puzzle_data?.replace(/=/g, '')}
                     </div>
-                    <div className="mt-8 flex justify-center gap-6 text-[12px] font-black uppercase tracking-widest text-[#4a5d4a]">
+                    <div className="mt-6 md:mt-8 flex flex-col md:flex-row justify-center items-center gap-3 md:gap-6 text-[10px] md:text-[12px] font-black uppercase tracking-widest text-[#4a5d4a]">
                       <span className="flex items-center gap-2"><Zap size={14}/> Algorithm: B64_VIG</span>
                       <span className="flex items-center gap-2 animate-pulse"><Lock size={14}/> ACCESS_RESTRICTED</span>
                     </div>
                 </div>
              </div>
 
-             {/* الطبقات (الخطوة 1 والخطوة 2) */}
-             <div className="grid grid-cols-1 gap-6">
+             <div className="grid grid-cols-1 gap-4 md:gap-6">
                 
-                {/* 1. طبقة الـ Base64 */}
-                <div className={`p-8 rounded-[2rem] border-2 transition-all duration-700 
+                <div className={`p-5 md:p-8 rounded-[1.5rem] md:rounded-[2rem] border-2 transition-all duration-700 
                   ${layer1Done ? 'bg-[#001a0a]/40 border-[#00ff96]/40 opacity-60 scale-[0.98]' : 'bg-[#0a1020] border-white/10 shadow-xl'}`}>
-                    <div className="flex items-center justify-between mb-6">
-                        <div className="flex items-center gap-4">
-                            <div className={`w-8 h-8 rounded-full flex items-center justify-center font-black ${layer1Done ? 'bg-[#00ff96] text-black' : 'bg-white/10 text-white'}`}>
+                    <div className="flex items-center justify-between mb-4 md:mb-6">
+                        <div className="flex items-center gap-3 md:gap-4">
+                            <div className={`w-6 h-6 md:w-8 md:h-8 rounded-full flex items-center justify-center text-[10px] md:text-base font-black ${layer1Done ? 'bg-[#00ff96] text-black' : 'bg-white/10 text-white'}`}>
                               {layer1Done ? '✓' : '1'}
                             </div>
-                            <h3 className={`text-xs font-black uppercase tracking-[0.2em] ${layer1Done ? 'text-[#00ff96]' : 'text-gray-400'}`}>Layer 01: Base64 Decryption</h3>
+                            <h3 className={`text-[10px] md:text-xs font-black uppercase tracking-[0.1em] md:tracking-[0.2em] ${layer1Done ? 'text-[#00ff96]' : 'text-gray-400'}`}>Layer 01: Base64 Decryption</h3>
                         </div>
                     </div>
                     
                     {!layer1Done && (
-                      <div className="flex gap-4 animate-in fade-in slide-in-from-bottom-2">
-                        <input value={layer1Input} onChange={e => setLayer1Input(e.target.value.toUpperCase())} placeholder="DECODE_LAYER_01..." className="flex-1 bg-black border border-white/10 p-5 rounded-2xl text-xl font-bold text-[#00ff96] tracking-[0.2em] outline-none focus:border-[#00ff9660] transition-all uppercase" />
-                        <button onClick={checkLayer1} className="bg-[#00ff96] text-black px-10 rounded-2xl font-black uppercase tracking-widest hover:bg-white transition-all active:scale-95">Verify</button>
+                      <div className="flex flex-col md:flex-row gap-3 md:gap-4 animate-in fade-in slide-in-from-bottom-2">
+                        <input value={layer1Input} onChange={e => setLayer1Input(e.target.value.toUpperCase())} placeholder="DECODE_LAYER_01..." className="flex-1 bg-black border border-white/10 p-4 md:p-5 rounded-[1rem] md:rounded-2xl text-base md:text-xl font-bold text-[#00ff96] tracking-[0.1em] md:tracking-[0.2em] outline-none focus:border-[#00ff9660] transition-all uppercase text-center md:text-left" />
+                        <button onClick={checkLayer1} className="bg-[#00ff96] text-black py-3 md:py-0 md:px-10 rounded-[1rem] md:rounded-2xl font-black uppercase tracking-widest hover:bg-white transition-all active:scale-95">Verify</button>
                       </div>
                     )}
                 </div>
 
-                {/* 2. طبقة الـ Vigenère والحل النهائي */}
-                {/* 2. طبقة الـ Vigenère (التعديل المطلوب: دمج المفتاح وحذف الأكشن ✅) */}
-                <div className={`p-8 rounded-[2rem] border-2 transition-all duration-700 
+                <div className={`p-5 md:p-8 rounded-[1.5rem] md:rounded-[2rem] border-2 transition-all duration-700 
                   ${layer1Done ? 'bg-[#0a1020] border-[#6040ff]/50 shadow-[0_0_40px_rgba(96,64,255,0.15)] animate-in zoom-in' : 'bg-black/20 border-white/5 opacity-20 pointer-events-none'}`}>
                     
-                    <div className="flex items-center justify-between mb-8">
-                        <div className="flex items-center gap-4">
-                            <div className={`w-8 h-8 rounded-full flex items-center justify-center font-black ${layer1Done ? 'bg-[#6040ff] text-white shadow-[0_0_15px_#6040ff50]' : 'bg-white/5 text-gray-600'}`}>2</div>
-                            <h3 className={`text-xs font-black uppercase tracking-[0.2em] ${layer1Done ? 'text-white' : 'text-gray-600'}`}>Layer 02: Master Plaintext Recovery</h3>
+                    <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 md:gap-0 mb-6 md:mb-8">
+                        <div className="flex items-center gap-3 md:gap-4">
+                            <div className={`w-6 h-6 md:w-8 md:h-8 rounded-full flex items-center justify-center text-[10px] md:text-base font-black ${layer1Done ? 'bg-[#6040ff] text-white shadow-[0_0_15px_#6040ff50]' : 'bg-white/5 text-gray-600'}`}>2</div>
+                            <h3 className={`text-[10px] md:text-xs font-black uppercase tracking-[0.1em] md:tracking-[0.2em] ${layer1Done ? 'text-white' : 'text-gray-600'}`}>Layer 02: Master Plaintext Recovery</h3>
                         </div>
 
-                        {/* دمج المفتاح هنا بجانب العنوان ✅ */}
-                        <div className="flex items-center gap-3 px-4 py-2 bg-red-500/10 border border-red-500/20 rounded-xl">
-                           <Key size={14} className="text-[#ff88cc]" />
-                           <span className="text-[10px] text-gray-500 font-black uppercase tracking-widest mr-2">Secret Key:</span>
-                           <span className="text-[#ff88cc] font-black text-xl tracking-[0.3em] drop-shadow-[0_0_10px_rgba(255,136,204,0.5)] animate-pulse inline-block skew-x-[-10deg]">
+                        <div className="flex items-center gap-2 md:gap-3 px-3 md:px-4 py-1.5 md:py-2 bg-red-500/10 border border-red-500/20 rounded-lg md:rounded-xl">
+                           <Key size={12} className="text-[#ff88cc] md:w-[14px] md:h-[14px]" />
+                           <span className="text-[8px] md:text-[10px] text-gray-500 font-black uppercase tracking-widest mr-1 md:mr-2">Secret Key:</span>
+                           <span className="text-[#ff88cc] font-black text-base md:text-xl tracking-[0.2em] md:tracking-[0.3em] drop-shadow-[0_0_10px_rgba(255,136,204,0.5)] animate-pulse inline-block skew-x-[-10deg]">
                              {currentRoom?.hint}
                            </span>
                         </div>
                     </div>
 
-                    <div className="flex gap-4">
+                    <div className="flex flex-col md:flex-row gap-3 md:gap-4">
                         <input 
                           value={answerInput} 
                           onChange={e => setAnswerInput(e.target.value.toUpperCase())} 
                           onKeyDown={e => e.key === 'Enter' && onBreach(answerInput)}
                           placeholder="INPUT_MASTER_SECURITY_KEY..." 
-                          className="flex-1 bg-black border border-white/10 p-5 rounded-2xl text-xl font-bold text-[#ff88cc] tracking-[0.2em] outline-none focus:border-[#6040ff60] transition-all uppercase shadow-inner" 
+                          className="flex-1 bg-black border border-white/10 p-4 md:p-5 rounded-[1rem] md:rounded-2xl text-base md:text-xl font-bold text-[#ff88cc] tracking-[0.1em] md:tracking-[0.2em] outline-none focus:border-[#6040ff60] transition-all uppercase shadow-inner text-center md:text-left" 
                         />
-                        <button onClick={() => onBreach(answerInput)} className="bg-[#6040ff] text-white px-10 rounded-2xl font-black uppercase tracking-widest hover:bg-[#8060ff] transition-all shadow-[0_0_25px_rgba(96,64,255,0.4)] active:scale-95">Unlock Door</button>
+                        <button onClick={() => onBreach(answerInput)} className="bg-[#6040ff] text-white py-3 md:py-0 md:px-10 rounded-[1rem] md:rounded-2xl font-black uppercase tracking-widest hover:bg-[#8060ff] transition-all shadow-[0_0_25px_rgba(96,64,255,0.4)] active:scale-95">Unlock Door</button>
                     </div>
                 </div>
              </div>
@@ -385,15 +361,14 @@ const EscapeRoomLayout = ({
         )}
       </main>
 
-      {/* 4. Footer */}
-      <footer className="px-8 py-6 bg-[#080c16] border-t border-white/5 flex justify-between items-center z-20">
-        <div className="flex gap-5 italic text-[#00ff96]/30 text-[10px] font-black tracking-[0.2em] uppercase">
+      <footer className="px-4 py-4 md:px-8 md:py-6 bg-[#080c16] border-t border-white/5 flex flex-col md:flex-row justify-center md:justify-between items-center gap-3 md:gap-0 z-20">
+        <div className="flex flex-wrap justify-center gap-2 md:gap-5 italic text-[#00ff96]/30 text-[8px] md:text-[10px] font-black tracking-[0.1em] md:tracking-[0.2em] uppercase">
            {scenario.map((_, i) => (
               <span key={i} className={currentRoomIdx >= i ? "text-[#00ff96] opacity-100" : "opacity-20"}>ROOM_0{i+1} {i < scenario.length - 1 && " // "}</span>
            ))}
         </div>
-        <div className="text-[10px] font-black text-gray-400 uppercase italic flex items-center gap-2">
-           <Shield size={12} className="text-[#00ff96]/40" />
+        <div className="text-[8px] md:text-[10px] font-black text-gray-400 uppercase italic flex items-center gap-2">
+           <Shield size={10} className="text-[#00ff96]/40 md:w-3 md:h-3" />
            Security_Status: {currentRoomIdx === scenario.length - 1 ? "FINAL_GATE_ACTIVE" : "IN_PROGRESS"}
         </div>
       </footer>

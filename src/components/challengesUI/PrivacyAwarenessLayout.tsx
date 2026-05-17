@@ -71,7 +71,7 @@ const PrivacyAwarenessLayout: React.FC<PrivacyLayoutProps> = ({
             </div> */}
 
             {/* 2. Context Box - صندوق المعلومات */}
-            <div className="bg-white border-2 border-dashed border-blue-100 rounded-[2.5rem] p-6 mb-8 flex flex-col md:flex-row gap-8 items-center animate-in fade-in duration-700 shadow-sm">
+            <div className="bg-white border-2 border-dashed border-blue-100 rounded-[2.5rem] p-5 md:p-6 mb-8 flex flex-col md:flex-row gap-6 md:gap-8 items-center animate-in fade-in duration-700 shadow-sm">
                 <div className="flex-1 px-2">
                     <div className="flex items-center gap-2 mb-3">
                         <Info className="text-blue-500" size={18} />
@@ -98,7 +98,7 @@ const PrivacyAwarenessLayout: React.FC<PrivacyLayoutProps> = ({
                 {/* 3. Inventory Column - قائمة البيانات المتاحة */}
                 <div className="lg:col-span-3 space-y-3">
                     <h3 className="text-gray-400 font-black text-[9px] tracking-[0.2em] uppercase px-1">Inventory</h3>
-                    <div className="grid grid-cols-1 gap-2 max-h-[500px] overflow-y-auto pr-2 custom-scrollbar">
+                    <div className="grid grid-cols-1 gap-2 max-h-[400px] md:max-h-[500px] overflow-y-auto pr-2 custom-scrollbar">
                         {scenario?.dataItems?.map((item: any) => (
                             <div key={item.id} onClick={() => onAddData(item)}
                                 className={cn("bg-white border-2 p-3 rounded-xl shadow-sm transition-all flex items-center gap-3 min-h-[64px]",
@@ -114,7 +114,7 @@ const PrivacyAwarenessLayout: React.FC<PrivacyLayoutProps> = ({
                 </div>
 
                 {/* 4. Decision Grid Column - منطقة اتخاذ القرارات */}
-                <div className="lg:col-span-9 bg-white rounded-[2.5rem] border border-gray-200 shadow-xl flex flex-col overflow-hidden min-h-[600px]">
+                <div className="lg:col-span-9 bg-white rounded-[2.5rem] border border-gray-200 shadow-xl flex flex-col overflow-hidden min-h-[500px] md:min-h-[600px]">
                     <div className="bg-gray-900 text-white p-5 flex items-center justify-between">
                         <div className="flex items-center gap-3">
                             <ShieldCheck className="text-blue-400" size={20} />
@@ -129,7 +129,8 @@ const PrivacyAwarenessLayout: React.FC<PrivacyLayoutProps> = ({
                         </div>
                     ) : (
                         <div className="flex flex-col flex-1 overflow-hidden">
-                            <div className="grid grid-cols-12 gap-2 px-6 py-4 bg-gray-50 border-b border-gray-100 text-[8px] font-black text-gray-400 uppercase tracking-widest text-center">
+                            {/* 🟢 التعديل: إخفاء صف العناوين في الجوال لأننا بنغير شكل الشبكة، وإظهارها في اللابتوب */}
+                            <div className="hidden md:grid grid-cols-12 gap-2 px-6 py-4 bg-gray-50 border-b border-gray-100 text-[8px] font-black text-gray-400 uppercase tracking-widest text-center">
                                 <div className="col-span-3 text-left">Data Point</div>
                                 <div className="col-span-2">Necessity</div>
                                 <div className="col-span-2">Sensitivity</div>
@@ -138,43 +139,51 @@ const PrivacyAwarenessLayout: React.FC<PrivacyLayoutProps> = ({
                                 <div className="col-span-1">Del</div>
                             </div>
 
-                            <div className="flex-1 overflow-y-auto p-4 space-y-2.5 custom-scrollbar font-sans">
+                            <div className="flex-1 overflow-y-auto p-4 space-y-3 md:space-y-2.5 custom-scrollbar font-sans">
                                 {selectedIds.map(id => {
                                     const item = scenario.dataItems.find((i: any) => i.id === id);
                                     return (
-                                        <div key={id} className="grid grid-cols-12 gap-2 items-center bg-white border border-gray-100 p-3 rounded-2xl shadow-sm animate-in slide-in-from-right">
-                                            <div className="col-span-3 flex items-center gap-2">
-                                                <span className="text-xl self-start mt-0.5">{item?.icon}</span>
+                                        // 🟢 التعديل: شبكة ذكية! عمودين للجوال (عشان الخيارات تترتب تحت بعض)، و 12 عمود للابتوب
+                                        <div key={id} className="grid grid-cols-2 md:grid-cols-12 gap-3 md:gap-2 items-center bg-white border border-gray-100 p-4 md:p-3 rounded-2xl shadow-sm animate-in slide-in-from-right relative">
+                                            
+                                            {/* البيانات (أيقونة + اسم) */}
+                                            <div className="col-span-2 md:col-span-3 flex items-center gap-2 pr-6 md:pr-0">
+                                                <span className="text-xl md:text-xl self-start mt-0.5">{item?.icon}</span>
                                                 <div className="min-w-0 flex-1">
-                                                    <h4 className="font-black text-gray-900 text-[10px] uppercase italic leading-tight break-words">{item?.name}</h4>
-                                                    <p className="text-[7px] text-gray-400 font-bold mt-1 uppercase">{item?.category}</p>
+                                                    <h4 className="font-black text-gray-900 text-[11px] md:text-[10px] uppercase italic leading-tight break-words">{item?.name}</h4>
+                                                    <p className="text-[8px] md:text-[7px] text-gray-400 font-bold mt-1 uppercase">{item?.category}</p>
                                                 </div>
                                             </div>
-                                            <div className="col-span-2">
+                                            
+                                            {/* الأزرار والقوائم */}
+                                            <div className="col-span-1 md:col-span-2">
                                                 <button onClick={() => onUpdateDecision(id, 'necessary', !decisions[id]?.necessary)}
-                                                    className={cn("w-full py-2 rounded-lg text-[8px] font-black uppercase border transition-all",
+                                                    className={cn("w-full py-2.5 md:py-2 rounded-lg text-[9px] md:text-[8px] font-black uppercase border transition-all",
                                                         decisions[id]?.necessary ? "bg-blue-600 border-blue-600 text-white shadow-md shadow-blue-100" : "bg-gray-50 border-gray-200 text-gray-400")}>
                                                     {decisions[id]?.necessary ? "Essential" : "Optional"}
                                                 </button>
                                             </div>
-                                            <div className="col-span-2 px-1">
-                                                <select className="w-full bg-white border border-gray-300 p-2 rounded-lg text-[7px] font-black text-gray-900 outline-none"
+                                            
+                                            <div className="col-span-1 md:col-span-2 px-0 md:px-1">
+                                                <select className="w-full bg-white border border-gray-300 p-2 md:p-2 rounded-lg text-[10px] md:text-[7px] font-black text-gray-900 outline-none"
                                                     value={decisions[id]?.sensitivity} onChange={(e) => onUpdateDecision(id, 'sensitivity', e.target.value)}>
                                                     <option value="normal">NORMAL</option>
                                                     <option value="important">IMPORTANT</option>
                                                     <option value="sensitive">SENSITIVE</option>
                                                 </select>
                                             </div>
-                                            <div className="col-span-2 px-1">
-                                                <select className="w-full bg-white border border-gray-300 p-2 rounded-lg text-[7px] font-black text-gray-900 outline-none"
+                                            
+                                            <div className="col-span-1 md:col-span-2 px-0 md:px-1">
+                                                <select className="w-full bg-white border border-gray-300 p-2 md:p-2 rounded-lg text-[10px] md:text-[7px] font-black text-gray-900 outline-none"
                                                     value={decisions[id]?.encryption} onChange={(e) => onUpdateDecision(id, 'encryption', e.target.value)}>
                                                     <option value="plain">PLAIN</option>
                                                     <option value="encrypted">ENCRYPTED</option>
                                                     <option value="hashed">HASHED</option>
                                                 </select>
                                             </div>
-                                            <div className="col-span-2 px-1">
-                                                <select className="w-full bg-white border border-gray-300 p-2 rounded-lg text-[7px] font-black text-gray-900 outline-none"
+                                            
+                                            <div className="col-span-1 md:col-span-2 px-0 md:px-1">
+                                                <select className="w-full bg-white border border-gray-300 p-2 md:p-2 rounded-lg text-[10px] md:text-[7px] font-black text-gray-900 outline-none"
                                                     value={decisions[id]?.accessLevel} onChange={(e) => onUpdateDecision(id, 'accessLevel', e.target.value)}>
                                                     <option value="user">JUST USER</option>
                                                     <option value="admin">ADMIN</option>
@@ -182,14 +191,16 @@ const PrivacyAwarenessLayout: React.FC<PrivacyLayoutProps> = ({
                                                     <option value="private">PRIVATE</option>
                                                 </select>
                                             </div>
-                                            <div className="col-span-1 text-right">
-                                                <button onClick={() => onRemoveData(id)} className="p-1.5 text-gray-300 hover:text-red-500 transition-colors"><Trash2 size={12} /></button>
+                                            
+                                            {/* زر الحذف - خليناه طائر فوق يمين الكرت بالجوال عشان يوفر مساحة */}
+                                            <div className="absolute top-2 right-2 md:relative md:top-auto md:right-auto col-span-2 md:col-span-1 text-right">
+                                                <button onClick={() => onRemoveData(id)} className="p-2 md:p-1.5 text-gray-300 hover:text-red-500 transition-colors bg-white md:bg-transparent rounded-full shadow-sm md:shadow-none border border-gray-100 md:border-transparent"><Trash2 size={14} className="md:w-3 md:h-3" /></button>
                                             </div>
                                         </div>
                                     );
                                 })}
                             </div>
-                            <div className="p-6 bg-gray-50 border-t border-gray-100">
+                            <div className="p-4 md:p-6 bg-gray-50 border-t border-gray-100">
                                 <button onClick={onSubmit} className="w-full bg-blue-600 text-white py-4 rounded-2xl font-black italic text-[11px] hover:bg-blue-700 transition-all shadow-xl shadow-blue-100 uppercase tracking-widest leading-none">
                                     Submit Architecture Audit
                                 </button>
@@ -202,33 +213,32 @@ const PrivacyAwarenessLayout: React.FC<PrivacyLayoutProps> = ({
             {/* 5. Result View - شاشة النتائج */}
             {showResult && (
                 <div className="fixed inset-0 bg-black/90 backdrop-blur-xl z-[500] flex items-center justify-center p-4">
-                    <div className="bg-[#f8f9fa] rounded-[2.5rem] max-w-xl w-full max-h-[85vh] flex flex-col shadow-2xl border-8 border-white animate-in zoom-in duration-300 overflow-hidden relative">
-                        <div className="sticky top-0 bg-[#f8f9fa] z-30 px-8 py-5 border-b border-gray-100 flex items-center justify-between shadow-sm">
+                    <div className="bg-[#f8f9fa] rounded-[2.5rem] max-w-xl w-full max-h-[85vh] flex flex-col shadow-2xl border-4 md:border-8 border-white animate-in zoom-in duration-300 overflow-hidden relative">
+                        <div className="sticky top-0 bg-[#f8f9fa] z-30 px-6 md:px-8 py-5 border-b border-gray-100 flex items-center justify-between shadow-sm">
                             <div className="flex items-center gap-4">
-                                <div className={cn("text-5xl font-black italic", result.score >= 70 ? "text-emerald-500" : "text-red-500")}>
+                                <div className={cn("text-4xl md:text-5xl font-black italic", result.score >= 70 ? "text-emerald-500" : "text-red-500")}>
                                     {result.score}%
                                 </div>
-                                <h2 className={cn("text-sm font-black uppercase italic leading-tight", getScoreGrade(result.score).color)}>
+                                <h2 className={cn("text-xs md:text-sm font-black uppercase italic leading-tight", getScoreGrade(result.score).color)}>
                                     {getScoreGrade(result.score).text}
                                 </h2>
                             </div>
                         </div>
 
-                        <div className="flex-1 overflow-y-auto px-8 py-6 space-y-4 custom-scrollbar font-sans">
+                        <div className="flex-1 overflow-y-auto px-4 md:px-8 py-6 space-y-4 custom-scrollbar font-sans">
                             {result?.details?.map((item: any, idx: number) => (
-                                <div key={idx} className={cn("p-5 rounded-2xl border-l-[6px] bg-white transition-all shadow-sm", item.correct ? "border-emerald-500" : "border-red-500")}>
-                                    <div className="flex items-start gap-4">
-                                        {item.correct ? <CheckCircle2 className="text-emerald-600 mt-1" size={24} /> : <AlertCircle className="text-red-600 mt-1" size={24} />}
-                                        <div className="flex-1">
-                                            <h4 className={cn("font-black text-[11px] uppercase mb-1", item.correct ? "text-emerald-700" : "text-red-700")}>
+                                <div key={idx} className={cn("p-4 md:p-5 rounded-2xl border-l-[6px] bg-white transition-all shadow-sm", item.correct ? "border-emerald-500" : "border-red-500")}>
+                                    <div className="flex items-start gap-3 md:gap-4">
+                                    {item.correct ? <CheckCircle2 className="text-emerald-600 mt-1 shrink-0 md:w-6 md:h-6" size={20} /> : <AlertCircle className="text-red-600 mt-1 shrink-0 md:w-6 md:h-6" size={20} />}                                        <div className="flex-1">
+                                            <h4 className={cn("font-black text-[10px] md:text-[11px] uppercase mb-1", item.correct ? "text-emerald-700" : "text-red-700")}>
                                                 {item.correct ? `Safe Entry ✓` : `Risk Detected X`} - {item.title}
                                             </h4>
-                                            <p className="text-xs font-bold text-gray-800 italic leading-snug">{item.msg}</p>
+                                            <p className="text-[11px] md:text-xs font-bold text-gray-800 italic leading-snug">{item.msg}</p>
                                             {item.tips && (
                                                 <div className="mt-3 pt-3 border-t border-gray-50 space-y-1">
                                                     {item.tips.map((tip: string, tIdx: number) => (
-                                                        <div key={tIdx} className="text-[10px] font-bold text-red-600 flex items-center gap-1.5 mt-1">
-                                                            <div className="w-1 h-1 rounded-full bg-red-400" /> {tip}
+                                                        <div key={tIdx} className="text-[9px] md:text-[10px] font-bold text-red-600 flex items-center gap-1.5 mt-1">
+                                                            <div className="w-1 h-1 rounded-full bg-red-400 shrink-0" /> {tip}
                                                         </div>
                                                     ))}
                                                 </div>
@@ -244,20 +254,21 @@ const PrivacyAwarenessLayout: React.FC<PrivacyLayoutProps> = ({
                             )}
                         </div>
 
-                        <div className="sticky bottom-0 bg-[#f8f9fa] z-30 px-8 py-6 border-t border-gray-100 flex gap-4">
+                        <div className="sticky bottom-0 bg-[#f8f9fa] z-30 px-6 md:px-8 py-5 md:py-6 border-t border-gray-100 flex gap-4">
                             {result.score >= 70 ? (
                                 <button onClick={() => onFinish({ score: result.score, status: 'Win' })}
-                                    className="w-full bg-emerald-600 text-white py-5 rounded-2xl font-black uppercase shadow-lg shadow-emerald-200 hover:bg-emerald-700 italic transition-all flex items-center justify-center gap-2">
+                                    className="w-full bg-emerald-600 text-white py-4 md:py-5 rounded-2xl font-black uppercase shadow-lg shadow-emerald-200 hover:bg-emerald-700 italic transition-all flex items-center justify-center gap-2">
                                     FINISH MISSION <ShieldCheck size={20} />
                                 </button>
                             ) : (
-                                <div className="flex gap-4 w-full">
-                                    <button onClick={onQuit} className="flex-1 bg-white border-2 border-red-100 text-red-400 py-3 rounded-2xl font-black uppercase hover:bg-red-50 flex items-center justify-center gap-2 italic transition-all leading-none">
+                                // 🟢 التعديل: الأزرار تنزل تحت بعض بالجوال عشان تاخذ راحتها، وجنب بعض باللابتوب
+                                <div className="flex flex-col md:flex-row gap-3 md:gap-4 w-full">
+                                    <button onClick={onQuit} className="flex-1 bg-white border-2 border-red-100 text-red-400 py-3 rounded-2xl text-[11px] md:text-base font-black uppercase hover:bg-red-50 flex items-center justify-center gap-2 italic transition-all leading-none">
                                         <LogOut size={16} /> ABORT MISSION
                                     </button>
                                     {retryCount < 3 && (
-                                        <button onClick={onReset} className="flex-[2] bg-gray-900 text-white py-4 rounded-2xl font-black uppercase shadow-lg hover:bg-black transition-all flex items-center justify-center gap-2 italic animate-in slide-in-from-right">
-                                            <RotateCcw size={16} /> RETRY NEW SCENARIO
+                                        <button onClick={onReset} className="flex-[2] bg-gray-900 text-white py-3 md:py-4 rounded-2xl text-[11px] md:text-base font-black uppercase shadow-lg hover:bg-black transition-all flex items-center justify-center gap-2 italic animate-in slide-in-from-right">
+                                            <RotateCcw size={16} /> RETRY SCENARIO
                                         </button>
                                     )}
                                 </div>

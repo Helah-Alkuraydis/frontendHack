@@ -593,12 +593,12 @@ Swal.fire({
 
   return (
     <MainLayout activePage="games">
-      <div className="text-xl md:text-3xl font-black tracking-tight text-white uppercase italic mb-4 md:mb-5 px-2">
+      <div className="text-xl md:text-3xl font-black tracking-tight text-white uppercase italic mb-4 md:mb-5 px-2 ml-header">
         Waiting Room
       </div>
 
-      <div className="flex-1 flex flex-col items-center justify-center p-2 relative">
-        <div className="w-full max-w-6xl min-h-[600px] md:h-[750px] bg-[#0a0f1d]/90 backdrop-blur-2xl border border-white/10 rounded-3xl md:rounded-[3rem] p-4 md:p-7 shadow-2xl relative overflow-hidden flex flex-col justify-between">
+      <div className="flex-1 flex flex-col items-center justify-center p-2 relative ml-wrapper">
+        <div className="w-full max-w-6xl min-h-[600px] md:h-[750px] bg-[#0a0f1d]/90 backdrop-blur-2xl border border-white/10 rounded-3xl md:rounded-[3rem] p-4 md:p-7 shadow-2xl relative overflow-hidden flex flex-col justify-between ml-container">
           <div className="flex justify-end items-center mb-4 relative z-30">
             <div className="bg-white/5 border border-white/10 px-4 md:px-6 py-1.5 md:py-2 rounded-full flex items-center gap-2 md:gap-3">
               <span className="text-white/60 font-bold text-xs md:text-base">Players</span>
@@ -608,8 +608,7 @@ Swal.fire({
             </div>
           </div>
 
-          {/* 🔥 التعديل: تقليل المسافات العمودية وتوسيع الآيكونات 🔥 */}
-          <div className="flex-1 grid grid-cols-2 grid-rows-[auto_auto] gap-x-2 md:gap-x-36 gap-y-2 md:gap-y-0 relative content-center my-auto md:my-0">
+          <div className="flex-1 grid grid-cols-2 grid-rows-[auto_auto] gap-x-2 md:gap-x-36 gap-y-2 md:gap-y-0 relative content-center my-auto md:my-0 ml-grid">
             {[0, 1, 2, 3].map((idx) => {
               const player = players[idx];
               const isTop = idx < 2;
@@ -625,7 +624,7 @@ Swal.fire({
                     ${isTop && !isLeft ? "md:pr-[30px]" : ""}
                     ${!isTop && isLeft ? "md:ml-[160px]" : ""}
                     ${!isTop && !isLeft ? "md:mr-[160px]" : ""}
-                    ${!isTop ? "mt-4 md:mb-[40px] md:mt-0" : ""}`}
+                    ${!isTop ? "mt-4 md:mb-[40px] md:mt-0 ml-grid-item-bottom" : ""}`}
                 >
                   {player ? (
                     <div className="flex flex-col items-center animate-in fade-in zoom-in duration-1000">
@@ -649,17 +648,15 @@ Swal.fire({
                           color="#FFFFFF"
                           className="absolute inset-x-0 bottom-0 h-full w-full"
                         />
-                        {/* 🔥 التعديل: تكبير شخصيات اللاعبين بالجوال w-24 و w-32 🔥 */}
                         <img
                           src={getStandingAvatar(player.characterStyle)}
-                          className={`${isTop ? "w-24 md:w-48" : "w-32 md:w-96"} h-auto z-10 drop-shadow-[0_20px_40px_rgba(59,130,246,0.4)] animate-float`}
+                          className={`${isTop ? "w-24 md:w-48 ml-avatar-top" : "w-32 md:w-96 ml-avatar-bottom"} h-auto z-10 drop-shadow-[0_20px_40px_rgba(59,130,246,0.4)] animate-float`}
                           alt="Hero"
                         />
                       </div>
-                      {/* 🔥 التعديل: تكبير المسرح المشغول بالجوال w-36 و w-44 🔥 */}
                       <img
                         src="/stage.png"
-                        className={`${isTop ? "w-36 md:w-56" : "w-44 md:w-80"} h-auto mt-[-2px] opacity-90`}
+                        className={`${isTop ? "w-36 md:w-56 ml-stage-top" : "w-44 md:w-80 ml-stage-bottom"} h-auto mt-[-2px] opacity-90`}
                         alt="Platform"
                       />
                     </div>
@@ -669,12 +666,11 @@ Swal.fire({
                       if (isPasswordGame && players.length >= 2) {
                         return (
                           <div className="flex flex-col items-center opacity-20 grayscale">
-                            <div className="mb-2 md:mb-12 flex flex-col items-center gap-1 md:gap-2">
+                            <div className="mb-2 md:mb-12 flex flex-col items-center gap-1 md:gap-2 ml-invite-btn">
                                <Lock className="text-gray-500 w-4 h-4 md:w-5 md:h-5" />
                                <span className="text-[8px] font-black uppercase tracking-tighter text-gray-500 text-center leading-tight">Dual<br/>Access</span>
                             </div>
-                            {/* 🔥 التعديل: تكبير المسرح المقفل بالجوال 🔥 */}
-                            <img src="/stage.png" className={`${isTop ? "w-36 md:w-56" : "w-44 md:w-64"} grayscale brightness-50 opacity-30 mt-[-20px] md:mt-[-50px]`} alt="Locked Stage" />
+                            <img src="/stage.png" className={`${isTop ? "w-36 md:w-56" : "w-44 md:w-64"} ml-empty-stage grayscale brightness-50 opacity-30 mt-[-20px] md:mt-[-50px]`} alt="Locked Stage" />
                           </div>
                         );
                       }
@@ -682,14 +678,13 @@ Swal.fire({
                       return (
                         <div className="flex flex-col items-center opacity-40 hover:opacity-100 transition-all duration-500">
                           <button
-                            className="group flex items-center gap-1 md:gap-2 bg-blue-500/10 border border-blue-500/20 px-3 py-1.5 md:px-3 md:py-1.5 rounded-lg md:rounded-xl mb-2 md:mb-12 hover:bg-blue-500 transition-all z-20"
+                            className="group flex items-center gap-1 md:gap-2 bg-blue-500/10 border border-blue-500/20 px-3 py-1.5 md:px-3 md:py-1.5 rounded-lg md:rounded-xl mb-2 md:mb-12 hover:bg-blue-500 transition-all z-20 ml-invite-btn"
                             onClick={() => setIsInviteModalOpen(true)}
                           >
                             <PlusCircle className="text-blue-400 group-hover:text-white w-3 h-3 md:w-4 md:h-4" />
                             <span className="text-[9px] font-black uppercase tracking-widest text-blue-400 group-hover:text-white">Invite</span>
                           </button>
-                          {/* 🔥 التعديل: تكبير المسرح الفاضي بالجوال 🔥 */}
-                          <img src="/stage.png" className={`${isTop ? "w-36 md:w-56" : "w-44 md:w-64"} grayscale brightness-50 opacity-50 mt-[-20px] md:mt-[-50px]`} alt="Empty Stage" />
+                          <img src="/stage.png" className={`${isTop ? "w-36 md:w-56" : "w-44 md:w-64"} ml-empty-stage grayscale brightness-50 opacity-50 mt-[-20px] md:mt-[-50px]`} alt="Empty Stage" />
                         </div>
                       );
                     })()
@@ -699,7 +694,7 @@ Swal.fire({
             })}
           </div>
 
-          <div className="flex flex-row justify-between items-end mt-auto pt-4 md:mt-6 relative z-30 gap-2 w-full">
+          <div className="flex flex-row justify-between items-end mt-auto pt-4 md:mt-6 relative z-30 gap-2 w-full ml-footer">
             <button
               onClick={handleLeaveRoom}
               className="flex items-center justify-center gap-1.5 w-auto px-4 py-2.5 md:px-8 md:py-3 rounded-xl md:rounded-2xl bg-white/5 border border-white/10 text-gray-400 font-black uppercase text-[10px] md:text-xs hover:bg-red-500/20 hover:text-red-500 transition-all"
@@ -812,6 +807,34 @@ Swal.fire({
       {showTour && (
           <MissionTour onComplete={() => setShowTour(false)} />
       )}
+
+      {/* سحر ببجي المخصص لشاشات الجوال المقلوبة فقط 🎮 */}
+      <style>{`
+        @keyframes float { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-8px); } }
+        .animate-float { animation: float 3s ease-in-out infinite; }
+
+        @media (max-width: 930px) and (orientation: landscape) {
+          .ml-wrapper { padding: 0 !important; }
+          .ml-header { display: none !important; }
+          .ml-container {
+            min-height: 100dvh !important;
+            height: 100dvh !important;
+            border-radius: 0 !important;
+            border: none !important;
+            padding: 10px 20px !important;
+          }
+          .ml-grid { gap: 0 !important; margin: auto 0 !important; }
+          .ml-grid-item-bottom { margin-top: 10px !important; margin-bottom: 0 !important; }
+          .ml-avatar-top { width: 60px !important; }
+          .ml-stage-top { width: 110px !important; margin-top: -5px !important; }
+          .ml-avatar-bottom { width: 80px !important; }
+          .ml-stage-bottom { width: 150px !important; margin-top: -10px !important; }
+          .ml-empty-stage { width: 130px !important; margin-top: -20px !important; }
+          .ml-invite-btn { margin-bottom: 5px !important; }
+          .ml-footer { padding-top: 5px !important; margin-top: 5px !important; }
+          .ml-footer button { padding-top: 8px !important; padding-bottom: 8px !important; font-size: 10px !important; }
+        }
+      `}</style>
     </MainLayout>
   );
 };
